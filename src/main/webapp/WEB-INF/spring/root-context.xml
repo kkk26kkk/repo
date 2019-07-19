@@ -5,16 +5,13 @@
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations" value="classpath:/jdbc.properties"/>
-		<property name="fileEncoding" value="UTF-8"/>
-	</bean>
-	
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-		<property name="driverClassName" value="${jdbc.driverClassName}"/>
-		<property name="url" value="${jdbc.url}"/>
-		<property name="username" value="${jdbc.username}"/>
-		<property name="password" value="${jdbc.password}"/>
+		<property name="driverClassName"
+	    		  value="oracle.jdbc.driver.OracleDriver"/>
+	    <property name="url"
+	    		  value="jdbc:oracle:thin:@localhost:1521:xe"/>
+	    <property name="username" value="juhyung"/>
+	    <property name="password" value="park"/>
 	</bean>
 	
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -27,4 +24,13 @@
 		<constructor-arg ref="sqlSession" index="0"/>
 	</bean>
 	
+	<bean id="jsonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"/>
+	
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="jsonHttpMessageConverter"/>
+			</list>
+		</property>
+	</bean>
 </beans>
