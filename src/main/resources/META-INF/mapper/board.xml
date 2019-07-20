@@ -17,7 +17,7 @@
 	<insert id="insertBoard" parameterType="com.kkk26kkk.bbs.model.BoardVO">
 		INSERT INTO tb_board
 		VALUES (tb_board_seq.nextval, #{userId}, #{userName}, #{title},
-				#{pw}, #{contents}, 0, 0, 0, 0, sysdate, sysdate)
+				#{pw}, #{contents}, 0, 0, 0, 0, sysdate)
 	</insert>
 	
 	<delete id="deleteBoard" parameterType="int">

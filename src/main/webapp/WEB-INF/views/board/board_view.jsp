@@ -28,6 +28,10 @@
 				<td>${board.title }</td>
 			</tr>
 			<tr>
+				<th>작성자</th>
+				<td>${board.userName }</td>
+			</tr>
+			<tr>
 				<th>작성일</th>
 				<td>${board.regDtm }</td>
 			</tr>
@@ -35,10 +39,18 @@
 				<th>내용</th>
 				<td>${board.contents }</td>
 			</tr>
-			<tr>
-				<td><button id="update-btn" onclick="location='board_edit?idx=${board.idx }'">수정</button></td>
-				<td><button id="delete-btn" onclick="location='board_delete?idx=${board.idx }'">삭제</button></td>
-			</tr>
+			<c:if test="${sessionScope.userId == board.userId }">
+				<tr>
+					<td><button id="update-btn" onclick="location='board_edit?idx=${board.idx }'">수정</button></td>
+					<td><button id="delete-btn" onclick="location='board_delete?idx=${board.idx }'">삭제</button></td>
+				</tr>
+			</c:if>
+			<c:if test="${sessionScope.userId != board.userId }">
+				<tr>
+					<td><button id="reply-btn" onclick="location='board_reply?idx=${board.idx }'">답변</button></td>
+					<td><button id="comment-btn" onclick="location='board_comment'?idx=${board.idx }">댓글</button></td>
+				</tr>
+			</c:if>
 		</table>
 	</div>
 </div>

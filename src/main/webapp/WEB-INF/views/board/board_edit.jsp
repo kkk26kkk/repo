@@ -32,12 +32,12 @@ function edit_check() {
 					<td><input type="text" name="title" value="${board.title }" />
 				</tr>
 				<tr>
-					<th>작성일</th>
-					<td>${board.regDtm }</td>
+					<th>작성자</th>
+					<td>${board.userName }</td>
 				</tr>
 				<tr>
-					<th>삭제 비밀번호</th>
-					<td><input type="password" name="pw" /></td>
+					<th>작성일</th>
+					<td>${board.regDtm }</td>
 				</tr>
 				<tr>
 					<th>내용</th>

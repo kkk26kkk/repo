@@ -37,4 +37,8 @@ public class BoardDAO {
 		sqlSession.update("updateBoard", board);
 	}
 
+	public void replyBoard(BoardVO board) {
+		sqlSession.insert("replyBoard", board);
+	}
+
 }

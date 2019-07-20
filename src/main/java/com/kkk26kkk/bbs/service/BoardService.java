@@ -36,5 +36,9 @@ public class BoardService {
 	public void updateBoard(BoardVO board) {
 		boardDAO.updateBoard(board);
 	}
+
+	public void replyBoard(BoardVO board) {
+		boardDAO.replyBoard(board);
+	}
 	
 }
