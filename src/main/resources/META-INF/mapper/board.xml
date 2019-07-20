@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Board">
+	<select id="getBoardList" resultType="com.kkk26kkk.bbs.model.BoardVO">
+		SELECT *
+		FROM tb_board
+	</select>
+	
+	<select id="getBoard" parameterType="int" resultType="com.kkk26kkk.bbs.model.BoardVO">
+		SELECT *
+		FROM tb_board
+		WHERE idx = #{idx}
+	</select>
+
+	<insert id="insertBoard" parameterType="com.kkk26kkk.bbs.model.BoardVO">
+		INSERT INTO tb_board
+		VALUES (tb_board_seq.nextval, #{userId}, #{userName}, #{title},
+				#{pw}, #{contents}, 0, 0, 0, 0, sysdate, sysdate)
+	</insert>
+	
+	<delete id="deleteBoard" parameterType="int">
+		DELETE FROM tb_board
+		WHERE idx = #{idx}
+	</delete>
+	
+	<select id="getBoardPw" parameterType="int" resultType="String">
+		SELECT pw
+		FROM tb_board
+		WHERE idx = #{idx}
+	</select>
+	
+	<update id="updateBoard" parameterType="com.kkk26kkk.bbs.model.BoardVO">
+		UPDATE tb_board
+		SET	
+			title = #{title},
+			contents = #{contents},
+			reg_dtm = sysdate
+		WHERE idx = #{idx}
+	</update>
+</mapper>
