@@ -51,6 +51,7 @@
 			            </c:if>
 					
 						<!-- 제목 출력 부분 -->
+						<a href="#{board.link }">${board.title }</a>
 						<a href="board_view?page=${page }&idx=${board.idx}">${board.title }</a>
 					</td>
 					<td>${board.userName }</td>

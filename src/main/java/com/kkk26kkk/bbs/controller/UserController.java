@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.kkk26kkk.bbs.model.UserVO;
+import com.kkk26kkk.bbs.model.User;
 import com.kkk26kkk.bbs.service.UserService;
 
 @Controller
@@ -28,10 +28,10 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/login_ok", method = RequestMethod.POST)
-	String loginOk(UserVO user, HttpServletRequest request) {
+	String loginOk(User user, HttpServletRequest request) {
 		String userPw = userService.getUserPw(user.getId());
 		
-		if(userPw.equals(user.getPw())) {
+		if(userPw.equals(user.getHashPw())) {
 			request.getSession().setAttribute("userId", user.getId());
 		}
 		

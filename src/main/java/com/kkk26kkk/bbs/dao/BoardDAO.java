@@ -6,14 +6,15 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.kkk26kkk.bbs.model.BoardVO;
+import com.kkk26kkk.bbs.model.Article;
+import com.kkk26kkk.bbs.model.ArticleVo;
 
 @Repository
 public class BoardDAO {
 	@Autowired
 	SqlSessionTemplate sqlSession;
 	
-	public List<BoardVO> getBoardList(int page) {
+	public List<Article> getBoardList(int page) {
 		return sqlSession.selectList("getBoardList", page);
 	}
 	
@@ -21,11 +22,11 @@ public class BoardDAO {
 		return sqlSession.selectOne("getBoardListCount");
 	}
 	
-	public BoardVO getBoard(int idx) {
+	public ArticleVo getBoard(int idx) {
 		return sqlSession.selectOne("getBoard", idx);
 	}
 	
-	public void insertBoard(BoardVO board) {
+	public void insertBoard(ArticleVo board) {
 		sqlSession.insert("insertBoard", board);
 	}
 
@@ -37,11 +38,11 @@ public class BoardDAO {
 		return sqlSession.selectOne("getBoardPw", idx);
 	}
 
-	public void updateBoard(BoardVO board) {
+	public void updateBoard(ArticleVo board) {
 		sqlSession.update("updateBoard", board);
 	}
 
-	public void replyBoard(BoardVO board) {
+	public void replyBoard(ArticleVo board) {
 		sqlSession.insert("replyBoard", board);
 	}
 

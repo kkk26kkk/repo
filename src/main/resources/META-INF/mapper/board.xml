@@ -15,7 +15,10 @@
 			FROM
 			(
 				SELECT *
-			 	FROM tb_board 
+			 	FROM tb_board
+			-- 	where 1=1
+			 START WITH parent_id IS NULL --루트노드를 지정,
+			CONNECT BY PRIOR article_id = parent_id;
 			 	ORDER BY group_no DESC, group_layer ASC
 			 )
 		 )

@@ -6,14 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kkk26kkk.bbs.dao.BoardDAO;
-import com.kkk26kkk.bbs.model.BoardVO;
+import com.kkk26kkk.bbs.model.Article;
+import com.kkk26kkk.bbs.model.ArticleVo;
 
 @Service
 public class BoardService {
 	@Autowired
 	BoardDAO boardDAO;
 
-	public List<BoardVO> getBoardList(int page) {
+	public List<Article> getBoardList(int page) {
 		return boardDAO.getBoardList(page);
 	}
 	
@@ -21,11 +22,11 @@ public class BoardService {
 		return boardDAO.getBoardListCount();
 	}
 	
-	public BoardVO getBoard(int idx) {
+	public ArticleVo getBoard(int idx) {
 		return boardDAO.getBoard(idx);
 	}
 	
-	public void insertBoard(BoardVO board) {
+	public void insertBoard(ArticleVo board) {
 		boardDAO.insertBoard(board);
 	}
 
@@ -37,11 +38,11 @@ public class BoardService {
 		return boardDAO.getBoardPw(idx);
 	}
 
-	public void updateBoard(BoardVO board) {
+	public void updateBoard(ArticleVo board) {
 		boardDAO.updateBoard(board);
 	}
 
-	public void replyBoard(BoardVO board) {
+	public void replyBoard(ArticleVo board) {
 		boardDAO.replyBoard(board);
 	}
 	

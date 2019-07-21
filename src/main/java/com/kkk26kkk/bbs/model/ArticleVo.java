@@ -1,23 +1,27 @@
 package com.kkk26kkk.bbs.model;
 
-public class BoardVO {
-	private int idx;
+public class ArticleVo {
+	private int articleId;
+	private String boardId;
 	private String userId;
 	private String userName;
 	private String title;
-	private String pw;
 	private String contents;
-	private int groupNo;		// 글 그룹 번호 : 답글
-	private int groupOrder;		// 답글 레벨 순서
-	private int groupLayer;		// 답글 화면에 보이는 위치
+	private int parentId;
 	private int readCount;
 	private String regDtm;
 	
-	public int getIdx() {
-		return idx;
+	public int getArticleId() {
+		return articleId;
 	}
-	public void setIdx(int idx) {
-		this.idx = idx;
+	public void setArticleId(int articleId) {
+		this.articleId = articleId;
+	}
+	public String getBoardId() {
+		return boardId;
+	}
+	public void setBoardId(String boardId) {
+		this.boardId = boardId;
 	}
 	public String getUserId() {
 		return userId;
@@ -37,35 +41,17 @@ public class BoardVO {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public String getPw() {
-		return pw;
-	}
-	public void setPw(String pw) {
-		this.pw = pw;
-	}
 	public String getContents() {
 		return contents;
 	}
 	public void setContents(String contents) {
 		this.contents = contents;
 	}
-	public int getGroupNo() {
-		return groupNo;
+	public int getParentId() {
+		return parentId;
 	}
-	public void setGroupNo(int groupNo) {
-		this.groupNo = groupNo;
-	}
-	public int getGroupOrder() {
-		return groupOrder;
-	}
-	public void setGroupOrder(int groupOrder) {
-		this.groupOrder = groupOrder;
-	}
-	public int getGroupLayer() {
-		return groupLayer;
-	}
-	public void setGroupLayer(int groupLayer) {
-		this.groupLayer = groupLayer;
+	public void setParentId(int parentId) {
+		this.parentId = parentId;
 	}
 	public int getReadCount() {
 		return readCount;
@@ -79,5 +65,5 @@ public class BoardVO {
 	public void setRegDtm(String regDtm) {
 		this.regDtm = regDtm;
 	}
-	
+
 }
