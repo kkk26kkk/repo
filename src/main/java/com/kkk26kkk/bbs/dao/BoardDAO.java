@@ -13,8 +13,12 @@ public class BoardDAO {
 	@Autowired
 	SqlSessionTemplate sqlSession;
 	
-	public List<BoardVO> getBoardList() {
-		return sqlSession.selectList("getBoardList");
+	public List<BoardVO> getBoardList(int page) {
+		return sqlSession.selectList("getBoardList", page);
+	}
+	
+	public int getBoardListCount() {
+		return sqlSession.selectOne("getBoardListCount");
 	}
 	
 	public BoardVO getBoard(int idx) {

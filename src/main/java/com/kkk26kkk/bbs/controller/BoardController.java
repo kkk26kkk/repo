@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,115 +22,58 @@ public class BoardController {
 	private BoardService boardService;
 	@Autowired
 	private UserService userService;
-	
-	/** REST **/
-//	@RequestMapping(value = "/board", method = RequestMethod.GET)
-//	@ResponseBody
-//	Map<String, Object> getBoardList() {
-//		Map<String, Object> result = new HashMap<>();
-//
-//		List<BoardVO> boardList = boardService.getBoardList();
-//		
-//		result.put("result", Boolean.TRUE);
-//		result.put("data", boardList);
-//		
-//		return result;
-//	}	
-//	@RequestMapping(value = "/board/{idx}", method = RequestMethod.GET)
-//	@ResponseBody
-//	Map<String, Object> getBoard(@PathVariable int idx) {
-//		Map<String, Object> result = new HashMap<>();
-//
-//		BoardVO board = boardService.getBoard(idx);
-//		
-//		result.put("result", Boolean.TRUE);
-//		result.put("data", board);
-//		
-//		return result;
-//	}
-//	@RequestMapping(value = "/board", method = RequestMethod.POST, headers = "Content-Type=application/json")
-//	@ResponseBody
-//	Map<String, Object> insertBoard(@RequestBody BoardVO board) {
-//		Map<String, Object> result = new HashMap<>();
-//
-//		boardService.insertBoard(board);
-//			
-//		result.put("result", Boolean.TRUE);
-//		
-//		return result;
-//	}
-//	@RequestMapping(value = "/board", method = RequestMethod.DELETE, headers = "Content-Type=application/json")
-//	@ResponseBody
-//	Map<String, Object> deleteBoard(@RequestBody BoardVO board) {
-//		Map<String, Object> result = new HashMap<>();
-//
-//		String boardPw = boardService.getBoardPw(board.getIdx());
-//		
-//		if(boardPw.equals(board.getPw())) {
-//			boardService.deleteBoard(board.getIdx());
-//			result.put("result", "삭제 성공");
-//		} else {
-//			result.put("result", "삭제 실패");
-//		}
-//		
-//		return result;
-//	}
-//	@RequestMapping(value = "/board", method = RequestMethod.PUT, headers = "Content-Type=application/json")
-//	@ResponseBody
-//	Map<String, Object> updateBoard(@RequestBody BoardVO board) {
-//		Map<String, Object> result = new HashMap<>();
-//		
-//		String boardPw = boardService.getBoardPw(board.getIdx());
-//		
-//		if(boardPw.equals(board.getPw())) {
-//			boardService.updateBoard(board);
-//			result.put("result", "수정 성공");
-//		} else {
-//			result.put("result", "수정 실패");
-//		}
-//		
-//		return result;
-//	}
-	
-	@RequestMapping(value = "/board", method = RequestMethod.GET)
-	String getBoardList(Model model) {
+
+	@RequestMapping(value = "/board_list", method = RequestMethod.GET)
+	String getBoardList(Model model, @RequestParam(value = "page", defaultValue = "1", required = false) int page) {
+	    int limit = 10; // 한 화면에 출력할 레코드 갯수
+
+	    int listCount = boardService.getBoardListCount(); // 총 리스트 수를 받아옵니다.
+
+	    // 총 페이지 수
+	    int maxPage = (listCount + limit - 1) / limit;
+
+	    // 현재 페이지에 보여줄 시작 페이지 수(1, 11, 21, ...)
+	    int startPage = ((page - 1) / 10) * 10 + 1;
+
+	    // 현재 페이지에 보여줄 마지막 페이지 수(10, 20, 30, ...)
+	    int endPage = startPage + 10 - 1;
+
+	    if (endPage > maxPage)
+	      endPage = maxPage;
 		
-		List<BoardVO> boardList = boardService.getBoardList();
+		List<BoardVO> boardList = boardService.getBoardList(page);
 		
+		model.addAttribute("page", page);
+		model.addAttribute("maxpage", maxPage);
+		model.addAttribute("startpage", startPage);
+		model.addAttribute("endpage", endPage);
+		model.addAttribute("listcount", listCount);
 		model.addAttribute("boardList", boardList);
 		
 		return "/board/board_list";
 	}
 	
-	@RequestMapping(value = "/board/{idx}", method = RequestMethod.GET)
-	String getBoard(@PathVariable int idx, Model model) {
+	@RequestMapping(value = "/board_view", method = RequestMethod.GET)
+	String getBoard(@RequestParam("idx") int idx, @RequestParam("page") int page,
+			Model model) {
 		BoardVO board = boardService.getBoard(idx);
 		
 		model.addAttribute("board", board);
+		model.addAttribute("page", page);
 		
 		return "/board/board_view";
 	}
-		
-//	@RequestMapping(value = "/board", method = RequestMethod.DELETE, headers = "Content-Type=application/json")
-//	String deleteBoard(@RequestBody BoardVO board) {
-//		String boardPw = boardService.getBoardPw(board.getIdx());
-//		
-//		if(boardPw.equals(board.getPw())) {
-//			boardService.deleteBoard(board.getIdx());
-//		} 
-//		
-//		return "board";
-//	}
-	
-	@RequestMapping(value = "/board/board_delete") 
+
+	@RequestMapping(value = "/board_delete") 
 	String boardDelete(@RequestParam int idx, Model model) {
 		boardService.deleteBoard(idx);
 		
-		return "redirect:../board";
+		return "redirect:/board_list";
 	}
 	
-	@RequestMapping(value = "/board/board_edit") 
-	String boardEdit(@RequestParam int idx, Model model) {
+	@RequestMapping(value = "/board_edit") 
+	String boardEdit(@RequestParam int idx, @RequestParam("page") int page,
+			Model model) {
 		BoardVO board = boardService.getBoard(idx);
 		
 		model.addAttribute("board", board);
@@ -139,19 +81,19 @@ public class BoardController {
 		return "/board/board_edit";
 	}
 	
-	@RequestMapping(value = "/board/board_edit_ok", method = RequestMethod.POST)
+	@RequestMapping(value = "/board_edit_ok", method = RequestMethod.POST)
 	String boardEditOk(BoardVO board) {
 		boardService.updateBoard(board);
 		
-		return "redirect:../board";
+		return "redirect:/board_list";
 	}
 	
-	@RequestMapping(value = "/board/board_write")
+	@RequestMapping(value = "/board_write")
 	String boardWrite() {
 		return "/board/board_write";
 	}
 	
-	@RequestMapping(value = "/board/board_write_ok")
+	@RequestMapping(value = "/board_write_ok")
 	String boardWriteOk(BoardVO board, HttpServletRequest request) {
 		UserVO user = userService.getUserInfo(request.getSession().getAttribute("userId").toString());
 		
@@ -160,7 +102,34 @@ public class BoardController {
 		board.setPw(user.getPw());
 		boardService.insertBoard(board);
 		
-		return "redirect:../board";
+		return "redirect:/board_list";
 	}
 	
+	@RequestMapping(value = "/board_reply")
+	String boardReply(@RequestParam int idx, @RequestParam("page") int page,
+			Model model) {
+		BoardVO board = boardService.getBoard(idx);
+		
+		model.addAttribute("board", board);
+		model.addAttribute("page", page);
+		
+		return "/board/board_reply";
+	}
+	
+	@RequestMapping(value = "/board_reply_ok")
+	String boardReplyOk(BoardVO board, @RequestParam("page") int page,
+			HttpServletRequest request) {
+		UserVO user = userService.getUserInfo(request.getSession().getAttribute("userId").toString());
+		
+		board.setUserId(user.getId());
+		board.setUserName(user.getName());
+		board.setPw(user.getPw());
+		board.setGroupNo(board.getGroupNo());
+		board.setGroupOrder(board.getGroupOrder() + 1);
+		board.setGroupLayer(board.getGroupLayer() + 1);
+		
+		boardService.replyBoard(board);
+		
+		return "redirect:/board_list?page=" + page;
+	}
 }

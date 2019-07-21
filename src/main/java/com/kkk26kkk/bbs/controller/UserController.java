@@ -15,19 +15,19 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	@RequestMapping("/user/login")
+	@RequestMapping("/login")
 	String login() {
 		return "/user/user_login";
 	}
 	
-	@RequestMapping("/user/logout")
+	@RequestMapping("/logout")
 	String logout(HttpServletRequest request) {
 		request.getSession().invalidate();
 		
-		return "redirect:../board";
+		return "redirect:/board_list";
 	}
 	
-	@RequestMapping(value = "/user/login_ok", method = RequestMethod.POST)
+	@RequestMapping(value = "/login_ok", method = RequestMethod.POST)
 	String loginOk(UserVO user, HttpServletRequest request) {
 		String userPw = userService.getUserPw(user.getId());
 		
@@ -35,7 +35,7 @@ public class UserController {
 			request.getSession().setAttribute("userId", user.getId());
 		}
 		
-		return "redirect:../board";
+		return "redirect:/board_list";
 	}
 	
 }

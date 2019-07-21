@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>게시글 작성</title>
+<title>답글 작성</title>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
@@ -13,7 +13,11 @@
 <body>
 <div id="wrap">
 	<div id="tb-wrap">
-		<form action="board_write_ok" method="post">
+		<form action="board_reply_ok" method="post">
+		<input type="hidden" name="groupNo" value="${board.groupNo }" />
+		<input type="hidden" name="groupOrder" value="${board.groupOrder }" />
+		<input type="hidden" name="groupLayer" value="${board.groupLayer }" />		
+		<input type="hidden" name="page" value="${page }">	
 			<table class="table table-striped">
 				<tr>
 					<th>아이디</th>
@@ -21,7 +25,7 @@
 				</tr>
 				<tr>
 					<th>제목</th>
-					<td><input type="text" name="title" /></td>
+					<td><input type="text" name="title" value="RE:${board.title }"/></td>
 				</tr>
 				<tr>
 					<th>내용</th>

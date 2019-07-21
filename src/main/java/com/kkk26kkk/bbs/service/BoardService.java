@@ -13,8 +13,12 @@ public class BoardService {
 	@Autowired
 	BoardDAO boardDAO;
 
-	public List<BoardVO> getBoardList() {
-		return boardDAO.getBoardList();
+	public List<BoardVO> getBoardList(int page) {
+		return boardDAO.getBoardList(page);
+	}
+	
+	public int getBoardListCount() {
+		return boardDAO.getBoardListCount();
 	}
 	
 	public BoardVO getBoard(int idx) {
