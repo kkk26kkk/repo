@@ -2,28 +2,26 @@ package com.kkk26kkk.bbs.model;
 
 import java.util.Date;
 
-public class ArticleVo {
+public class CommentVo {
+	private int commentId;
 	private int articleId;
-	private int boardId;
 	private String userId;
 	private String userName;
-	private String title;
 	private String contents;
 	private int parentId;
-	private int readCount;
 	private Date regDtm;
 	
+	public int getCommentId() {
+		return commentId;
+	}
+	public void setCommentId(int commentId) {
+		this.commentId = commentId;
+	}
 	public int getArticleId() {
 		return articleId;
 	}
 	public void setArticleId(int articleId) {
 		this.articleId = articleId;
-	}
-	public int getBoardId() {
-		return boardId;
-	}
-	public void setBoardId(int boardId) {
-		this.boardId = boardId;
 	}
 	public String getUserId() {
 		return userId;
@@ -37,12 +35,6 @@ public class ArticleVo {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
 	public String getContents() {
 		return contents;
 	}
@@ -55,17 +47,11 @@ public class ArticleVo {
 	public void setParentId(int parentId) {
 		this.parentId = parentId;
 	}
-	public int getReadCount() {
-		return readCount;
-	}
-	public void setReadCount(int readCount) {
-		this.readCount = readCount;
-	}
 	public Date getRegDtm() {
 		return regDtm;
 	}
 	public void setRegDtm(Date regDtm) {
 		this.regDtm = regDtm;
 	}
-
+	
 }

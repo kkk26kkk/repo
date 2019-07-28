@@ -1,8 +1,16 @@
 package com.kkk26kkk.common.model;
 
 public enum Path {
-	Article("/board_view"),
-	ArticleList("/board_list");
+	WriteForm("/board/write"),
+	UpdateForm("/board/update"),
+	ReplyForm("/board/reply"),
+	Write("/board"),
+	Update("/board"),
+	Article("/board"),
+	Delete("/board"),
+	Reply("/board"),
+	ArticleList("/board/list"),
+	Comment("/comment");
 	
 	private String path;
 	

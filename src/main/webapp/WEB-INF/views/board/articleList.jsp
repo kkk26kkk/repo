@@ -9,20 +9,20 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
-<link rel="stylesheet" href="resources/css/board.css" />
+<link rel="stylesheet" href="/resources/css/board.css" />
 </head>
 <body>
 <div id="wrap">
 	<div id="tb-wrap">
 		<div>
 			<c:if test="${sessionScope.userId == null }">
-				<a href="login">로그인</a>
+				<a href="${contextPath }/login">로그인</a>
 			</c:if>
 			
 			<c:if test="${sessionScope.userId != null }">
-					<span>아이디 : ${userId }</span>
-					<a href="board_write">글쓰기</a>
-					<a href="logout">로그아웃</a>
+					<span>아이디 : ${sessionScope.userId } 이름 : ${sessionScope.userName }</span>
+					<a href="${writeFormLink }">글쓰기</a>
+					<a href="/logout">로그아웃</a>
 			</c:if>
 		</div>
 		<table class="table table-striped">
@@ -34,28 +34,18 @@
 			</tr>
 			
 			<!-- 화면 출력 번호 변수 정의 -->
-        	<c:set var="num" value="${listcount-(page-1)*10 }"/>
+        	<c:set var="num" value="${totalCount-(page-1)*10 }"/>
 			
-			<c:forEach var="board" items="${boardList }">
+			<c:forEach var="bc" items="${boardContents }">
 				<tr>
 					<td>
 						<!-- 번호 출력 부분 -->
 			            <c:out value="${num }"/>
 			            <c:set var="num" value="${num-1 }"/>
 					</td>
-					<td>
-						<c:if test="${b.bbs_re_lev != 0 }">
-		            	    <c:forEach var="k" begin="1" end="${board.groupOrder }">
-			                  &nbsp;&nbsp;
-			                </c:forEach>
-			            </c:if>
-					
-						<!-- 제목 출력 부분 -->
-						<a href="#{board.link }">${board.title }</a>
-						<a href="board_view?page=${page }&idx=${board.idx}">${board.title }</a>
-					</td>
-					<td>${board.userName }</td>
-					<td>${board.regDtm }</td>
+					<td><a href="${bc.link }">${bc.title }</a>
+					<td>${bc.userName }</td>
+					<td>${bc.regDtm }</td>
 				</tr>
 			</c:forEach>
 		</table>
@@ -66,23 +56,23 @@
 	        </c:if>
 	        
 	        <c:if test="${page>1 }">
-	          <a href="board_list?page=${page-1 }">[이전]</a>&nbsp;
+	          <a href="/board/list?page=${page-1 }">[이전]</a>&nbsp;
 	        </c:if>
 	        
-	        <c:forEach var="a" begin="${startpage }" end="${endpage }">
+	        <c:forEach var="a" begin="${startPage }" end="${endPage }">
 	          <c:if test="${a==page }">
 	            [${a }]
 	          </c:if>
 	          <c:if test="${a!=page }">
-	            <a href="board_list?page=${a }">[${a }]</a>&nbsp;
+	            <a href="/board/list?page=${a }">[${a }]</a>&nbsp;
 	          </c:if>
 	        </c:forEach>
 	        
-	        <c:if test="${page>=maxpage }">
+	        <c:if test="${page>=maxPage }">
 	          [다음]
 	        </c:if>
-	        <c:if test="${page<maxpage }">
-	          <a href="board_list?page=${page+1 }">[다음]</a>
+	        <c:if test="${page<maxPage }">
+	          <a href="/board/list?page=${page+1 }">[다음]</a>
 	        </c:if>
 		</div>
 	</div>

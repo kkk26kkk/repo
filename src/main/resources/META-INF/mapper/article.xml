@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Article">
+	<select id="getArticle" parameterType="int" resultType="com.kkk26kkk.bbs.model.Article">
+		SELECT *
+		FROM tb_article
+		WHERE article_id = #{articleId}
+	</select>
+
+	<insert id="insertArticle" parameterType="com.kkk26kkk.bbs.model.ArticleVo"> <!-- Article? ArticleVo? -->
+		INSERT INTO tb_article
+		VALUES (tb_article_seq.nextval, #{boardId}, #{userId}, #{userName}, #{title},
+				#{contents}, #{parentId}, 0, sysdate)
+	</insert>
+	
+	<update id="updateArticle" parameterType="com.kkk26kkk.bbs.model.Article">
+		UPDATE tb_article
+		SET 
+			title = #{title},
+			contents = #{contents}
+			-- reg_date ?
+		WHERE article_id = #{articleId}
+	</update>
+	
+	<delete id="deleteArticle" parameterType="int">
+		DELETE 
+		FROM tb_Article
+		WHERE article_id = #{articleId}
+	</delete>
+</mapper>

@@ -3,10 +3,14 @@ package com.kkk26kkk.bbs.model;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class User extends UserVO {
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+
+import com.kkk26kkk.common.model.Path;
+
+public class User extends UserVo {
 	
 	public String getHashPw() {
-		return this.hash(super.getPw());
+		return this.hash(super.getUserPw());
 	}
 	
     public String hash(String str) {
@@ -28,4 +32,32 @@ public class User extends UserVO {
         
         return sb.toString();
     }
+    
+    public ArticleDto writeArticle(User user) {
+    	ArticleDto dto = new ArticleDto();
+    	dto.setUserName(user.getUserName());
+    	dto.setLink(Path.Write.getPath());
+    	
+    	return dto;
+    }
+    
+    public ArticleDto updateArticle(Article article) {
+    	ArticleDto dto = new ArticleDto();
+    	dto.setArticleId(article.getArticleId());
+    	dto.setUserName(article.getUserName());
+    	dto.setTitle(article.getTitle());
+    	dto.setContents(article.getContents());
+    	dto.setLink(Path.Update.getPath());
+    	return dto;
+    }
+    
+    public ArticleDto replyArticle(Article article) {
+    	ArticleDto dto = new ArticleDto();
+    	dto.setArticleId(article.getArticleId());
+    	dto.setUserName(article.getUserName());
+    	dto.setTitle(article.getTitle());
+    	dto.setLink(Path.Reply.getPath());
+    	return dto;
+    }
+    
 }

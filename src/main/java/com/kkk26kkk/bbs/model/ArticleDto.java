@@ -1,13 +1,20 @@
 package com.kkk26kkk.bbs.model;
 
 public class ArticleDto {
+	private int articleId;
+	private String userId;
 	private String userName;
 	private String title;
 	private String contents;
 	private String readCount;
 	private String regDtm;
 	private String link;
-	
+	private String writeFormLink;
+	private String updateFormLink;
+	private String replyFormLink;
+	private String deleteLink;
+	private String commentLink;
+
 	ArticleDto() {}
 	
 	ArticleDto(String userName, String title, String contents, String readCount) {
@@ -17,6 +24,18 @@ public class ArticleDto {
 		this.readCount = readCount;
 	}
 	
+	public int getArticleId() {
+		return articleId;
+	}
+	public void setArticleId(int articleId) {
+		this.articleId = articleId;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 	public String getLink() {
 		return link;
 	}
@@ -52,6 +71,36 @@ public class ArticleDto {
 	}
 	public void setReadCount(String readCount) {
 		this.readCount = readCount;
+	}
+	public String getWriteFormLink() {
+		return writeFormLink;
+	}
+	public void setWriteFormLink(String writeFormLink) {
+		this.writeFormLink = writeFormLink;
+	}
+	public String getUpdateFormLink() {
+		return updateFormLink;
+	}
+	public void setUpdateFormLink(String updateFormLink) {
+		this.updateFormLink = updateFormLink;
+	}
+	public String getReplyFormLink() {
+		return replyFormLink;
+	}
+	public void setReplyFormLink(String replyFormLink) {
+		this.replyFormLink = replyFormLink;
+	}
+	public String getDeleteLink() {
+		return deleteLink;
+	}
+	public void setDeleteLink(String deleteLink) {
+		this.deleteLink = deleteLink;
+	}
+	public String getCommentLink() {
+		return commentLink;
+	}
+	public void setCommentLink(String commentLink) {
+		this.commentLink = commentLink;
 	}
 	
 }

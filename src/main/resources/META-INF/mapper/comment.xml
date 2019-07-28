@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Comment">
+	<insert id="insertComment" parameterType="com.kkk26kkk.bbs.model.Comment">
+		INSERT INTO tb_comment
+		VALUES (tb_comment_seq.nextval, #{articleId}, #{userId}, #{userName},
+				#{contents}, #{parentId}, sysdate)
+	</insert>
+	
+	<select id="getCommentList" parameterType="int" resultType="com.kkk26kkk.bbs.model.Comment">
+		SELECT *
+		FROM tb_comment
+		WHERE article_id = #{articleId}
+	</select>
+</mapper>

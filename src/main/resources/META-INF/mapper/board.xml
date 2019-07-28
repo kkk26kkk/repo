@@ -3,72 +3,26 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="Board">
-	<select id="getBoardList" resultType="com.kkk26kkk.bbs.model.BoardVO">
-<!-- 		SELECT * -->
-<!-- 		FROM tb_board -->
+	<select id="getArticleList" parameterType="com.kkk26kkk.common.model.Page" resultType="com.kkk26kkk.bbs.model.Article">
 		<![CDATA[
 		SELECT *
 		FROM
-		(SELECT rownum rnum, idx, user_id, user_name,
-				title, contents, group_no, group_order,
-				group_layer, read_count, reg_dtm
-			FROM
 			(
-				SELECT *
-			 	FROM tb_board
-			-- 	where 1=1
-			 START WITH parent_id IS NULL --루트노드를 지정,
-			CONNECT BY PRIOR article_id = parent_id;
-			 	ORDER BY group_no DESC, group_layer ASC
-			 )
-		 )
-		WHERE rnum >= ((#{page}-1) * 10 + 1)
-  	  	AND rnum <= (#{page} * 10)
-  	  	]]>
+				SELECT /*+ INDEX_DESC(A SYS_C007000) */
+		        rownum rnum, A.*
+				FROM tb_article A
+				WHERE 1=1
+				START WITH parent_id = 0 
+				CONNECT BY PRIOR article_id = parent_id
+				ORDER SIBLINGS BY article_id DESC
+			)
+		WHERE rnum >= #{startNum}
+		AND rnum <= #{endNum}
+		]]>
 	</select>
 	
-	<select id="getBoardListCount" resultType="int">
-		SELECT COUNT(idx)
-		FROM tb_board
-	</select>
-	
-	<select id="getBoard" parameterType="int" resultType="com.kkk26kkk.bbs.model.BoardVO">
-		SELECT *
-		FROM tb_board
-		WHERE idx = #{idx}
-	</select>
-
-	<insert id="insertBoard" parameterType="com.kkk26kkk.bbs.model.BoardVO">
-		INSERT INTO tb_board
-		VALUES (tb_board_seq.nextval, #{userId}, #{userName}, #{title},
-				#{pw}, #{contents}, tb_board_seq.nextval, 0, 0, 0, sysdate)
-	</insert>
-	
-	<delete id="deleteBoard" parameterType="int">
-		DELETE FROM tb_board
-		WHERE idx = #{idx}
-	</delete>
-	
-	<select id="getBoardPw" parameterType="int" resultType="String">
-		SELECT pw
-		FROM tb_board
-		WHERE idx = #{idx}
-	</select>
-	
-	<update id="updateBoard" parameterType="com.kkk26kkk.bbs.model.BoardVO">
-		UPDATE tb_board
-		SET	
-			title = #{title},
-			contents = #{contents},
-			reg_dtm = sysdate
-		WHERE idx = #{idx}
-	</update>
-	
-	<insert id="replyBoard" parameterType="com.kkk26kkk.bbs.model.BoardVO">
-		INSERT INTO tb_board
-		VALUES 
-			(tb_board_seq.nextval, #{userId}, #{userName}, #{title},
-			 #{pw}, #{contents}, #{groupNo}, #{groupOrder}, #{groupLayer}, 
-			 0, sysdate)
-	</insert>
+	<select id="getArticleCount" resultType="int">
+		SELECT COUNT(article_id)
+		FROM tb_article
+	</select>	
 </mapper>
