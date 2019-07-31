@@ -1,5 +1,6 @@
 package com.kkk26kkk.bbs.controller;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kkk26kkk.bbs.model.Article;
+import com.kkk26kkk.bbs.model.ArticleDto;
 import com.kkk26kkk.bbs.model.Comment;
 import com.kkk26kkk.bbs.model.CommentDto;
 import com.kkk26kkk.bbs.model.User;
@@ -43,20 +46,89 @@ public class ArticleController {
 		
 		model.addAttribute("article", article.showArticle());
 		
+		// TODO 모델에 담도록 수정하고, 뷰에서도 수정 - 이 버튼들은 상세보기 페이지에 연관있고, Article 객체와는 사실 관계 없다고 볼 수도 있음
+//		dto.setUpdateFormLink(Path.UpdateForm.getPath() + "?articleId=" + getArticleId());
+//		dto.setReplyFormLink(Path.ReplyForm.getPath() + "?articleId=" + getArticleId());
+//		dto.setDeleteLink(Path.Delete.getPath());
+//		dto.setCommentLink(Path.Comment.getPath());
+		
 		return "/board/show";
+	}
+	
+	// 글 작성 폼
+	// TODO 커스텀 인터페이스로 에스펙트 - @LoginRequire - user에서 isLogin 체크
+	@RequestMapping(value = {"/board/write", "/board/reply"})
+	String writeForm(HttpServletRequest request, Model model, @RequestParam(required = false) int articleId/*, User user*/) {
+		// TODO user 객체를 여기에서 판단하는 것이 아닌, 인터셉터에서 주입해주도록 (대상:전체)
+		String userId = request.getSession().getAttribute("userId").toString();
+		User user = userService.getUser(userId);
+		
+		ArticleDto articleDto = user.createArticle();
+		
+		if(Path.ReplyForm.comparePath(request.getRequestURI())) {
+			ArticleDto article = articleService.getArticleDto(articleId);
+			
+			articleDto.setArticleId(article.getArticleId());
+			articleDto.setTitle(article.getTitle());
+		}
+		
+		model.addAttribute("article", articleDto);
+//		articleDto = null;
+		model.addAttribute("path", Path.Article.getPath());
+		
+		return "/board/write";
 	}
 	
 	// 글 수정 폼
 	@RequestMapping(value = "/board/update")
 	String updateForm(@RequestParam int articleId, Model model) {
-		Article article = articleService.getArticle(articleId);
+		ArticleDto article = articleService.getArticleDto(articleId);
 		
-		model.addAttribute("article", new User().updateArticle(article));
+		model.addAttribute("article", article);
 		
 		return "/board/update";
 	}
 	
-	// 글 수정 처리
+	// 글 답변 폼
+//	@RequestMapping(value = "/board/reply")
+//	String replyForm(@RequestParam int articleId, Model model, HttpServletRequest request) {
+//		String userName = request.getSession().getAttribute("userName").toString();
+//		
+//		ArticleDto article = articleService.getArticleDto(articleId); // 컨텐츠 빼야함
+//		
+//		
+//		return "/board/reply";
+//	}
+	
+	// 글 등록 처리
+	@RequestMapping(value = "/board", method = RequestMethod.POST)
+	@ResponseBody
+	Map<String, Object> write(@RequestBody ArticleDto articleDto, HttpServletRequest request) {
+		// TODO user 객체를 여기에서 판단하는 것이 아닌, 인터셉터에서 주입해주도록 (대상:전체)
+		String userId = request.getSession().getAttribute("userId").toString();
+		User user = userService.getUser(userId);
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		
+		if(false == user.isUserId(articleDto.getUserId())) {
+			result.put("msg", "로그인 정보가 다릅니다.");
+            result.put("code", HttpStatus.FORBIDDEN);
+		}
+		
+		try {
+			articleService.insertArticle(articleDto, user);
+			result.put("code", HttpStatus.OK);
+			result.put("redirect", Path.ArticleList.getPath());
+		} catch(Exception e) {
+			result.put("msg", e.getMessage());
+            result.put("code", HttpStatus.INTERNAL_SERVER_ERROR);
+            e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	// 글 수정 처리 // TODO /{articleId} 붙여서 쓰도록 수정
 	@RequestMapping(value = "/board", method = RequestMethod.PUT)
 	@ResponseBody
 	Map<String, Object> update(@RequestBody Article article) {
@@ -75,51 +147,7 @@ public class ArticleController {
 		return result;
 	}
 	
-	// 글 작성 폼
-	@RequestMapping(value = "/board/write")
-	String writeForm(HttpServletRequest request, Model model) {
-		model.addAttribute("article", new User().writeArticle(userService.getUser(request.getSession().getAttribute("userId").toString())));
-		
-		return "/board/write";
-	}
-	
-	// 글 답변 폼
-	@RequestMapping(value = "/board/reply")
-	String replyForm(@RequestParam int articleId, Model model, HttpServletRequest request) {
-		String userName = request.getSession().getAttribute("userName").toString();
-		
-		Article article = articleService.getArticle(articleId);
-		article.setUserName(userName);
-		
-		model.addAttribute("article", new User().replyArticle(article));
-		
-		return "/board/reply";
-	}
-	
-	// 글 등록 처리
-	@RequestMapping(value = "/board", method = RequestMethod.POST)
-	@ResponseBody
-	Map<String, Object> write(@RequestBody Article article, HttpServletRequest request) {
-		String userId = request.getSession().getAttribute("userId").toString();
-		
-		Map<String, Object> result = new HashMap<String, Object>();
-		
-		article.setUserId(userId);
-		
-		try {
-			articleService.insertArticle(article);
-			result.put("code", HttpStatus.OK);
-			result.put("redirect", Path.ArticleList.getPath());
-		} catch(Exception e) {
-			result.put("msg", "해당 글이 존재하지 않습니다.");
-            result.put("code", HttpStatus.NOT_FOUND);
-            e.printStackTrace();
-		}
-		
-		return result;
-	}
-	
-	// 글 삭제 처리
+	// 글 삭제 처리 // TODO /{articleId} 붙여서 쓰도록 수정
 	@RequestMapping(value = "/board", method = RequestMethod.DELETE)
 	@ResponseBody
 	Map<String, Object> remove(@RequestBody Article article) {
@@ -163,17 +191,13 @@ public class ArticleController {
 	
 	// 댓글 리스트
 	@RequestMapping(value = "/comment", method = RequestMethod.GET)
-	@ResponseBody
-	Map<String, Object> getCommentList(@RequestParam int articleId, HttpServletRequest request) {
-		List<Comment> commentList = commentService.getCommentList(articleId);
+	@ResponseBody List<CommentDto> getCommentList(@RequestParam int articleId, HttpServletRequest request) {
+		List<Comment> list = commentService.getCommentList(articleId);
 		
-		List<CommentDto> articleComments = commentList.stream()
+		List<CommentDto> commentList = list.stream()
 				.map(Comment::showComment)
 				.collect(Collectors.toList());
 		
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("articleComments", articleComments);
-		
-		return result;
+		return commentList;
 	}
 }

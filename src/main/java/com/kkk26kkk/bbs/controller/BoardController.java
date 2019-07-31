@@ -44,6 +44,7 @@ public class BoardController {
 	    Page p = new Page();
 	    p.setStartNum((page - 1) * 10 + 1);
 	    p.setEndNum(page * 10);
+	    p.setPageSize(pageSize);
 		
 		List<Article> articleList = boardService.getArticleList(p);
 //		int length = 0;

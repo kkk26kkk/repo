@@ -3,17 +3,31 @@ package com.kkk26kkk.bbs.model;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.apache.commons.lang3.StringUtils;
 
 import com.kkk26kkk.common.model.Path;
 
 public class User extends UserVo {
 	
-	public String getHashPw() {
-		return this.hash(super.getUserPw());
+//	private boolean login = false;
+	
+	public boolean isUserId(String userId) {
+		if(StringUtils.equals(userId, this.getUserId())) {
+			return true;
+		}
+		
+		return false;
 	}
 	
-    public String hash(String str) {
+	public boolean isLogin() {
+		return StringUtils.isNotEmpty(super.getUserId());
+	}
+	
+	public String getHashPw() {
+		return User.hash(super.getUserPw());
+	}
+	
+    public static String hash(String str) {
         String salt = "juhyung park @@@ 162 psy War !@";
         StringBuilder sb = new StringBuilder();
 
@@ -33,30 +47,12 @@ public class User extends UserVo {
         return sb.toString();
     }
     
-    public ArticleDto writeArticle(User user) {
+    public ArticleDto createArticle() {
     	ArticleDto dto = new ArticleDto();
-    	dto.setUserName(user.getUserName());
-    	dto.setLink(Path.Write.getPath());
+    	dto.setUserId(this.getUserId());
+    	dto.setUserName(this.getUserName());
+//    	dto.setLink(Path.Write.getPath());
     	
-    	return dto;
-    }
-    
-    public ArticleDto updateArticle(Article article) {
-    	ArticleDto dto = new ArticleDto();
-    	dto.setArticleId(article.getArticleId());
-    	dto.setUserName(article.getUserName());
-    	dto.setTitle(article.getTitle());
-    	dto.setContents(article.getContents());
-    	dto.setLink(Path.Update.getPath());
-    	return dto;
-    }
-    
-    public ArticleDto replyArticle(Article article) {
-    	ArticleDto dto = new ArticleDto();
-    	dto.setArticleId(article.getArticleId());
-    	dto.setUserName(article.getUserName());
-    	dto.setTitle(article.getTitle());
-    	dto.setLink(Path.Reply.getPath());
     	return dto;
     }
     

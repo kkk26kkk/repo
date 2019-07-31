@@ -16,8 +16,8 @@ public class ArticleDao {
 		return sqlSession.selectOne("getArticle", articleId);
 	}
 	
-	public void insertArticle(ArticleVo articleVo) {
-		sqlSession.insert("insertArticle", articleVo);
+	public int insertArticle(ArticleVo articleVo) {
+		return sqlSession.insert("insertArticle", articleVo);
 	}
 
 	public void updateArticle(Article article) {

@@ -20,7 +20,7 @@ $(function(){
 		data.userPw = $('#userPw').val();
 		
 		$.ajax({
-			url : 'login_ok',
+			url : '/login_ok',
 			method : 'POST',
 			contentType : 'application/json;charset=utf-8',
 			dataType : 'json',

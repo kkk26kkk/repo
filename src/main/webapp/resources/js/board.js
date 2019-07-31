@@ -1,20 +1,3 @@
-function writeArticle(link) {
-	var data = {};
-	data.userName = $('#userName').html();
-	data.title = $('#title').val();
-	data.contents = $('#contents').val();
-	
-	$.ajax({
-		url : link,
-		method : 'POST',
-		contentType : 'application/json;charset=utf-8',
-		dataType : 'json',
-		data : JSON.stringify(data)
-	}).done(function(result){
-		$(location).attr('href', result.redirect);
-	});
-}
-
 function updateArticle(link, articleId) {
 	var data = {};
 	data.articleId = articleId;
@@ -24,24 +7,6 @@ function updateArticle(link, articleId) {
 	$.ajax({
 		url : link,
 		method : 'PUT',
-		contentType : 'application/json;charset=utf-8',
-		dataType : 'json',
-		data : JSON.stringify(data)
-	}).done(function(result){
-		$(location).attr('href', result.redirect);
-	});
-}
-
-function replyArticle(link, articleId) {
-	var data = {};
-	data.userName = $('#userName').html();
-	data.title = $('#title').val();
-	data.contents = $('#contents').val();
-	data.parentId = articleId; 
-		
-	$.ajax({
-		url : link,
-		method : 'POST',
 		contentType : 'application/json;charset=utf-8',
 		dataType : 'json',
 		data : JSON.stringify(data)

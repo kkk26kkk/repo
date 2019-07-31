@@ -22,7 +22,7 @@
 	</select>
 	
 	<select id="getArticleCount" resultType="int">
-		SELECT COUNT(article_id)
+		SELECT COUNT(1)
 		FROM tb_article
 	</select>	
 </mapper>

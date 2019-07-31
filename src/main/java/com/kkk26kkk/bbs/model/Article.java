@@ -19,10 +19,6 @@ public class Article extends ArticleVo {
 		dto.setArticleId(getArticleId());
 		dto.setUserId(getUserId());
 		dto.setRegDtm(fdf.format(getRegDtm()));
-		dto.setUpdateFormLink(Path.UpdateForm.getPath() + "?articleId=" + getArticleId());
-		dto.setReplyFormLink(Path.ReplyForm.getPath() + "?articleId=" + getArticleId());
-		dto.setDeleteLink(Path.Delete.getPath());
-		dto.setCommentLink(Path.Comment.getPath());
 		return dto;
 	}
 }

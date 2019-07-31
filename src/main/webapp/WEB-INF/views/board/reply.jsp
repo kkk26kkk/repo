@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%-- <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -17,23 +17,23 @@
 	<div id="tb-wrap">
 		<table class="table table-striped">
 			<tr>
-				<th>제목</th>
-				<td><input type="text" id="title" value="RE:${article.title }"/></td>
-			</tr>
-			<tr>
 				<th>작성자</th>
 				<td><span id="userName">${article.userName }</span></td>
+			</tr>
+			<tr>
+				<th>제목</th>
+				<td><input type="text" id="title" value=""/></td>
 			</tr>
 			<tr>
 				<th>내용</th>
 				<td><textarea rows="8" cols="50" id="contents"></textarea></td>
 			</tr>
 			<tr>
-				<td><button type="button" onclick="replyArticle('${article.link }', ${article.articleId })">답변</button></td>
+				<td><button type="button" onclick="replyArticle('${article.link }', ${article.articleId})">답변</button></td>
 				<td>--</td>
 			</tr>
 		</table>
 	</div>
 </div>
 </body>
-</html>
+</html> --%>

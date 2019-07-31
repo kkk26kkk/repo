@@ -2,6 +2,7 @@ package com.kkk26kkk.bbs.model;
 
 public class ArticleDto {
 	private int articleId;
+	private int parentId;
 	private String userId;
 	private String userName;
 	private String title;
@@ -15,7 +16,7 @@ public class ArticleDto {
 	private String deleteLink;
 	private String commentLink;
 
-	ArticleDto() {}
+	public ArticleDto() {}
 	
 	ArticleDto(String userName, String title, String contents, String readCount) {
 		this.userName = userName;
@@ -59,6 +60,12 @@ public class ArticleDto {
 	}
 	public void setContents(String contents) {
 		this.contents = contents;
+	}
+	public int getParentId() {
+		return parentId;
+	}
+	public void setParentId(int parentId) {
+		this.parentId = parentId;
 	}
 	public String getRegDtm() {
 		return regDtm;

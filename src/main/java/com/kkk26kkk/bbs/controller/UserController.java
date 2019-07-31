@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kkk26kkk.bbs.model.User;
-import com.kkk26kkk.bbs.model.UserVo;
+import com.kkk26kkk.bbs.model.UserDto;
 import com.kkk26kkk.bbs.service.UserService;
 
 @Controller
@@ -36,7 +36,7 @@ public class UserController {
 	
 	@RequestMapping(value = "/login_ok", method = RequestMethod.POST, headers = "Content-Type=application/json")
 	@ResponseBody
-	Map<String, Object> loginOk(@RequestBody User loginUser, HttpServletRequest request) {
+	Map<String, Object> loginOk(@RequestBody UserDto loginUser, HttpServletRequest request) {
 		Map<String, Object> result = new HashMap<>();
 		
 		User getUser = userService.getUser(loginUser.getUserId());
