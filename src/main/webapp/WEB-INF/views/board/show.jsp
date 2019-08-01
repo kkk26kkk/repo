@@ -35,16 +35,16 @@
 				<th>내용</th>
 				<td><span id="contents">${article.contents }</span></td>
 			</tr>
-			<c:if test="${sessionScope.userId != null }">
-				<c:if test="${sessionScope.userId == article.userId }">
+			<c:if test="${sessionScope.user.userId != null }">
+				<c:if test="${sessionScope.user.userId == article.userId }">
 					<tr>
-						<td><button id="update-btn" onclick="location='${article.updateFormLink }'">수정</button></td> <!-- full link로 -->
-						<td><button id="delete-btn" onclick="deleteArticle('${article.deleteLink}', ${article.articleId })">삭제</button></td>
+						<td><button id="update-btn" onclick="location='${updateFormLink }'">수정</button></td> <!-- full link로 -->
+						<td><button id="delete-btn" onclick="deleteArticle('${deleteLink}', '${article.articleId }')">삭제</button></td>
 					</tr>
 				</c:if>
-				<c:if test="${sessionScope.userId != article.userId }">
+				<c:if test="${sessionScope.user.userId != article.userId }">
 					<tr>
-						<td><button type="button" onclick="location='${article.replyFormLink}'">답변</button></td>
+						<td><button type="button" onclick="location='${replyFormLink}'">답변</button></td>
 						<td>--</td>
 					</tr>
 				</c:if>

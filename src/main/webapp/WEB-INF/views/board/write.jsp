@@ -23,7 +23,7 @@
 			</tr>
 			<tr>
 				<th>제목</th>
-				<td><input type="text" id="title" data-parent-id="${article.articleId}" />${article.title }</td>
+				<td><input type="text" id="title" data-parent-id="${article.articleId}" value="${article.title }" /></td>
 			</tr>
 			<tr>
 				<th>내용</th>

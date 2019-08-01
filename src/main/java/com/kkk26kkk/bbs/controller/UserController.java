@@ -36,15 +36,16 @@ public class UserController {
 	
 	@RequestMapping(value = "/login_ok", method = RequestMethod.POST, headers = "Content-Type=application/json")
 	@ResponseBody
-	Map<String, Object> loginOk(@RequestBody UserDto loginUser, HttpServletRequest request) {
+	Map<String, Object> loginOk(@RequestBody UserDto userDto, HttpServletRequest request) {
 		Map<String, Object> result = new HashMap<>();
 		
-		User getUser = userService.getUser(loginUser.getUserId());
+		User user = userService.getUser(userDto.getUserId());
 		
 		try {
-			if(loginUser.getUserPw().equals(getUser.getUserPw())) { // user.getHashPw() 로 변경
-				request.getSession().setAttribute("userId", getUser.getUserId());
-				request.getSession().setAttribute("userName", getUser.getUserName());
+			if(userDto.getUserPw().equals(user.getUserPw())) { // user.getHashPw() 로 변경
+//				request.getSession().setAttribute("userId", user.getUserId());
+//				request.getSession().setAttribute("userName", user.getUserName());
+				request.getSession().setAttribute("user", user);
 				result.put("code", HttpStatus.OK);
 				result.put("redirect", request.getContextPath() + "/board/list");
 			} else {

@@ -14,13 +14,14 @@
 <body>
 <div id="wrap">
 	<div id="tb-wrap">
+		<h3>게시판</h3>
 		<div>
-			<c:if test="${sessionScope.userId == null }">
-				<a href="${contextPath }/login">로그인</a>
+			<c:if test="${sessionScope.user.userId == null }">
+				<a href="/login">로그인</a>
 			</c:if>
 			
-			<c:if test="${sessionScope.userId != null }">
-					<span>아이디 : ${sessionScope.userId } 이름 : ${sessionScope.userName }</span>
+			<c:if test="${sessionScope.user.userId != null }">
+					<span>아이디 : ${sessionScope.user.userId } 이름 : ${sessionScope.user.userName }</span>
 					<a href="${writeFormLink }">글쓰기</a>
 					<a href="/logout">로그아웃</a>
 			</c:if>

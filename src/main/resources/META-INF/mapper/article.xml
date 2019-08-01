@@ -9,18 +9,18 @@
 		WHERE article_id = #{articleId}
 	</select>
 
-	<insert id="insertArticle" parameterType="com.kkk26kkk.bbs.model.ArticleVo"> <!-- Article? ArticleVo? -->
+	<insert id="insertArticle" parameterType="com.kkk26kkk.bbs.model.ArticleVo">
 		INSERT INTO tb_article
 		VALUES (tb_article_seq.nextval, #{boardId}, #{userId}, #{userName}, #{title},
 				#{contents}, #{parentId}, 0, sysdate)
 	</insert>
 	
-	<update id="updateArticle" parameterType="com.kkk26kkk.bbs.model.Article">
+	<update id="updateArticle" parameterType="com.kkk26kkk.bbs.model.ArticleVo">
 		UPDATE tb_article
 		SET 
 			title = #{title},
 			contents = #{contents}
-			-- reg_date ?
+			-- reg_date ? 날짜를 수정해도 글 목록의 순서는 그대로??
 		WHERE article_id = #{articleId}
 	</update>
 	

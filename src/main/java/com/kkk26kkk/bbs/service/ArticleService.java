@@ -46,11 +46,22 @@ public class ArticleService {
 		}
 	}
 	
-	public void updateArticle(Article article) {
-		articleDao.updateArticle(article);
+	public void updateArticle(int articleId, ArticleDto articleDto) throws SQLException {
+		ArticleVo articleVo = new ArticleVo();
+		articleVo.setArticleId(articleId);
+		articleVo.setTitle(articleDto.getTitle());
+		articleVo.setContents(articleDto.getContents());
+		
+		int resultCnt = articleDao.updateArticle(articleVo);
+		if(1 != resultCnt) {
+			throw new SQLException("게시글 수정을 실패 했습니다.");
+		}
 	}
 
-	public void deleteArticle(int articleId) {
-		articleDao.deleteArticle(articleId);
+	public void deleteArticle(int articleId) throws SQLException {
+		int resultCnt = articleDao.deleteArticle(articleId);
+		if(1 != resultCnt) {
+			throw new SQLException("게시글 삭제를 실패했습니다.");
+		}
 	}
 }

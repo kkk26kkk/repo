@@ -20,12 +20,12 @@ public class ArticleDao {
 		return sqlSession.insert("insertArticle", articleVo);
 	}
 
-	public void updateArticle(Article article) {
-		sqlSession.update("updateArticle", article);
+	public int updateArticle(ArticleVo articleVo) {
+		return sqlSession.update("updateArticle", articleVo);
 	}
 
-	public void deleteArticle(int articleId) {
-		sqlSession.delete("deleteArticle", articleId);
+	public int deleteArticle(int articleId) {
+		return sqlSession.delete("deleteArticle", articleId);
 	}
 	
 }

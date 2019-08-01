@@ -51,26 +51,32 @@ public class ArticleController {
 //		dto.setReplyFormLink(Path.ReplyForm.getPath() + "?articleId=" + getArticleId());
 //		dto.setDeleteLink(Path.Delete.getPath());
 //		dto.setCommentLink(Path.Comment.getPath());
+		model.addAttribute("updateFormLink", Path.UpdateForm.getPath() + "?articleId=" + articleId);
+		model.addAttribute("replyFormLink", Path.ReplyForm.getPath() + "?articleId=" + articleId);
+		model.addAttribute("deleteLink", Path.Delete.getPath() + "/" + articleId);
+		model.addAttribute("commentLink", Path.Comment.getPath());
 		
 		return "/board/show";
 	}
 	
 	// 글 작성 폼
 	// TODO 커스텀 인터페이스로 에스펙트 - @LoginRequire - user에서 isLogin 체크
-	@RequestMapping(value = {"/board/write", "/board/reply"})
-	String writeForm(HttpServletRequest request, Model model, @RequestParam(required = false) int articleId/*, User user*/) {
+	@RequestMapping(value = {"/board/write", "/board/reply"}) // PathVariable
+	String writeForm(HttpServletRequest request, Model model, @RequestParam(required = false, defaultValue = "0") int articleId, User user) {
 		// TODO user 객체를 여기에서 판단하는 것이 아닌, 인터셉터에서 주입해주도록 (대상:전체)
-		String userId = request.getSession().getAttribute("userId").toString();
-		User user = userService.getUser(userId);
+//		String userId = request.getSession().getAttribute("userId").toString();
+//		User user = userService.getUser(userId);
 		
 		ArticleDto articleDto = user.createArticle();
+		System.out.println("userId" + user.getUserId());
 		
 		if(Path.ReplyForm.comparePath(request.getRequestURI())) {
 			ArticleDto article = articleService.getArticleDto(articleId);
 			
 			articleDto.setArticleId(article.getArticleId());
-			articleDto.setTitle(article.getTitle());
-		}
+//			articleDto.setUserName(user.getUserName()); // 이미 user.createArticle에서 지정한다..?
+			articleDto.setTitle("RE:" + article.getTitle());
+		} 
 		
 		model.addAttribute("article", articleDto);
 //		articleDto = null;
@@ -82,9 +88,9 @@ public class ArticleController {
 	// 글 수정 폼
 	@RequestMapping(value = "/board/update")
 	String updateForm(@RequestParam int articleId, Model model) {
-		ArticleDto article = articleService.getArticleDto(articleId);
+		ArticleDto articleDto = articleService.getArticleDto(articleId);
 		
-		model.addAttribute("article", article);
+		model.addAttribute("article", articleDto);
 		
 		return "/board/update";
 	}
@@ -103,10 +109,10 @@ public class ArticleController {
 	// 글 등록 처리
 	@RequestMapping(value = "/board", method = RequestMethod.POST)
 	@ResponseBody
-	Map<String, Object> write(@RequestBody ArticleDto articleDto, HttpServletRequest request) {
+	Map<String, Object> write(HttpServletRequest request, @RequestBody ArticleDto articleDto, User user) {
 		// TODO user 객체를 여기에서 판단하는 것이 아닌, 인터셉터에서 주입해주도록 (대상:전체)
-		String userId = request.getSession().getAttribute("userId").toString();
-		User user = userService.getUser(userId);
+//		String userId = request.getSession().getAttribute("userId").toString();
+//		User user = userService.getUser(userId);
 		
 		Map<String, Object> result = new HashMap<String, Object>();
 		
@@ -129,15 +135,15 @@ public class ArticleController {
 	}
 	
 	// 글 수정 처리 // TODO /{articleId} 붙여서 쓰도록 수정
-	@RequestMapping(value = "/board", method = RequestMethod.PUT)
+	@RequestMapping(value = "/board/{articleId}", method = RequestMethod.PUT)
 	@ResponseBody
-	Map<String, Object> update(@RequestBody Article article) {
+	Map<String, Object> update(@PathVariable int articleId, @RequestBody ArticleDto articleDto) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		try {
-			articleService.updateArticle(article);
+			articleService.updateArticle(articleId, articleDto);
 			result.put("code", HttpStatus.OK);
-			result.put("redirect", Path.Article.getPath() + "/" + article.getArticleId());
+			result.put("redirect", Path.Article.getPath() + "/" + articleId);
 		} catch(Exception e) {
 			result.put("msg", "해당 글이 존재하지 않습니다.");
             result.put("code", HttpStatus.NOT_FOUND);
@@ -148,13 +154,13 @@ public class ArticleController {
 	}
 	
 	// 글 삭제 처리 // TODO /{articleId} 붙여서 쓰도록 수정
-	@RequestMapping(value = "/board", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/board/{articleId}", method = RequestMethod.DELETE)
 	@ResponseBody
-	Map<String, Object> remove(@RequestBody Article article) {
+	Map<String, Object> remove(@PathVariable int articleId, @RequestBody Article article) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		try {
-			articleService.deleteArticle(article.getArticleId());
+			articleService.deleteArticle(articleId);
 			result.put("code", HttpStatus.OK);
 			result.put("redirect", Path.ArticleList.getPath());
 		} catch(Exception e) {

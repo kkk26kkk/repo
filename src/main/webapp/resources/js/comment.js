@@ -14,7 +14,8 @@ com.kkk26kkk.bbs.comments = (function() {
 				articleId : $('#a_id').val()
 			}
 		}).done(function(result){
-			var commentList = JSON.parse(result);
+//			var commentList = JSON.parse(result);
+			var commentList = result;
 			
 			var comments = commentList
 			.map(function(comment) {
@@ -28,7 +29,7 @@ com.kkk26kkk.bbs.comments = (function() {
 			})
 			.join('')
 			
-			var html = $.parseHTML(comments).filter("tr");
+			var html = $($.parseHTML(comments)).filter("tr");
 			
 			$('#tb-comment > tbody').append(html);
 		});
