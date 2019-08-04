@@ -1,6 +1,5 @@
 package com.kkk26kkk.bbs.controller;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +7,6 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -27,15 +25,12 @@ import com.kkk26kkk.bbs.model.CommentDto;
 import com.kkk26kkk.bbs.model.User;
 import com.kkk26kkk.bbs.service.ArticleService;
 import com.kkk26kkk.bbs.service.CommentService;
-import com.kkk26kkk.bbs.service.UserService;
 import com.kkk26kkk.common.model.Path;
 
 @Controller
 public class ArticleController {
 	@Autowired
 	private ArticleService articleService;
-	@Autowired
-	private UserService userService;
 	@Autowired
 	private CommentService commentService;
 	
@@ -47,10 +42,6 @@ public class ArticleController {
 		model.addAttribute("article", article.showArticle());
 		
 		// TODO 모델에 담도록 수정하고, 뷰에서도 수정 - 이 버튼들은 상세보기 페이지에 연관있고, Article 객체와는 사실 관계 없다고 볼 수도 있음
-//		dto.setUpdateFormLink(Path.UpdateForm.getPath() + "?articleId=" + getArticleId());
-//		dto.setReplyFormLink(Path.ReplyForm.getPath() + "?articleId=" + getArticleId());
-//		dto.setDeleteLink(Path.Delete.getPath());
-//		dto.setCommentLink(Path.Comment.getPath());
 		model.addAttribute("updateFormLink", Path.UpdateForm.getPath() + "?articleId=" + articleId);
 		model.addAttribute("replyFormLink", Path.ReplyForm.getPath() + "?articleId=" + articleId);
 		model.addAttribute("deleteLink", Path.Delete.getPath() + "/" + articleId);
@@ -64,8 +55,6 @@ public class ArticleController {
 	@RequestMapping(value = {"/board/write", "/board/reply"}) // PathVariable
 	String writeForm(HttpServletRequest request, Model model, @RequestParam(required = false, defaultValue = "0") int articleId, User user) {
 		// TODO user 객체를 여기에서 판단하는 것이 아닌, 인터셉터에서 주입해주도록 (대상:전체)
-//		String userId = request.getSession().getAttribute("userId").toString();
-//		User user = userService.getUser(userId);
 		
 		ArticleDto articleDto = user.createArticle();
 		System.out.println("userId" + user.getUserId());
@@ -74,7 +63,6 @@ public class ArticleController {
 			ArticleDto article = articleService.getArticleDto(articleId);
 			
 			articleDto.setArticleId(article.getArticleId());
-//			articleDto.setUserName(user.getUserName()); // 이미 user.createArticle에서 지정한다..?
 			articleDto.setTitle("RE:" + article.getTitle());
 		} 
 		
@@ -95,24 +83,11 @@ public class ArticleController {
 		return "/board/update";
 	}
 	
-	// 글 답변 폼
-//	@RequestMapping(value = "/board/reply")
-//	String replyForm(@RequestParam int articleId, Model model, HttpServletRequest request) {
-//		String userName = request.getSession().getAttribute("userName").toString();
-//		
-//		ArticleDto article = articleService.getArticleDto(articleId); // 컨텐츠 빼야함
-//		
-//		
-//		return "/board/reply";
-//	}
-	
 	// 글 등록 처리
 	@RequestMapping(value = "/board", method = RequestMethod.POST)
 	@ResponseBody
 	Map<String, Object> write(HttpServletRequest request, @RequestBody ArticleDto articleDto, User user) {
 		// TODO user 객체를 여기에서 판단하는 것이 아닌, 인터셉터에서 주입해주도록 (대상:전체)
-//		String userId = request.getSession().getAttribute("userId").toString();
-//		User user = userService.getUser(userId);
 		
 		Map<String, Object> result = new HashMap<String, Object>();
 		

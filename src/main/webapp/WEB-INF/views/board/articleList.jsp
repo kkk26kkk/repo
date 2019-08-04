@@ -69,10 +69,10 @@
 	          </c:if>
 	        </c:forEach>
 	        
-	        <c:if test="${page>=maxPage }">
+	        <c:if test="${page>=totalPage }">
 	          [다음]
 	        </c:if>
-	        <c:if test="${page<maxPage }">
+	        <c:if test="${page<totalPage }">
 	          <a href="/board/list?page=${page+1 }">[다음]</a>
 	        </c:if>
 		</div>
