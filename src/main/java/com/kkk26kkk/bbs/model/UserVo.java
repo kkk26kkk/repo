@@ -4,6 +4,7 @@ public class UserVo {
 	private String userId;
 	private String userPw;
 	private String userName;
+	private String userGrade;
 	
 	public String getUserId() {
 		return userId;
@@ -22,6 +23,12 @@ public class UserVo {
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+	public String getUserGrade() {
+		return userGrade;
+	}
+	public void setUserGrade(String userGrade) {
+		this.userGrade = userGrade;
 	}
 
 }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.kkk26kkk.bbs.model.User;
 
 @Repository
-public class UserDAO {
+public class UserDao {
 	@Autowired
 	private SqlSessionTemplate sqlSession; 
 

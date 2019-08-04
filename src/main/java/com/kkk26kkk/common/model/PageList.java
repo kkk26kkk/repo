@@ -11,10 +11,12 @@ public class PageList<E> {
 	
 	public PageList() {}
 	
-	public PageList(List<E> list, int page, int pageSize) {
+	public PageList(List<E> list, int page, int pageSize, int totalCount, boolean hasNext) {
 		this.list = list;
 		this.page = page;
 		this.pageSize = pageSize;
+		this.totalCount = totalCount;
+		this.hasNext = hasNext;
 	}
 	
 	public List<E> getList() {
@@ -29,17 +31,10 @@ public class PageList<E> {
 	public int getTotalCount() { // 리스트 수
 		return totalCount;
 	}
-	public void setTotalCount(int totalCount) {
-		this.totalCount = totalCount;
-	}
 	public int getTotalPage() { // 페이지 수
-//		return totalPage;
 		return (this.totalCount + this.pageSize - 1) / this.pageSize;
 	}
-	public boolean isHasNext() {
+	public boolean hasNext() {
 		return hasNext;
-	}
-	public void setHasNext(boolean hasNext) {
-		this.hasNext = hasNext;
 	}
 }

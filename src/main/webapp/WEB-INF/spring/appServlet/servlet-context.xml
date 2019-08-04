@@ -34,7 +34,7 @@
       class="org.springframework.http.converter.json.GsonHttpMessageConverter">
     </beans:bean>
     
-    <beans:bean id="authenticationInterceptor" class="com.kkk26kkk.interceptor.AuthenticationInterceptor"></beans:bean>
+    <beans:bean id="authenticationInterceptor" class="com.kkk26kkk.common.interceptor.AuthenticationInterceptor"></beans:bean>
     
     <!-- Interceptor -->
     <interceptors>
@@ -48,7 +48,7 @@
     
     <annotation-driven>
         <argument-resolvers>
-            <beans:bean class="com.kkk26kkk.resolver.AuthenticationArgumentResolver"></beans:bean>
+            <beans:bean class="com.kkk26kkk.common.resolver.AuthenticationArgumentResolver"></beans:bean>
         </argument-resolvers>
     </annotation-driven>
 		

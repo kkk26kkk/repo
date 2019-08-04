@@ -1,4 +1,4 @@
-package com.kkk26kkk.interceptor;
+package com.kkk26kkk.common.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

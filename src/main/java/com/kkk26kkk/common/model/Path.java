@@ -6,11 +6,7 @@ public enum Path {
 	WriteForm("/board/write"),
 	UpdateForm("/board/update"),
 	ReplyForm("/board/reply"),
-//	Write("/board"),
-	Update("/board"),
 	Article("/board"),
-	Delete("/board"),
-	Reply("/board"),
 	ArticleList("/board/list"),
 	Comment("/comment");
 	
@@ -24,7 +20,7 @@ public enum Path {
 		return path;
 	}
 	
-	public boolean comparePath(String realPath) {
+	public boolean compare(String realPath) {
 		if(StringUtils.equals(path, realPath)) {
 			return true;
 		}

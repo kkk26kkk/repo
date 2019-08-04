@@ -1,7 +1,8 @@
-package com.kkk26kkk.resolver;
+package com.kkk26kkk.common.resolver;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -24,6 +25,13 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
 		HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 		
 		User user = (User) request.getSession().getAttribute("user");
+		
+		if(null == user) {
+			user = new User();
+			user.setUserId(StringUtils.EMPTY);
+			user.setUserPw(StringUtils.EMPTY);
+			user.setUserName("¼Õ´Ô");
+		}
 		
 		return user;
 	}

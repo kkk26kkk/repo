@@ -1,5 +1,6 @@
 package com.kkk26kkk.bbs.controller;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,12 +40,12 @@ public class ArticleController {
 	String show(@PathVariable int articleId, Model model) {
 		Article article = articleService.getArticle(articleId);
 		
-		model.addAttribute("article", article.showArticle());
+		model.addAttribute("article", article.showContent());
 		
 		// TODO 모델에 담도록 수정하고, 뷰에서도 수정 - 이 버튼들은 상세보기 페이지에 연관있고, Article 객체와는 사실 관계 없다고 볼 수도 있음
 		model.addAttribute("updateFormLink", Path.UpdateForm.getPath() + "?articleId=" + articleId);
 		model.addAttribute("replyFormLink", Path.ReplyForm.getPath() + "?articleId=" + articleId);
-		model.addAttribute("deleteLink", Path.Delete.getPath() + "/" + articleId);
+		model.addAttribute("deleteLink", Path.Article.getPath() + "/" + articleId);
 		model.addAttribute("commentLink", Path.Comment.getPath());
 		
 		return "/board/show";
@@ -59,7 +60,7 @@ public class ArticleController {
 		ArticleDto articleDto = user.createArticle();
 		System.out.println("userId" + user.getUserId());
 		
-		if(Path.ReplyForm.comparePath(request.getRequestURI())) {
+		if(Path.ReplyForm.compare(request.getRequestURI())) {
 			ArticleDto article = articleService.getArticleDto(articleId);
 			
 			articleDto.setArticleId(article.getArticleId());
@@ -91,7 +92,7 @@ public class ArticleController {
 		
 		Map<String, Object> result = new HashMap<String, Object>();
 		
-		if(false == user.isUserId(articleDto.getUserId())) {
+		if(!user.isUserId(articleDto.getUserId())) {
 			result.put("msg", "로그인 정보가 다릅니다.");
             result.put("code", HttpStatus.FORBIDDEN);
 		}
@@ -116,9 +117,14 @@ public class ArticleController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		try {
+			// TODO 자기글만 수정할 수 있도록 user 받아서 쓴다 - 뒤에 로직도 수정
 			articleService.updateArticle(articleId, articleDto);
 			result.put("code", HttpStatus.OK);
 			result.put("redirect", Path.Article.getPath() + "/" + articleId);
+		} catch(SQLException e) { // TODO 이런 식으로, 서비스에서 에러 던졌으면 잡아준다
+			result.put("msg", e.getMessage());
+            result.put("code", HttpStatus.INTERNAL_SERVER_ERROR);
+            e.printStackTrace();
 		} catch(Exception e) {
 			result.put("msg", "해당 글이 존재하지 않습니다.");
             result.put("code", HttpStatus.NOT_FOUND);

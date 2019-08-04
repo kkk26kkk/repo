@@ -10,13 +10,14 @@ public class ArticleDto {
 	private String readCount;
 	private String regDtm;
 	private String link;
-	private String writeFormLink;
-	private String updateFormLink;
-	private String replyFormLink;
-	private String deleteLink;
-	private String commentLink;
 
 	public ArticleDto() {}
+	
+	ArticleDto(String userName, String title, String readCount) {
+		this.userName = userName;
+		this.title = title;
+		this.readCount = readCount;
+	}
 	
 	ArticleDto(String userName, String title, String contents, String readCount) {
 		this.userName = userName;
@@ -78,36 +79,6 @@ public class ArticleDto {
 	}
 	public void setReadCount(String readCount) {
 		this.readCount = readCount;
-	}
-	public String getWriteFormLink() {
-		return writeFormLink;
-	}
-	public void setWriteFormLink(String writeFormLink) {
-		this.writeFormLink = writeFormLink;
-	}
-	public String getUpdateFormLink() {
-		return updateFormLink;
-	}
-	public void setUpdateFormLink(String updateFormLink) {
-		this.updateFormLink = updateFormLink;
-	}
-	public String getReplyFormLink() {
-		return replyFormLink;
-	}
-	public void setReplyFormLink(String replyFormLink) {
-		this.replyFormLink = replyFormLink;
-	}
-	public String getDeleteLink() {
-		return deleteLink;
-	}
-	public void setDeleteLink(String deleteLink) {
-		this.deleteLink = deleteLink;
-	}
-	public String getCommentLink() {
-		return commentLink;
-	}
-	public void setCommentLink(String commentLink) {
-		this.commentLink = commentLink;
 	}
 	
 }

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kkk26kkk.bbs.model.Article;
+import com.kkk26kkk.common.model.PageListParam;
 import com.kkk26kkk.common.model.PageList;
 
 @Repository
@@ -16,10 +17,8 @@ public class BoardDao extends BaseDao {
 	
 	// TODO List를 적재할 객체 만들고 -> list, page, pageSize, totalCount, totalPage, hasNext, totalPage(getter)
 	
-	public PageList<Article> getArticleList(int page, int pageSize) { /** totalPage **/
-		int totalCount = this.getArticleCount();
-		
-		return super.getArticleList("getArticleList", page, pageSize, totalCount);
+	public PageList<Article> getArticleList(PageListParam pageDto) { /** totalPage **/
+		return super.getPageListTotal("getArticleList", "getArticleCount", pageDto);
 	}
 	
 	public int getArticleCount() {
