@@ -1,5 +1,6 @@
 package com.kkk26kkk.bbs.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 
 public class Comment extends CommentVo {
@@ -15,4 +16,13 @@ public class Comment extends CommentVo {
 		
 		return dto;
 	}
+	
+	public boolean isCommentWriter(String userId) {
+		if(StringUtils.equals(this.getUserId(), userId)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 }

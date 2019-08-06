@@ -26,6 +26,8 @@ import com.kkk26kkk.bbs.model.CommentDto;
 import com.kkk26kkk.bbs.model.User;
 import com.kkk26kkk.bbs.service.ArticleService;
 import com.kkk26kkk.bbs.service.CommentService;
+import com.kkk26kkk.common.model.Code;
+import com.kkk26kkk.common.model.PageListParam;
 import com.kkk26kkk.common.model.Path;
 
 @Controller
@@ -35,6 +37,8 @@ public class ArticleController {
 	@Autowired
 	private CommentService commentService;
 	
+	private static final int pageSize = 10;
+	
 	// 글 상세보기
 	@RequestMapping(value = "/board/{articleId}", method = RequestMethod.GET)
 	String show(@PathVariable int articleId, Model model) {
@@ -42,7 +46,6 @@ public class ArticleController {
 		
 		model.addAttribute("article", article.showContent());
 		
-		// TODO 모델에 담도록 수정하고, 뷰에서도 수정 - 이 버튼들은 상세보기 페이지에 연관있고, Article 객체와는 사실 관계 없다고 볼 수도 있음
 		model.addAttribute("updateFormLink", Path.UpdateForm.getPath() + "?articleId=" + articleId);
 		model.addAttribute("replyFormLink", Path.ReplyForm.getPath() + "?articleId=" + articleId);
 		model.addAttribute("deleteLink", Path.Article.getPath() + "/" + articleId);
@@ -52,11 +55,9 @@ public class ArticleController {
 	}
 	
 	// 글 작성 폼
-	// TODO 커스텀 인터페이스로 에스펙트 - @LoginRequire - user에서 isLogin 체크
+	// 커스텀 인터페이스로 에스펙트 - @LoginRequire - user에서 isLogin 체크
 	@RequestMapping(value = {"/board/write", "/board/reply"}) // PathVariable
-	String writeForm(HttpServletRequest request, Model model, @RequestParam(required = false, defaultValue = "0") int articleId, User user) {
-		// TODO user 객체를 여기에서 판단하는 것이 아닌, 인터셉터에서 주입해주도록 (대상:전체)
-		
+	String writeForm(HttpServletRequest request, Model model, @RequestParam(defaultValue = "0") int articleId, User user) {
 		ArticleDto articleDto = user.createArticle();
 		System.out.println("userId" + user.getUserId());
 		
@@ -88,8 +89,6 @@ public class ArticleController {
 	@RequestMapping(value = "/board", method = RequestMethod.POST)
 	@ResponseBody
 	Map<String, Object> write(HttpServletRequest request, @RequestBody ArticleDto articleDto, User user) {
-		// TODO user 객체를 여기에서 판단하는 것이 아닌, 인터셉터에서 주입해주도록 (대상:전체)
-		
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		if(!user.isUserId(articleDto.getUserId())) {
@@ -113,7 +112,7 @@ public class ArticleController {
 	// 글 수정 처리 // TODO /{articleId} 붙여서 쓰도록 수정
 	@RequestMapping(value = "/board/{articleId}", method = RequestMethod.PUT)
 	@ResponseBody
-	Map<String, Object> update(@PathVariable int articleId, @RequestBody ArticleDto articleDto) {
+	Map<String, Object> update(@PathVariable int articleId, @RequestBody ArticleDto articleDto, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		try {
@@ -137,8 +136,10 @@ public class ArticleController {
 	// 글 삭제 처리 // TODO /{articleId} 붙여서 쓰도록 수정
 	@RequestMapping(value = "/board/{articleId}", method = RequestMethod.DELETE)
 	@ResponseBody
-	Map<String, Object> remove(@PathVariable int articleId, @RequestBody Article article) {
+	Map<String, Object> remove(@PathVariable int articleId, @RequestBody Article article, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
+		
+		// TODO 글 작성자만 수정할 수 있도록
 		
 		try {
 			articleService.deleteArticle(articleId);
@@ -178,8 +179,25 @@ public class ArticleController {
 	
 	// 댓글 리스트
 	@RequestMapping(value = "/comment", method = RequestMethod.GET)
-	@ResponseBody List<CommentDto> getCommentList(@RequestParam int articleId, HttpServletRequest request) {
+	@ResponseBody List<CommentDto> getCommentList(@RequestParam int articleId, @RequestParam(defaultValue = "1") int page, HttpServletRequest request, User user) {
+		// TODO 댓글 페이징 처리
+		// TODO service단에서 처리할 부분 이동
+		
+		PageListParam pageListParam = new PageListParam
+				.Builder(page, pageSize)
+				.useTotal(true)
+				.useMore(true)
+				.build();
+		
 		List<Comment> list = commentService.getCommentList(articleId);
+		list.stream()
+			.filter(comment -> /* !(comment.isCommentWriter(user.getUserId() 
+									|| article.isArticleWriter(user.getUserId())))
+									&& */ Code.COMMENT_SECRET_TYPE_PRIVATE.compare(comment.getCode()))
+			.forEach(comment -> comment.setContents("비밀 댓글입니다."));
+		list.stream()
+			.filter(comment -> /* TODO !"관리자".equals(user.getGrade()) && */ Code.COMMENT_SECRET_TYPE_REPORTED.compare(comment.getCode()))
+			.forEach(comment -> comment.setContents("신고 접수된 댓글입니다."));
 		
 		List<CommentDto> commentList = list.stream()
 				.map(Comment::showComment)

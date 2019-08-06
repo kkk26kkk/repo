@@ -1,6 +1,8 @@
 package com.kkk26kkk.bbs.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kkk26kkk.bbs.model.Article;
 import com.kkk26kkk.bbs.model.ArticleDto;
@@ -53,6 +56,7 @@ public class BoardController {
 		int totalCount = pageList.getTotalCount();
 		boolean hasNext = pageList.hasNext();
 		
+		// TODO service단에서
 		List<ArticleDto> boardContents = articleList.stream()
 				.map(Article::showHeader)
 //				.filter(v -> null == v.getContents())
@@ -71,4 +75,24 @@ public class BoardController {
 		return "/board/articleList";
 	}
 	
+	@RequestMapping(value = "/board/showMore", method = RequestMethod.GET)
+	@ResponseBody
+	Map<String, Object> showMore(@RequestParam int page) {
+		Map<String, Object> map = new HashMap<>();
+		
+		PageListParam pageListParam = new PageListParam
+				.Builder(page, pageSize)
+				.build();
+		
+		// TODO service단에서
+		List<Article> articleList = boardService.getArticleListMore(pageListParam);
+		List<ArticleDto> boardContents = articleList.stream()
+				.map(Article::showHeader)
+				.collect(Collectors.toList());
+		
+		map.put("boardContents", boardContents);
+		map.put("page", page);
+		
+		return map;
+	}
 }

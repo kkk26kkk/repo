@@ -1,5 +1,6 @@
 package com.kkk26kkk.bbs.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 
 import com.kkk26kkk.common.model.Path;
@@ -20,5 +21,13 @@ public class Article extends ArticleVo {
 		dto.setUserId(getUserId());
 		dto.setRegDtm(fdf.format(getRegDtm()));
 		return dto;
+	}
+	
+	public boolean isArticleWriter(String userId) {
+		if(StringUtils.equals(this.getUserId(), userId)) {
+			return true;
+		}
+		
+		return false;
 	}
 }
