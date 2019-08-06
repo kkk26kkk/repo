@@ -179,7 +179,7 @@ public class ArticleController {
 	
 	// 댓글 리스트
 	@RequestMapping(value = "/comment", method = RequestMethod.GET)
-	@ResponseBody List<CommentDto> getCommentList(@RequestParam int articleId, @RequestParam(defaultValue = "1") int page, HttpServletRequest request, User user) {
+	@ResponseBody List<CommentDto> getCommentList(@RequestParam int articleId, @RequestParam String articleUserId, @RequestParam(defaultValue = "1") int page, HttpServletRequest request, User user) {
 		// TODO 댓글 페이징 처리
 		// TODO service단에서 처리할 부분 이동
 		
@@ -191,12 +191,11 @@ public class ArticleController {
 		
 		List<Comment> list = commentService.getCommentList(articleId);
 		list.stream()
-			.filter(comment -> /* !(comment.isCommentWriter(user.getUserId() 
-									|| article.isArticleWriter(user.getUserId())))
-									&& */ Code.COMMENT_SECRET_TYPE_PRIVATE.compare(comment.getCode()))
+			.filter(comment ->  !( user.isUserId(comment.getUserId()) || user.isUserId(articleUserId) )
+									&&  Code.COMMENT_SECRET_TYPE_PRIVATE.compare(comment.getCode()))
 			.forEach(comment -> comment.setContents("비밀 댓글입니다."));
 		list.stream()
-			.filter(comment -> /* TODO !"관리자".equals(user.getGrade()) && */ Code.COMMENT_SECRET_TYPE_REPORTED.compare(comment.getCode()))
+			.filter(comment -> /* TODO !UserGrade.SUPER_USER.compare(user.getGrade()) && */ Code.COMMENT_SECRET_TYPE_REPORTED.compare(comment.getCode()))
 			.forEach(comment -> comment.setContents("신고 접수된 댓글입니다."));
 		
 		List<CommentDto> commentList = list.stream()

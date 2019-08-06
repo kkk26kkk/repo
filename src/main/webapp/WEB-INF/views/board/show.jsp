@@ -11,7 +11,6 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
 <link rel="stylesheet" href="/resources/css/board.css" />
-<script src="/resources/js/board.js"></script>
 <script src="/resources/js/comment.js"></script>
 </head>
 <body>
@@ -21,11 +20,11 @@
 		<table class="table table-striped">
 			<tr>
 				<th>제목</th>
-				<td><span id="title">${article.title }</span></td>
+				<td><span id="title" data-article-id="${article.articleId }">${article.title }</span></td>
 			</tr>
 			<tr>
 				<th>작성자</th>
-				<td>${article.userName }</td>
+				<td id="userName" data-user-id="${article.userId }">${article.userName }</td>
 			</tr>
 			<tr>
 				<th>작성일</th>
@@ -51,7 +50,6 @@
 			</c:if>
 		</table>
 		
-		<input type="hidden" id="a_id" value="${article.articleId }" />
 		<h3>댓글</h3>
 		<table id="tb-comment" class="table table-striped">
 			<tbody>

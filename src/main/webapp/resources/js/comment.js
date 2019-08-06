@@ -11,7 +11,8 @@ com.kkk26kkk.bbs.comments = (function() {
 			url : "/comment",
 			method : 'GET',
 			data : {
-				articleId : $('#a_id').val()
+				articleId : $("#title").attr("data-article-id"),
+				articleUserId : $("#userName").attr("data-user-id")
 			}
 		}).done(function(result){
 //			var commentList = JSON.parse(result);
