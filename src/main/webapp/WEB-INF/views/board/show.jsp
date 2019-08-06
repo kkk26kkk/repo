@@ -60,7 +60,7 @@
 		</table>
 		
 		<textarea id=c-contents rows="2" cols="120"></textarea>
-		<button type="button" onclick="writeComment('${article.commentLink}', '${article.articleId }')">댓글 등록</button>
+		<button type="button" onclick="writeComment('${commentLink}', '${article.articleId }')">댓글 등록</button>
 	</div>
 </div>
 

@@ -1,8 +1,6 @@
 package com.kkk26kkk.bbs.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,18 +47,6 @@ public class BoardController {
 		
 	    PageList<Article> pageList = boardService.getArticleList(pageListParam);
 	    pageListParam = null;
-	    
-	    Map<String, String> map = new HashMap<>();
-	    // 뭐 담아서 썼다가
-	    map = new HashMap<>();
-	    // 다시 뭐 담아서 썼다가
-	    
-	    // TODO
-	    Map<String, String> map2 = new HashMap<>();
-	    // 뭐 담아서 썼다가
-	    map2 = null; // 해당 객체에 들어있는 데이터를 안 쓰게 된 시점에 null 넣어준다
-	    map2 = new HashMap<>();
-	    // 다시 뭐 담아서 썼다가
 	    
 		List<Article> articleList = pageList.getList();
 		int totalPage = pageList.getTotalPage();
