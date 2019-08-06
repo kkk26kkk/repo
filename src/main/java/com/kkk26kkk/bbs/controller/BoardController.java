@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kkk26kkk.bbs.model.Article;
 import com.kkk26kkk.bbs.model.ArticleDto;
@@ -50,23 +51,12 @@ public class BoardController {
 	    PageList<Article> pageList = boardService.getArticleList(pageListParam);
 	    pageListParam = null;
 	    
-	    Map<String, String> map = new HashMap<>();
-	    // 뭐 담아서 썼다가
-	    map = new HashMap<>();
-	    // 다시 뭐 담아서 썼다가
-	    
-	    // TODO
-	    Map<String, String> map2 = new HashMap<>();
-	    // 뭐 담아서 썼다가
-	    map2 = null; // 해당 객체에 들어있는 데이터를 안 쓰게 된 시점에 null 넣어준다
-	    map2 = new HashMap<>();
-	    // 다시 뭐 담아서 썼다가
-	    
 		List<Article> articleList = pageList.getList();
 		int totalPage = pageList.getTotalPage();
 		int totalCount = pageList.getTotalCount();
 		boolean hasNext = pageList.hasNext();
 		
+		// TODO service단에서
 		List<ArticleDto> boardContents = articleList.stream()
 				.map(Article::showHeader)
 //				.filter(v -> null == v.getContents())
@@ -85,4 +75,24 @@ public class BoardController {
 		return "/board/articleList";
 	}
 	
+	@RequestMapping(value = "/board/showMore", method = RequestMethod.GET)
+	@ResponseBody
+	Map<String, Object> showMore(@RequestParam int page) {
+		Map<String, Object> map = new HashMap<>();
+		
+		PageListParam pageListParam = new PageListParam
+				.Builder(page, pageSize)
+				.build();
+		
+		// TODO service단에서
+		List<Article> articleList = boardService.getArticleListMore(pageListParam);
+		List<ArticleDto> boardContents = articleList.stream()
+				.map(Article::showHeader)
+				.collect(Collectors.toList());
+		
+		map.put("boardContents", boardContents);
+		map.put("page", page);
+		
+		return map;
+	}
 }

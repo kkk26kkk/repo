@@ -10,6 +10,7 @@ public class CommentVo {
 	private String contents;
 	private int parentId;
 	private Date regDtm;
+	private String code;
 	
 	public int getCommentId() {
 		return commentId;
@@ -52,6 +53,12 @@ public class CommentVo {
 	}
 	public void setRegDtm(Date regDtm) {
 		this.regDtm = regDtm;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
 	}
 	
 }

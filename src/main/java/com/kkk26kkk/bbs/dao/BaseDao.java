@@ -12,34 +12,35 @@ public class BaseDao {
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 	
-	public <E> PageList<E> getPageListMore(String statement, PageListParam pageDto) {
-		return getPageList(statement, null, pageDto);
+	public <E> PageList<E> getPageListMore(String statement, PageListParam pageListParam) {
+		return getPageList(statement, null, pageListParam);
 	}
 	
-	public <E> PageList<E> getPageListTotal(String statement, String statementTotalCount, PageListParam pageDto) {
-		return getPageList(statement, statementTotalCount, pageDto);
+	public <E> PageList<E> getPageListTotal(String statement, String statementTotalCount, PageListParam pageListParam) {
+		return getPageList(statement, statementTotalCount, pageListParam);
 	}
 	
-	private <E> PageList<E> getPageList(String statement, String statementTotalCount, PageListParam pageDto) {
+	private <E> PageList<E> getPageList(String statement, String statementTotalCount, PageListParam pageListParam) {
 		
-		List<E> list = sqlSession.selectList(statement, pageDto);
+		List<E> list = sqlSession.selectList(statement, pageListParam);
 		
 		int totalCount = 0;
 		boolean hasNext = false;
 		
 		if(null == list) {
-			return new PageList<E>(list, pageDto.getPage(), pageDto.getPageSize(), totalCount, hasNext);
+			return new PageList<E>(list, pageListParam.getPage(), pageListParam.getPageSize(), totalCount, hasNext);
 		}
 		
-		if(pageDto.useTotal() && null != statementTotalCount) {
+		if(pageListParam.useTotal() && null != statementTotalCount) {
+			
 			totalCount = sqlSession.selectOne(statementTotalCount);
 		}
 		
-		if(pageDto.useMore() && pageDto.getPageSize() < list.size()) {
+		if(pageListParam.useMore() && pageListParam.getPageSize() < list.size()) {
 			hasNext = true;
-			list = list.subList(0, pageDto.getPageSize());
+			list = list.subList(0, pageListParam.getPageSize());
 		}
 		
-		return new PageList<E>(list, pageDto.getPage(), pageDto.getPageSize(), totalCount, hasNext);
+		return new PageList<E>(list, pageListParam.getPage(), pageListParam.getPageSize(), totalCount, hasNext);
 	}
 }
