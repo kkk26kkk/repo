@@ -56,7 +56,6 @@ public class BoardController {
 		int totalCount = pageList.getTotalCount();
 		boolean hasNext = pageList.hasNext();
 		
-		// TODO service단에서
 		List<ArticleDto> boardContents = articleList.stream()
 				.map(Article::showHeader)
 //				.filter(v -> null == v.getContents())
@@ -84,7 +83,6 @@ public class BoardController {
 				.Builder(page, pageSize)
 				.build();
 		
-		// TODO service단에서
 		List<Article> articleList = boardService.getArticleListMore(pageListParam);
 		List<ArticleDto> boardContents = articleList.stream()
 				.map(Article::showHeader)

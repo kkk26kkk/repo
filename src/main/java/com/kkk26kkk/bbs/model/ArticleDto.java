@@ -10,6 +10,7 @@ public class ArticleDto {
 	private String readCount;
 	private String regDtm;
 	private String link;
+	private String noticeFlag;
 
 	public ArticleDto() {}
 	
@@ -79,6 +80,12 @@ public class ArticleDto {
 	}
 	public void setReadCount(String readCount) {
 		this.readCount = readCount;
+	}
+	public String getNoticeFlag() {
+		return noticeFlag;
+	}
+	public void setNoticeFlag(String noticeFlag) {
+		this.noticeFlag = noticeFlag;
 	}
 	
 }

@@ -38,7 +38,7 @@
 				<c:if test="${sessionScope.user.userId == article.userId }">
 					<tr>
 						<td><button id="update-btn" onclick="location='${updateFormLink }'">수정</button></td> <!-- full link로 -->
-						<td><button id="delete-btn" onclick="deleteArticle('${deleteLink}', '${article.articleId }')">삭제</button></td>
+						<td><button id="delete-btn" onclick="deleteArticle('${deleteLink}')">삭제</button></td>
 					</tr>
 				</c:if>
 				<c:if test="${sessionScope.user.userId != article.userId }">
@@ -58,7 +58,7 @@
 		</table>
 		
 		<textarea id=c-contents rows="2" cols="120"></textarea>
-		<button type="button" onclick="writeComment('${commentLink}', '${article.articleId }')">댓글 등록</button>
+		<button type="button" onclick="writeComment('${commentLink}')">댓글 등록</button>
 	</div>
 </div>
 

@@ -20,7 +20,7 @@
 		SET 
 			title = #{title},
 			contents = #{contents}
-			-- reg_date ? 날짜를 수정해도 글 목록의 순서는 그대로??
+			-- reg_date ? // XXX 날짜를 수정해도 글 목록의 순서는 그대로??
 		WHERE article_id = #{articleId}
 	</update>
 	
@@ -29,4 +29,17 @@
 		FROM tb_Article
 		WHERE article_id = #{articleId}
 	</delete>
+	
+	<select id="getCurrentArticleId" resultType="int">
+		SELECT 
+				TB_ARTICLE_SEQ.CURRVAL
+		FROM	DUAL
+	</select>
+	
+	<insert id="insertNoticeArticle" parameterType="int">
+		INSERT	INTO TB_ARTICLE
+				(ARTICLE_ID, NOTICE_STT_DTM, NOTICE_END_DTM)
+		VALUES	
+				(#{article_id}, SYSDATE, SYSDATE + (INTERVAL '14' DAY))
+	</insert>
 </mapper>

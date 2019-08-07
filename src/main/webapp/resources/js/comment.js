@@ -8,7 +8,7 @@ com.kkk26kkk.bbs.comments = (function() {
 		$( '#tb-comment > tbody').empty();
 		
 		$.ajax({
-			url : "/comment",
+			url : "/board/comment",
 			method : 'GET',
 			data : {
 				articleId : $("#title").attr("data-article-id"),

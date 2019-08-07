@@ -8,7 +8,7 @@ public enum Path {
 	ReplyForm("/board/reply"),
 	Article("/board"),
 	ArticleList("/board/list"),
-	Comment("/comment");
+	Comment("/board/comment");
 	
 	private String path;
 	

@@ -1,12 +1,11 @@
 package com.kkk26kkk.bbs.model;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 
 public class Comment extends CommentVo {
 	private static final FastDateFormat fdf = FastDateFormat.getInstance("yyyy-MM-dd HH:mm");
 	
-	public CommentDto showComment() {
+	public CommentDto showContent() {
 		CommentDto dto = new CommentDto();
 		dto.setCommentId(getCommentId());
 		dto.setArticleId(getArticleId());
@@ -15,14 +14,6 @@ public class Comment extends CommentVo {
 		dto.setRegDtm(fdf.format(getRegDtm()));
 		
 		return dto;
-	}
-	
-	public boolean isCommentWriter(String userId) {
-		if(StringUtils.equals(this.getUserId(), userId)) {
-			return true;
-		}
-		
-		return false;
 	}
 	
 }

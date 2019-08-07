@@ -27,5 +27,13 @@ public class ArticleDao {
 	public int deleteArticle(int articleId) {
 		return sqlSession.delete("deleteArticle", articleId);
 	}
+
+	public int getCurrentArticleId() {
+		return sqlSession.selectOne("getCurrentArticleId");
+	}
+
+	public int insertNoticeArticle(int articleId) {
+		return sqlSession.insert("insertNoticeArticle", articleId);
+	}
 	
 }

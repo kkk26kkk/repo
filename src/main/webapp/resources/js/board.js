@@ -1,6 +1,6 @@
 function updateArticle(link, articleId) {
 	var data = {};
-	data.articleId = articleId;
+	data.userId = $("#userName").attr("data-user-id");
 	data.title = $('#title').val();
 	data.contents = $('#contents').val();
 	
@@ -15,9 +15,9 @@ function updateArticle(link, articleId) {
 	});
 }
 
-function deleteArticle(link, articleId) {
+function deleteArticle(link) {
 	var data = {};
-	data.articleId = articleId;
+	data.userId = $("#userName").attr("data-user-id");
 	
 	$.ajax({
 		url : link,
@@ -30,9 +30,9 @@ function deleteArticle(link, articleId) {
 	});
 }
 
-function writeComment(link, articleId) {
+function writeComment(link) {
 	var data = {};
-	data.articleId = articleId;
+	data.articleId = $("#title").attr("data-article-id");
 	data.contents = $('#c-contents').val();
 	
 	$.ajax({
@@ -52,32 +52,4 @@ function writeComment(link, articleId) {
 		$('#tb-comment').append(str);
 		$('#c-contents').val('');
 	});
-}
-
-function getTimeStamp() {
-	var d = new Date();
-	
-	var s =
-	leadingZeros(d.getFullYear(), 4) + '-' +
-	leadingZeros(d.getMonth() + 1, 2) + '-' +
-	leadingZeros(d.getDate(), 2) + ' ' +
-	
-	leadingZeros(d.getHours(), 2) + ':' +
-	leadingZeros(d.getMinutes(), 2);
-
-  return s;
-}
-
-
-
-function leadingZeros(n, digits) {
-	var zero = '';
-	n = n.toString();
-	
-	if (n.length < digits) {
-		for (i = 0; i < digits - n.length; i++)
-			zero += '0';
-	}
-		
-	return zero + n;
 }

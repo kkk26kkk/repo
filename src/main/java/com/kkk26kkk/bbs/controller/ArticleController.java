@@ -46,8 +46,8 @@ public class ArticleController {
 		
 		model.addAttribute("article", article.showContent());
 		
-		model.addAttribute("updateFormLink", Path.UpdateForm.getPath() + "?articleId=" + articleId);
-		model.addAttribute("replyFormLink", Path.ReplyForm.getPath() + "?articleId=" + articleId);
+		model.addAttribute("updateFormLink", Path.Article.getPath() + "/" + articleId + "/update");
+		model.addAttribute("replyFormLink", Path.Article.getPath() + "/" + articleId + "/reply");
 		model.addAttribute("deleteLink", Path.Article.getPath() + "/" + articleId);
 		model.addAttribute("commentLink", Path.Comment.getPath());
 		
@@ -56,12 +56,13 @@ public class ArticleController {
 	
 	// 글 작성 폼
 	// 커스텀 인터페이스로 에스펙트 - @LoginRequire - user에서 isLogin 체크
-	@RequestMapping(value = {"/board/write", "/board/reply"}) // PathVariable
-	String writeForm(HttpServletRequest request, Model model, @RequestParam(defaultValue = "0") int articleId, User user) {
+	@RequestMapping(value = {"/board/write", "/board/{articleId}/reply"})
+	String writeForm(HttpServletRequest request, Model model, @PathVariable int articleId, User user) {
 		ArticleDto articleDto = user.createArticle();
-		System.out.println("userId" + user.getUserId());
 		
-		if(Path.ReplyForm.compare(request.getRequestURI())) {
+//		String replyForm = Path.Article.getPath() + "/" + articleId + "/reply"; 
+		
+		if(Path.ReplyForm.compare(request.getRequestURI())) { // XXX PathVariable로 바꾸면 경로 비교 어떻게?
 			ArticleDto article = articleService.getArticleDto(articleId);
 			
 			articleDto.setArticleId(article.getArticleId());
@@ -76,8 +77,8 @@ public class ArticleController {
 	}
 	
 	// 글 수정 폼
-	@RequestMapping(value = "/board/update")
-	String updateForm(@RequestParam int articleId, Model model) {
+	@RequestMapping(value = "/board/{articleId}/update")
+	String updateForm(@PathVariable int articleId, Model model) {
 		ArticleDto articleDto = articleService.getArticleDto(articleId);
 		
 		model.addAttribute("article", articleDto);
@@ -90,11 +91,6 @@ public class ArticleController {
 	@ResponseBody
 	Map<String, Object> write(HttpServletRequest request, @RequestBody ArticleDto articleDto, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		
-		if(!user.isUserId(articleDto.getUserId())) {
-			result.put("msg", "로그인 정보가 다릅니다.");
-            result.put("code", HttpStatus.FORBIDDEN);
-		}
 		
 		try {
 			articleService.insertArticle(articleDto, user);
@@ -109,18 +105,22 @@ public class ArticleController {
 		return result;
 	}
 	
-	// 글 수정 처리 // TODO /{articleId} 붙여서 쓰도록 수정
+	// 글 수정 처리
 	@RequestMapping(value = "/board/{articleId}", method = RequestMethod.PUT)
 	@ResponseBody
 	Map<String, Object> update(@PathVariable int articleId, @RequestBody ArticleDto articleDto, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		
+		if(!user.isUserId(articleDto.getUserId())) {
+			result.put("msg", "로그인 정보가 다릅니다.");
+            result.put("code", HttpStatus.FORBIDDEN);
+		}
+		
 		try {
-			// TODO 자기글만 수정할 수 있도록 user 받아서 쓴다 - 뒤에 로직도 수정
 			articleService.updateArticle(articleId, articleDto);
 			result.put("code", HttpStatus.OK);
 			result.put("redirect", Path.Article.getPath() + "/" + articleId);
-		} catch(SQLException e) { // TODO 이런 식으로, 서비스에서 에러 던졌으면 잡아준다
+		} catch(SQLException e) {
 			result.put("msg", e.getMessage());
             result.put("code", HttpStatus.INTERNAL_SERVER_ERROR);
             e.printStackTrace();
@@ -133,13 +133,16 @@ public class ArticleController {
 		return result;
 	}
 	
-	// 글 삭제 처리 // TODO /{articleId} 붙여서 쓰도록 수정
+	// 글 삭제 처리
 	@RequestMapping(value = "/board/{articleId}", method = RequestMethod.DELETE)
 	@ResponseBody
-	Map<String, Object> remove(@PathVariable int articleId, @RequestBody Article article, User user) {
+	Map<String, Object> remove(@PathVariable int articleId, @RequestBody ArticleDto articleDto, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		
-		// TODO 글 작성자만 수정할 수 있도록
+		if(!user.isUserId(articleDto.getUserId())) {
+			result.put("msg", "로그인 정보가 다릅니다.");
+            result.put("code", HttpStatus.FORBIDDEN);
+		}
 		
 		try {
 			articleService.deleteArticle(articleId);
@@ -155,19 +158,17 @@ public class ArticleController {
 	}
 	
 	// 댓글 등록
-	@RequestMapping(value = "/comment", method = RequestMethod.POST)
+	@RequestMapping(value = "/board/comment", method = RequestMethod.POST)
 	@ResponseBody
-	Map<String, Object> comment(@RequestBody Comment comment, HttpServletRequest request) {
-		comment.setUserId(request.getSession().getAttribute("userId").toString());
-		comment.setUserName(request.getSession().getAttribute("userName").toString());
-		
+	Map<String, Object> comment(@RequestBody CommentDto commentDto, HttpServletRequest request, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		try {
-			commentService.insertComment(comment);
+			int resultCommentId = commentService.insertComment(commentDto, user);
+			Comment comment = commentService.getComment(resultCommentId);
+			
+			result.put("comment", comment.showContent());
 			result.put("code", HttpStatus.OK);
-			result.put("userName", comment.getUserName());
-			result.put("contents", comment.getContents());
 		} catch(Exception e) {
 			result.put("msg", "해당 글이 존재하지 않습니다.");
             result.put("code", HttpStatus.NOT_FOUND);
@@ -178,20 +179,18 @@ public class ArticleController {
 	}
 	
 	// 댓글 리스트
-	@RequestMapping(value = "/comment", method = RequestMethod.GET)
+	@RequestMapping(value = "/board/comment", method = RequestMethod.GET) // TODO @PathVariable
 	@ResponseBody List<CommentDto> getCommentList(@RequestParam int articleId, @RequestParam String articleUserId, @RequestParam(defaultValue = "1") int page, HttpServletRequest request, User user) {
-		// TODO 댓글 페이징 처리
-		// TODO service단에서 처리할 부분 이동
-		
 		PageListParam pageListParam = new PageListParam
 				.Builder(page, pageSize)
 				.useTotal(true)
 				.useMore(true)
 				.build();
 		
-		List<Comment> list = commentService.getCommentList(articleId);
+		// TODO PageList로
+		List<Comment> list = commentService.getCommentList(articleId, pageListParam);
 		list.stream()
-			.filter(comment ->  !( user.isUserId(comment.getUserId()) || user.isUserId(articleUserId) )
+			.filter(comment -> !( user.isUserId(comment.getUserId()) || user.isUserId(articleUserId) )
 									&&  Code.COMMENT_SECRET_TYPE_PRIVATE.compare(comment.getCode()))
 			.forEach(comment -> comment.setContents("비밀 댓글입니다."));
 		list.stream()
@@ -199,7 +198,7 @@ public class ArticleController {
 			.forEach(comment -> comment.setContents("신고 접수된 댓글입니다."));
 		
 		List<CommentDto> commentList = list.stream()
-				.map(Comment::showComment)
+				.map(Comment::showContent)
 				.collect(Collectors.toList());
 		
 		return commentList;

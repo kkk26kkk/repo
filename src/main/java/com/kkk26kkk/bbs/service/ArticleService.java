@@ -2,6 +2,7 @@ package com.kkk26kkk.bbs.service;
 
 import java.sql.SQLException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,11 +40,27 @@ public class ArticleService {
 		articleVo.setTitle(articleDto.getTitle());
 		articleVo.setContents(articleDto.getContents());
 		
-		// TODO 전처리 필요하면 여기에
 		int resultCnt = articleDao.insertArticle(articleVo);
 		if(1 != resultCnt) {
 			throw new SQLException("게시글 등록을 실패 했습니다.");
 		}
+		
+		if(StringUtils.isNotEmpty(articleDto.getNoticeFlag())) {
+			int articleId = getCurrentArticleId();
+			resultCnt = insertNoticeArticle(articleId);
+		}
+		
+		if(1 != resultCnt) {
+			throw new SQLException("공지글 등록을 실패 했습니다.");
+		}
+	}
+	
+	private int getCurrentArticleId() {
+		return articleDao.getCurrentArticleId();
+	}
+	
+	private int insertNoticeArticle(int articleId) throws SQLException {
+		return articleDao.insertNoticeArticle(articleId);
 	}
 	
 	public void updateArticle(int articleId, ArticleDto articleDto) throws SQLException {
