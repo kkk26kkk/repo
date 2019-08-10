@@ -1,12 +1,13 @@
 package com.kkk26kkk.bbs.dao;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.kkk26kkk.common.model.PageListParam;
 import com.kkk26kkk.common.model.PageList;
+import com.kkk26kkk.common.model.PageListParam;
 
 public class BaseDao {
 	@Autowired
@@ -28,7 +29,7 @@ public class BaseDao {
 		boolean hasNext = false;
 		
 		if(null == list) {
-			return new PageList<E>(list, pageListParam.getPage(), pageListParam.getPageSize(), totalCount, hasNext);
+			return new PageList<E>(Collections.emptyList(), pageListParam.getPage(), pageListParam.getPageSize(), totalCount, hasNext);
 		}
 		
 		if(pageListParam.useTotal() && null != statementTotalCount) {
