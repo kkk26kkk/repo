@@ -4,9 +4,11 @@
 	xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
@@ -28,6 +30,17 @@
 	  <beans:property name="dataSource" ref="dataSource"/>
 	</beans:bean>
 	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	<aop:config proxy-target-class="true">
+	    <aop:pointcut id="boardServiceMethod" expression="execution(public * com.kkk26kkk.bbs.service..*(int))" />
+	    <aop:advisor advice-ref="txAdvice" pointcut-ref="boardServiceMethod" />
+    </aop:config>
+	
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+	    <tx:attributes>
+	       <tx:method name="deleteArticle" rollback-for="Exception" />
+	    </tx:attributes>
+	 </tx:advice>
 	
 	<!-- JsonMessageConverter -->
 	<beans:bean id="jsonMessageConverter"
