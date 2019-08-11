@@ -1,4 +1,4 @@
-package com.kkk26kkk.bbs.dao;
+package com.kkk26kkk.common.dao;
 
 import java.util.Collections;
 import java.util.List;

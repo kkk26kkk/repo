@@ -10,21 +10,21 @@ public class ArticleDto {
 	private String readCount;
 	private String regDtm;
 	private String link;
-	private String noticeFlag;
+	private boolean isNotice;
 
 	public ArticleDto() {}
 	
-	ArticleDto(String userName, String title, String readCount) {
+	ArticleDto(int articleId, String userName, String title) {
+		this.articleId = articleId;
 		this.userName = userName;
 		this.title = title;
-		this.readCount = readCount;
 	}
 	
-	ArticleDto(String userName, String title, String contents, String readCount) {
+	ArticleDto(int articleId, String userName, String title, String contents) {
+		this.articleId = articleId;
 		this.userName = userName;
 		this.title = title;
 		this.contents = contents;
-		this.readCount = readCount;
 	}
 	
 	public int getArticleId() {
@@ -81,11 +81,11 @@ public class ArticleDto {
 	public void setReadCount(String readCount) {
 		this.readCount = readCount;
 	}
-	public String getNoticeFlag() {
-		return noticeFlag;
+	public boolean isNotice() {
+		return isNotice;
 	}
-	public void setNoticeFlag(String noticeFlag) {
-		this.noticeFlag = noticeFlag;
+	public void setNotice(boolean isNotice) {
+		this.isNotice = isNotice;
 	}
 	
 }

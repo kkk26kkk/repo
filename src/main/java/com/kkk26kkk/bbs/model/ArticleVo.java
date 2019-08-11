@@ -13,55 +13,55 @@ public class ArticleVo {
 	private int readCount;
 	private Date regDtm;
 	
-	public int getArticleId() {
+	protected int getArticleId() {
 		return articleId;
 	}
 	public void setArticleId(int articleId) {
 		this.articleId = articleId;
 	}
-	public int getBoardId() {
+	protected int getBoardId() {
 		return boardId;
 	}
 	public void setBoardId(int boardId) {
 		this.boardId = boardId;
 	}
-	public String getUserId() {
+	protected String getUserId() {
 		return userId;
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	public String getUserName() {
+	protected String getUserName() {
 		return userName;
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	public String getTitle() {
+	protected String getTitle() {
 		return title;
 	}
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public String getContents() {
+	protected String getContents() {
 		return contents;
 	}
 	public void setContents(String contents) {
 		this.contents = contents;
 	}
-	public int getParentId() {
+	protected int getParentId() {
 		return parentId;
 	}
 	public void setParentId(int parentId) {
 		this.parentId = parentId;
 	}
-	public int getReadCount() {
+	protected int getReadCount() {
 		return readCount;
 	}
 	public void setReadCount(int readCount) {
 		this.readCount = readCount;
 	}
-	public Date getRegDtm() {
+	protected Date getRegDtm() {
 		return regDtm;
 	}
 	public void setRegDtm(Date regDtm) {

@@ -7,16 +7,18 @@ import com.kkk26kkk.common.model.Path;
 
 public class Article extends ArticleVo {
 	private static final FastDateFormat fdf = FastDateFormat.getInstance("yyyy-MM-dd HH:mm");
-	
+
 	public ArticleDto showHeader() {
-		ArticleDto dto = new ArticleDto(getUserName(), getTitle(), String.valueOf(getReadCount()));
+		ArticleDto dto = new ArticleDto(getArticleId(), getUserName(), getTitle());
+		dto.setReadCount(String.valueOf(getReadCount()));
 		dto.setRegDtm(fdf.format(getRegDtm()));
-		dto.setLink(Path.Article.getPath() + "/" + super.getArticleId());
+		dto.setLink(Path.Board.getPath() + "/" + super.getArticleId());
 		return dto;
 	}
 	
 	public ArticleDto showContent() {
-		ArticleDto dto = new ArticleDto(getUserName(), getTitle(), getContents(), String.valueOf(getReadCount()));
+		ArticleDto dto = new ArticleDto(getArticleId(), getUserName(), getTitle(), getContents());
+		dto.setReadCount(String.valueOf(getReadCount()));
 		dto.setArticleId(getArticleId());
 		dto.setUserId(getUserId());
 		dto.setRegDtm(fdf.format(getRegDtm()));

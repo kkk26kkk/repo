@@ -12,49 +12,49 @@ public class CommentVo {
 	private Date regDtm;
 	private String code;
 	
-	public int getCommentId() {
+	protected int getCommentId() {
 		return commentId;
 	}
 	public void setCommentId(int commentId) {
 		this.commentId = commentId;
 	}
-	public int getArticleId() {
+	protected int getArticleId() {
 		return articleId;
 	}
 	public void setArticleId(int articleId) {
 		this.articleId = articleId;
 	}
-	public String getUserId() {
+	protected String getUserId() {
 		return userId;
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	public String getUserName() {
+	protected String getUserName() {
 		return userName;
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	public String getContents() {
+	protected String getContents() {
 		return contents;
 	}
 	public void setContents(String contents) {
 		this.contents = contents;
 	}
-	public int getParentId() {
+	protected int getParentId() {
 		return parentId;
 	}
 	public void setParentId(int parentId) {
 		this.parentId = parentId;
 	}
-	public Date getRegDtm() {
+	protected Date getRegDtm() {
 		return regDtm;
 	}
 	public void setRegDtm(Date regDtm) {
 		this.regDtm = regDtm;
 	}
-	public String getCode() {
+	protected String getCode() {
 		return code;
 	}
 	public void setCode(String code) {

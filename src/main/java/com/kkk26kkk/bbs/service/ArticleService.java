@@ -2,7 +2,6 @@ package com.kkk26kkk.bbs.service;
 
 import java.sql.SQLException;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +10,7 @@ import com.kkk26kkk.bbs.model.Article;
 import com.kkk26kkk.bbs.model.ArticleDto;
 import com.kkk26kkk.bbs.model.ArticleVo;
 import com.kkk26kkk.bbs.model.User;
+import com.kkk26kkk.common.exception.BizException;
 
 @Service
 public class ArticleService {
@@ -20,18 +20,6 @@ public class ArticleService {
 	public Article getArticle(int articleId) {
 		return articleDao.getArticle(articleId);
 	}
-	
-	public ArticleDto getArticleDto(int articleId) {
-		Article article = getArticle(articleId);
-		
-		ArticleDto articleDto = new ArticleDto();
-    	articleDto.setArticleId(article.getArticleId());
-    	articleDto.setUserName(article.getUserName());
-    	articleDto.setTitle(article.getTitle());
-    	articleDto.setContents(article.getContents());
-		
-		return articleDto;
-	}
 
 	public void insertArticle(ArticleDto articleDto, User user) throws SQLException {
 		ArticleVo articleVo = new ArticleVo();
@@ -40,27 +28,28 @@ public class ArticleService {
 		articleVo.setTitle(articleDto.getTitle());
 		articleVo.setContents(articleDto.getContents());
 		
+		// TODO 시퀀스를 긁는(nextval) 쿼리를 따로 떼고, insert시 기본값으로 시퀀스 nextval 하지 않도록 셋팅
+		int articleId = 000000;
+		articleVo.setArticleId(articleId);
+		
+		// 뽑은 시퀀스 여기서도 쓰고
 		int resultCnt = articleDao.insertArticle(articleVo);
 		if(1 != resultCnt) {
 			throw new SQLException("게시글 등록을 실패 했습니다.");
 		}
-		
-		if(StringUtils.isNotEmpty(articleDto.getNoticeFlag())) {
-			int articleId = getCurrentArticleId();
-			resultCnt = insertNoticeArticle(articleId);
+
+		if(articleDto.isNotice()) {
+			// 뽑은 시퀀스 여기서도 쓰고
+			this.insertNoticeArticle(articleId);
 		}
+	}
+	
+	private void insertNoticeArticle(int articleId) throws SQLException {
+		int resultCnt = articleDao.insertNoticeArticle(articleId);
 		
 		if(1 != resultCnt) {
 			throw new SQLException("공지글 등록을 실패 했습니다.");
 		}
-	}
-	
-	private int getCurrentArticleId() {
-		return articleDao.getCurrentArticleId();
-	}
-	
-	private int insertNoticeArticle(int articleId) throws SQLException {
-		return articleDao.insertNoticeArticle(articleId);
 	}
 	
 	public void updateArticle(int articleId, ArticleDto articleDto) throws SQLException {
@@ -79,6 +68,18 @@ public class ArticleService {
 		int resultCnt = articleDao.deleteArticle(articleId);
 		if(1 != resultCnt) {
 			throw new SQLException("게시글 삭제를 실패했습니다.");
+		}
+	}
+	
+	public void updateArticleExample(int articleId, ArticleDto articleDto) throws BizException {
+		ArticleVo articleVo = new ArticleVo();
+		articleVo.setArticleId(articleId);
+		articleVo.setTitle(articleDto.getTitle());
+		articleVo.setContents(articleDto.getContents());
+		
+		int resultCnt = articleDao.updateArticle(articleVo);
+		if(1 != resultCnt) {
+			throw new BizException("게시글 수정을 실패 했습니다.");
 		}
 	}
 }

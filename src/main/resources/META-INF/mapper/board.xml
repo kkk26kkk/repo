@@ -20,7 +20,18 @@
 					                    INNER JOIN 
 					                            TB_NOTICE_ARTICLE C 
 					                    ON C.ARTICLE_ID = B.ARTICLE_ID
+					                    /*
+                                        SELECT  /*+ ORDERED USE_NL(C B) INDEX(C 인덱스이름) INDEX(B 인덱스이름) */
+                                                B.*
+                                        FROM    TB_NOTICE_ARTICLE   C
+                                              , TB_ARTICLE          B
+                                        WHERE   1               = 1
+                                        AND     SYSDATE         BETWEEN NOTICE_STT_DTM  AND NOTICE_END_DTM
+                                        AND     C.ARTICLE_ID    = B.ARTICLE_ID
+                                        */
+                                        
 					                    UNION ALL
+					                    
 								        SELECT
 								                Y.*
 								        FROM    ( -- TODO 인덱스 추가 (PARENT_ID, ARTICLE_ID)
@@ -28,6 +39,7 @@
 								                            A.* -- TODO 테이블 첫번째 접근시에는 읽어올 컬럼 명시 (전체더라도 전체 다 명시)
 								                    FROM    TB_ARTICLE A
 								                    WHERE   1          = 1
+								                    AND     (#{field} IS NULL OR FILED    = #{field})
 								                    START WITH
 								                            PARENT_ID  = 0 -- 기본값 null로 두고, 이 라인 = 0 을 IS NULL 로 변경
 								                    CONNECT BY

@@ -55,5 +55,14 @@ public class User extends UserVo {
     	
     	return dto;
     }
-    
+
+    @Override
+	public String getUserId() {
+		return super.getUserId();
+	}
+
+    @Override
+	public String getUserName() {
+		return super.getUserName();
+	}
 }

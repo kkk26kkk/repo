@@ -27,4 +27,10 @@
 		FROM	TB_COMMENT
 		WHERE	ARTICLE_ID = #{articleId}
 	</select>
+    
+    <insert id="insertNoticeArticle" parameterType="int">
+        INSERT INTO TB_NOTICE_ARTICLE
+               (NOTICE_ID, ARTICLE_ID, NOTICE_STT_DTM, NOTICE_END_DTM)
+        VALEUS (TB_NOTICE_ARTICLE_SEQ.NEXTVAL, #{articleId}, SYSDATE, (SYSDATE + INTERVAL '14' DAY))
+    </insert>
 </mapper>

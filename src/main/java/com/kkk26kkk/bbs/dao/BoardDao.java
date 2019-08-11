@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kkk26kkk.bbs.model.Article;
+import com.kkk26kkk.common.dao.BaseDao;
 import com.kkk26kkk.common.model.PageList;
 import com.kkk26kkk.common.model.PageListParam;
 

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.kkk26kkk.bbs.model.Comment;
 import com.kkk26kkk.bbs.model.CommentDto;
 import com.kkk26kkk.bbs.model.CommentVo;
+import com.kkk26kkk.common.dao.BaseDao;
 
 @Repository
 public class CommentDao extends BaseDao {
@@ -20,9 +21,9 @@ public class CommentDao extends BaseDao {
 	}
 
 	// TODO PageList로
-	public List<Comment> getCommentList(CommentDto commentDto) { // XXX 파라미터를 무엇으로 보내야하는가?
+	public List<Comment> getCommentList(int articleId) { // XXX 파라미터를 무엇으로 보내야하는가?
 //		return sqlSession.selectList("getCommentList", articleId);
-		return null;
+		return sqlSession.selectList("getCommentList", articleId);
 	}
 
 	public Comment getComment(int commentId) {

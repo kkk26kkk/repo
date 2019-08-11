@@ -42,7 +42,7 @@ public class UserController {
 		User user = userService.getUser(userDto.getUserId());
 		
 		try {
-			if(userDto.getUserPw().equals(user.getUserPw())) { // user.getHashPw() 로 변경
+			if(userDto.getUserPw().equals(user.getHashPw())) { // TODO DB에 해싱된 값으로 적재해주도록 데이터 마이그레이션
 //				request.getSession().setAttribute("userId", user.getUserId());
 //				request.getSession().setAttribute("userName", user.getUserName());
 				request.getSession().setAttribute("user", user);

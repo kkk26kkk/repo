@@ -39,14 +39,15 @@ public class CommentService {
 		return commentDao.getCurrentCommentId();
 	}
 	
-	public List<Comment> getCommentList(int articleId, PageListParam pageListParam) {
+	public List<Comment> getCommentList(int articleId) {
+		// XXX 파라미터를 무엇으로 보내야하는가?
 //		CommentDto commentDto = new CommentDto();
 //		commentDto.setArticleId(articleId);
 //		commentDto.setStartNum(pageListParam.getStartNum());
 //		commentDto.setEndNum(pageListParam.getEndNum());
 //		
 //		return commentDao.getCommentList(commentDto);
-		return null;
+		return commentDao.getCommentList(articleId);
 	}
 
 	public Comment getComment(int commentId) {

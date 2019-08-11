@@ -51,7 +51,7 @@ public class PageListParam {
 		}
 	}
 	
-	private PageListParam(Builder builder) {
+	protected PageListParam(Builder builder) {
 		this.page = builder.page;
 		this.pageSize = builder.pageSize;
 		this.startNum = builder.startNum;

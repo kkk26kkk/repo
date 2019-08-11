@@ -21,13 +21,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kkk26kkk.bbs.model.Article;
 import com.kkk26kkk.bbs.model.ArticleDto;
+import com.kkk26kkk.bbs.model.ArticleParam;
 import com.kkk26kkk.bbs.model.Comment;
 import com.kkk26kkk.bbs.model.CommentDto;
 import com.kkk26kkk.bbs.model.User;
 import com.kkk26kkk.bbs.service.ArticleService;
 import com.kkk26kkk.bbs.service.CommentService;
 import com.kkk26kkk.common.model.Code;
-import com.kkk26kkk.common.model.PageListParam;
 import com.kkk26kkk.common.model.Path;
 
 @Controller
@@ -46,9 +46,9 @@ public class ArticleController {
 		
 		model.addAttribute("article", article.showContent());
 		
-		model.addAttribute("updateFormLink", Path.Article.getPath() + "/" + articleId + "/update");
-		model.addAttribute("replyFormLink", Path.Article.getPath() + "/" + articleId + "/reply");
-		model.addAttribute("deleteLink", Path.Article.getPath() + "/" + articleId);
+		model.addAttribute("updateFormLink", Path.Board.getPath() + "/" + articleId + "/update");
+		model.addAttribute("replyFormLink", Path.Board.getPath() + "/" + articleId + "/reply");
+		model.addAttribute("deleteLink", Path.Board.getPath() + "/" + articleId);
 		model.addAttribute("commentLink", Path.Comment.getPath());
 		
 		return "/board/show";
@@ -62,16 +62,17 @@ public class ArticleController {
 		
 //		String replyForm = Path.Article.getPath() + "/" + articleId + "/reply"; 
 		
-		if(Path.ReplyForm.compare(request.getRequestURI())) { // XXX PathVariable로 바꾸면 경로 비교 어떻게?
-			ArticleDto article = articleService.getArticleDto(articleId);
+		if(Path.ReplyForm.포함되다오른쪽거에(request.getRequestURI())) {
+			Article article = articleService.getArticle(articleId);
+			ArticleDto parentArticleDto = article.showContent();
 			
-			articleDto.setArticleId(article.getArticleId());
-			articleDto.setTitle("RE:" + article.getTitle());
-		} 
+			articleDto.setArticleId(parentArticleDto.getArticleId());
+			articleDto.setTitle("RE:" + parentArticleDto.getTitle());
+		}
 		
 		model.addAttribute("article", articleDto);
 //		articleDto = null;
-		model.addAttribute("path", Path.Article.getPath());
+		model.addAttribute("path", Path.Board.getPath());
 		
 		return "/board/write";
 	}
@@ -79,7 +80,8 @@ public class ArticleController {
 	// 글 수정 폼
 	@RequestMapping(value = "/board/{articleId}/update")
 	String updateForm(@PathVariable int articleId, Model model) {
-		ArticleDto articleDto = articleService.getArticleDto(articleId);
+		Article article = articleService.getArticle(articleId);
+		ArticleDto articleDto = article.showContent();
 		
 		model.addAttribute("article", articleDto);
 		
@@ -119,7 +121,7 @@ public class ArticleController {
 		try {
 			articleService.updateArticle(articleId, articleDto);
 			result.put("code", HttpStatus.OK);
-			result.put("redirect", Path.Article.getPath() + "/" + articleId);
+			result.put("redirect", Path.Board.getPath() + "/" + articleId);
 		} catch(SQLException e) {
 			result.put("msg", e.getMessage());
             result.put("code", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -148,7 +150,11 @@ public class ArticleController {
 			articleService.deleteArticle(articleId);
 			result.put("code", HttpStatus.OK);
 			result.put("redirect", Path.ArticleList.getPath());
-		} catch(Exception e) {
+		}/* catch(BizException e) { // 커스텀 예외 예시 -> updateArticleExample
+			result.put("msg", e.getMessage());
+            result.put("code", HttpStatus.INTERNAL_SERVER_ERROR);
+            e.printStackTrace();
+		}*/ catch(Exception e) {
 			result.put("msg", "해당 글이 존재하지 않습니다.");
             result.put("code", HttpStatus.NOT_FOUND);
             e.printStackTrace();
@@ -181,18 +187,23 @@ public class ArticleController {
 	// 댓글 리스트
 	@RequestMapping(value = "/board/comment", method = RequestMethod.GET) // TODO @PathVariable
 	@ResponseBody List<CommentDto> getCommentList(@RequestParam int articleId, @RequestParam String articleUserId, @RequestParam(defaultValue = "1") int page, HttpServletRequest request, User user) {
-		PageListParam pageListParam = new PageListParam
-				.Builder(page, pageSize)
+
+		// TODO 캐스팅 제거할 수 있을 지 확인해본다
+		ArticleParam pageListParam = (ArticleParam) new ArticleParam
+				.Builder(page, pageSize, 000)
 				.useTotal(true)
 				.useMore(true)
 				.build();
 		
 		// TODO PageList로
-		List<Comment> list = commentService.getCommentList(articleId, pageListParam);
+		List<Comment> list = commentService.getCommentList(articleId);
+		
 		list.stream()
-			.filter(comment -> !( user.isUserId(comment.getUserId()) || user.isUserId(articleUserId) )
-									&&  Code.COMMENT_SECRET_TYPE_PRIVATE.compare(comment.getCode()))
+			.filter(comment -> Code.COMMENT_SECRET_TYPE_PRIVATE.compare(comment.getCode()))
+			.filter(comment -> !user.isUserId(comment.getUserId()))
+			.filter(comment -> !user.isUserId(articleUserId))
 			.forEach(comment -> comment.setContents("비밀 댓글입니다."));
+		
 		list.stream()
 			.filter(comment -> /* TODO !UserGrade.SUPER_USER.compare(user.getGrade()) && */ Code.COMMENT_SECRET_TYPE_REPORTED.compare(comment.getCode()))
 			.forEach(comment -> comment.setContents("신고 접수된 댓글입니다."));
