@@ -28,8 +28,8 @@ public class ArticleDao {
 		return sqlSession.delete("deleteArticle", articleId);
 	}
 
-	public int getCurrentArticleId() {
-		return sqlSession.selectOne("getCurrentArticleId");
+	public int getSeqNextVal() {
+		return sqlSession.selectOne("getSeqNextVal");
 	}
 
 	public int insertNoticeArticle(int articleId) {
