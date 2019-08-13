@@ -23,9 +23,9 @@
 		WHERE A.ARTICLE_ID = #{articleId}
 	</select>
 	
-	<select id="getCurrentCommentId" resultType="int">
+	<select id="getCommentSeqNextVal" resultType="int">
 		SELECT 
-				TB_COMMENT_SEQ.CURRVAL
+				TB_COMMENT_SEQ.NEXTVAL
 		FROM	DUAL
 	</select>
 	

@@ -33,7 +33,7 @@
 		WHERE article_id = #{articleId}
 	</delete>
 	
-	<select id="getSeqNextVal" resultType="int">
+	<select id="getArticleSeqNextVal" resultType="int">
 		SELECT 
 				TB_ARTICLE_SEQ.NEXTVAL
 		FROM	DUAL
