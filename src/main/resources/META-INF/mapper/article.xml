@@ -30,9 +30,9 @@
 		WHERE article_id = #{articleId}
 	</delete>
 	
-	<select id="getCurrentArticleId" resultType="int">
+	<select id="getSeqNextVal" resultType="int">
 		SELECT 
-				TB_ARTICLE_SEQ.CURRVAL
+				TB_ARTICLE_SEQ.NEXTVAL
 		FROM	DUAL
 	</select>
 	
