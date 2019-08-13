@@ -1,6 +1,6 @@
 package com.kkk26kkk.common.model;
 
-public class PageListParam {
+public class BaseParam {
 	private final int page;
 	private final int pageSize;
 	private final int startNum;
@@ -8,36 +8,43 @@ public class PageListParam {
 	private final boolean useTotal;
 	private final boolean useMore;
 	
-	public static class Builder {
-		private final int page;
-		private final int pageSize;
+	public static class Builder<T extends Builder<T>> {
+		private int page;
+		private int pageSize;
 		private int startNum;
 		private int endNum;
 		private boolean useTotal;
 		private boolean useMore;
 		
-		public Builder(int page, int pageSize) {
-			this.page = page;
+		public Builder(int pageSize) {
 			this.pageSize = pageSize;
 		}
 		
-		public Builder startNumAndEndNum(int startNum, int endNum) {
+		public Builder(int startNum, int endNum) {
 			this.startNum = startNum;
 			this.endNum = endNum;
-			return this;
 		}
 		
-		public Builder useTotal(boolean useTotal) {
+		public T page(int page) {
+			this.page = page;
+			return (T) this;
+		}
+		
+		public T useTotal(boolean useTotal) {
 			this.useTotal = useTotal;
-			return this;
+			return (T) this;
 		}
 		
-		public Builder useMore(boolean useMore) {
+		public T useMore(boolean useMore) {
 			this.useMore = useMore;
-			return this;
+			return (T) this;
 		}
 		
-		public PageListParam build() {
+		public BaseParam build() {
+			if(0 == this.page) {
+				this.page = 1;
+			}
+			
 			if(0 != this.startNum && 0 != this.endNum) {
 				this.startNum = (page - 1) * pageSize + 1;
 				this.endNum = page * pageSize;
@@ -47,11 +54,11 @@ public class PageListParam {
 				this.endNum = this.endNum + 1;
 			}
 			
-			return new PageListParam(this);
+			return new BaseParam(this);
 		}
 	}
 	
-	protected PageListParam(Builder builder) {
+	protected BaseParam(Builder<?> builder) {
 		this.page = builder.page;
 		this.pageSize = builder.pageSize;
 		this.startNum = builder.startNum;
