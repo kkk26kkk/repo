@@ -1,26 +1,36 @@
 package com.kkk26kkk.bbs.model;
 
-import com.kkk26kkk.common.model.PageListParam;
+import com.kkk26kkk.common.model.BaseParam;
 
-public class ArticleParam extends PageListParam {
-	private int articleId;
+public class CommentParam extends BaseParam {
+	private final int articleId;
 	
-	public static class Builder extends PageListParam.Builder {
-		private final int articleId;
+	public static class Builder extends BaseParam.Builder<Builder> {
+		private int articleId;
 		
-		public Builder(int page, int pageSize, int articleId) {
-			super(page, pageSize);
+		public Builder(int pageSize, int articleId) {
+			super(pageSize);
 			this.articleId = articleId;
 		}
 		
+		public Builder(int startNum, int endNum, int articleId) {
+			super(startNum, endNum);
+			this.articleId = articleId;
+		}
+		
+		public Builder articleId(int articleId) {
+			this.articleId = articleId;
+			return this;
+		}
+		
 		@Override
-		public ArticleParam build() {
+		public CommentParam build() {
 			super.build();
-			return new ArticleParam(this);
+			return new CommentParam(this);
 		}
 	}
 	
-	public ArticleParam(Builder builder) {
+	public CommentParam(Builder builder) {
 		super(builder);
 		this.articleId = builder.articleId;
 	}
