@@ -10,9 +10,12 @@
 	</select>
 
 	<insert id="insertArticle" parameterType="com.kkk26kkk.bbs.model.ArticleVo">
-		INSERT INTO tb_article
-		VALUES (tb_article_seq.nextval, #{boardId}, #{userId}, #{userName}, #{title},
-				#{contents}, #{parentId}, 0, sysdate)
+		INSERT 
+		INTO 	TB_ARTICLE
+				(ARTICLE_ID, BOARD_ID, USER_ID, USER_NAME, TITLE,
+				 CONTENTS, PARENT_ID, READ_COUNT, REG_DTM)
+		VALUES	(#{articleId}, #{boardId}, #{userId}, #{userName}, #{title},
+				 #{contents}, #{parentId}, 0, sysdate)
 	</insert>
 	
 	<update id="updateArticle" parameterType="com.kkk26kkk.bbs.model.ArticleVo">
@@ -37,9 +40,10 @@
 	</select>
 	
 	<insert id="insertNoticeArticle" parameterType="int">
-		INSERT	INTO TB_ARTICLE
-				(ARTICLE_ID, NOTICE_STT_DTM, NOTICE_END_DTM)
+		INSERT	
+		INTO 	TB_NOTICE
+				(NOTICE_ID, ARTICLE_ID, NOTICE_STT_DTM, NOTICE_END_DTM)
 		VALUES	
-				(#{article_id}, SYSDATE, SYSDATE + (INTERVAL '14' DAY))
+				(TB_NOTICE_SEQ.NEXTVAL, #{articleId}, SYSDATE, SYSDATE + (INTERVAL '14' DAY))
 	</insert>
 </mapper>
