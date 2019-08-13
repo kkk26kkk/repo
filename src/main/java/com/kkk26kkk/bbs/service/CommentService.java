@@ -30,23 +30,13 @@ public class CommentService {
 			throw new SQLException("댓글 등록을 실패 했습니다.");
 		}
 		
-		int currentCommentId = getCurrentCommentId();
+		int commentId = commentDao.getCommentSeqNextVal();
 		
-		return currentCommentId;
+		return commentId;
 	}
 	
-	private int getCurrentCommentId() {
-		return commentDao.getCurrentCommentId();
-	}
-	
+		
 	public List<Comment> getCommentList(CommentParam commentParam) {
-		// XXX 파라미터를 무엇으로 보내야하는가?
-//		CommentDto commentDto = new CommentDto();
-//		commentDto.setArticleId(articleId);
-//		commentDto.setStartNum(pageListParam.getStartNum());
-//		commentDto.setEndNum(pageListParam.getEndNum());
-//		
-//		return commentDao.getCommentList(commentDto);
 		return commentDao.getCommentList(commentParam);
 	}
 

@@ -28,7 +28,7 @@ public class ArticleService {
 		articleVo.setTitle(articleDto.getTitle());
 		articleVo.setContents(articleDto.getContents());
 		
-		int articleId = articleDao.getSeqNextVal();
+		int articleId = articleDao.getArticleSeqNextVal();
 		articleVo.setArticleId(articleId);
 		
 		int resultCnt = articleDao.insertArticle(articleVo);

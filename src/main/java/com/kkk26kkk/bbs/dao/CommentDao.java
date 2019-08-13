@@ -29,7 +29,7 @@ public class CommentDao extends BaseDao {
 		return sqlSession.selectOne("getComment", commentId);
 	}
 
-	public int getCurrentCommentId() {
-		return sqlSession.selectOne("getCurrentCommentId");
+	public int getCommentSeqNextVal() {
+		return sqlSession.selectOne("getCommentSeqNextVal");
 	}
 }
