@@ -15,9 +15,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kkk26kkk.bbs.model.Article;
 import com.kkk26kkk.bbs.model.ArticleDto;
+import com.kkk26kkk.bbs.model.ArticleParam;
 import com.kkk26kkk.bbs.service.BoardService;
+import com.kkk26kkk.common.model.BaseParam;
 import com.kkk26kkk.common.model.PageList;
-import com.kkk26kkk.common.model.PageListParam;
 import com.kkk26kkk.common.model.Path;
 
 @Controller
@@ -30,7 +31,7 @@ public class BoardController {
 	private static final int pageSize = 10;
 
 	@RequestMapping(value = "/board/list", method = RequestMethod.GET)
-	String showBoard(Model model, @RequestParam(defaultValue = "1") int page) {
+	String showBoard(Model model, @RequestParam(defaultValue = "0") int page) {
 //		int length = 0;
 //		for(Article board : boardList) {
 //			if(null == board.getContents()) {
@@ -42,14 +43,14 @@ public class BoardController {
 //			}
 //		}
 
-		PageListParam pageListParam = new PageListParam
-				.Builder(page, pageSize)
+		ArticleParam articleParam = new ArticleParam
+				.Builder(pageSize)
 				.useTotal(true)
 				.useMore(true)
 				.build();
 		
-	    PageList<Article> pageList = boardService.getArticleList(pageListParam);
-	    pageListParam = null;
+	    PageList<Article> pageList = boardService.getArticleList(articleParam);
+	    articleParam = null;
 	    
 		List<Article> articleList = pageList.getList();
 		int totalPage = pageList.getTotalPage();
@@ -79,11 +80,11 @@ public class BoardController {
 	Map<String, Object> showMore(@RequestParam int page) {
 		Map<String, Object> map = new HashMap<>();
 		
-		PageListParam pageListParam = new PageListParam
-				.Builder(page, pageSize)
+		ArticleParam articleParam = new ArticleParam
+				.Builder(pageSize)
 				.build();
 		
-		List<Article> articleList = boardService.getArticleListMore(pageListParam);
+		List<Article> articleList = boardService.getArticleListMore(articleParam);
 		List<ArticleDto> boardContents = articleList.stream()
 				.map(Article::showHeader)
 				.collect(Collectors.toList());

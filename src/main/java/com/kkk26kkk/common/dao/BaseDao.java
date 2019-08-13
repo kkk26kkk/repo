@@ -6,22 +6,22 @@ import java.util.List;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.kkk26kkk.common.model.BaseParam;
 import com.kkk26kkk.common.model.PageList;
-import com.kkk26kkk.common.model.PageListParam;
 
 public class BaseDao {
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 	
-	public <E> PageList<E> getPageListMore(String statement, PageListParam pageListParam) {
+	public <E> PageList<E> getPageListMore(String statement, BaseParam pageListParam) {
 		return getPageList(statement, null, pageListParam);
 	}
 	
-	public <E> PageList<E> getPageListTotal(String statement, String statementTotalCount, PageListParam pageListParam) {
+	public <E> PageList<E> getPageListTotal(String statement, String statementTotalCount, BaseParam pageListParam) {
 		return getPageList(statement, statementTotalCount, pageListParam);
 	}
 	
-	private <E> PageList<E> getPageList(String statement, String statementTotalCount, PageListParam pageListParam) {
+	private <E> PageList<E> getPageList(String statement, String statementTotalCount, BaseParam pageListParam) {
 		
 		List<E> list = sqlSession.selectList(statement, pageListParam);
 		

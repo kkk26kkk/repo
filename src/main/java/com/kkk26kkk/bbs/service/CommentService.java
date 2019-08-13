@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import com.kkk26kkk.bbs.dao.CommentDao;
 import com.kkk26kkk.bbs.model.Comment;
 import com.kkk26kkk.bbs.model.CommentDto;
+import com.kkk26kkk.bbs.model.CommentParam;
 import com.kkk26kkk.bbs.model.CommentVo;
 import com.kkk26kkk.bbs.model.User;
-import com.kkk26kkk.common.model.PageListParam;
 
 @Service
 public class CommentService {
@@ -39,7 +39,7 @@ public class CommentService {
 		return commentDao.getCurrentCommentId();
 	}
 	
-	public List<Comment> getCommentList(int articleId) {
+	public List<Comment> getCommentList(CommentParam commentParam) {
 		// XXX 파라미터를 무엇으로 보내야하는가?
 //		CommentDto commentDto = new CommentDto();
 //		commentDto.setArticleId(articleId);
@@ -47,7 +47,7 @@ public class CommentService {
 //		commentDto.setEndNum(pageListParam.getEndNum());
 //		
 //		return commentDao.getCommentList(commentDto);
-		return commentDao.getCommentList(articleId);
+		return commentDao.getCommentList(commentParam);
 	}
 
 	public Comment getComment(int commentId) {

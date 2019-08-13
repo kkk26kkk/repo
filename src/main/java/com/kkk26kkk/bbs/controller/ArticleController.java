@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kkk26kkk.bbs.model.Article;
 import com.kkk26kkk.bbs.model.ArticleDto;
-import com.kkk26kkk.bbs.model.ArticleParam;
+import com.kkk26kkk.bbs.model.CommentParam;
 import com.kkk26kkk.bbs.model.Comment;
 import com.kkk26kkk.bbs.model.CommentDto;
 import com.kkk26kkk.bbs.model.User;
@@ -171,8 +171,8 @@ public class ArticleController {
 		
 		try {
 			int resultCommentId = commentService.insertComment(commentDto, user);
-			Comment comment = commentService.getComment(resultCommentId);
-			
+			// XXX 댓글 등록 후 뷰단에서  등록된 댓글이 실시간으로 표출되려면 어떻게 해야 할까요?
+			Comment comment = commentService.getComment(resultCommentId);			
 			result.put("comment", comment.showContent());
 			result.put("code", HttpStatus.OK);
 		} catch(Exception e) {
@@ -187,16 +187,13 @@ public class ArticleController {
 	// 댓글 리스트
 	@RequestMapping(value = "/board/comment", method = RequestMethod.GET) // TODO @PathVariable
 	@ResponseBody List<CommentDto> getCommentList(@RequestParam int articleId, @RequestParam String articleUserId, @RequestParam(defaultValue = "1") int page, HttpServletRequest request, User user) {
-
-		// TODO 캐스팅 제거할 수 있을 지 확인해본다
-		ArticleParam pageListParam = (ArticleParam) new ArticleParam
-				.Builder(page, pageSize, 000)
+		CommentParam commentParam = new CommentParam
+				.Builder(pageSize, articleId)
 				.useTotal(true)
 				.useMore(true)
 				.build();
 		
-		// TODO PageList로
-		List<Comment> list = commentService.getCommentList(articleId);
+		List<Comment> list = commentService.getCommentList(commentParam);
 		
 		list.stream()
 			.filter(comment -> Code.COMMENT_SECRET_TYPE_PRIVATE.compare(comment.getCode()))
