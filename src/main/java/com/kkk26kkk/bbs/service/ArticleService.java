@@ -28,18 +28,15 @@ public class ArticleService {
 		articleVo.setTitle(articleDto.getTitle());
 		articleVo.setContents(articleDto.getContents());
 		
-		// TODO 시퀀스를 긁는(nextval) 쿼리를 따로 떼고, insert시 기본값으로 시퀀스 nextval 하지 않도록 셋팅
-		int articleId = 000000;
+		int articleId = articleDao.getSeqNextVal();
 		articleVo.setArticleId(articleId);
 		
-		// 뽑은 시퀀스 여기서도 쓰고
 		int resultCnt = articleDao.insertArticle(articleVo);
 		if(1 != resultCnt) {
 			throw new SQLException("게시글 등록을 실패 했습니다.");
 		}
 
 		if(articleDto.isNotice()) {
-			// 뽑은 시퀀스 여기서도 쓰고
 			this.insertNoticeArticle(articleId);
 		}
 	}
