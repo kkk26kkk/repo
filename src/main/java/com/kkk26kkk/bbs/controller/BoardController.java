@@ -31,7 +31,7 @@ public class BoardController {
 	private static final int pageSize = 10;
 
 	@RequestMapping(value = "/board/list", method = RequestMethod.GET)
-	String showBoard(Model model, @RequestParam(defaultValue = "0") int page) {
+	String showBoard(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(required = false) String sort) {
 //		int length = 0;
 //		for(Article board : boardList) {
 //			if(null == board.getContents()) {
@@ -47,6 +47,7 @@ public class BoardController {
 				.Builder(pageSize)
 				.useTotal(true)
 				.useMore(true)
+				.sort(sort)
 				.build();
 		
 	    PageList<Article> pageList = boardService.getArticleList(articleParam);
@@ -77,7 +78,7 @@ public class BoardController {
 	
 	@RequestMapping(value = "/board/showMore", method = RequestMethod.GET)
 	@ResponseBody
-	Map<String, Object> showMore(@RequestParam int page) {
+	Map<String, Object> showMore(@RequestParam int page, @RequestParam String sort) {
 		Map<String, Object> map = new HashMap<>();
 		
 		ArticleParam articleParam = new ArticleParam
