@@ -9,10 +9,10 @@
 				#{contents}, #{parentId}, sysdate)
 	</insert>
 	
-	<select id="getCommentList" parameterType="int" resultType="com.kkk26kkk.bbs.model.Comment">
+	<select id="getCommentList" parameterType="com.kkk26kkk.bbs.model.CommentParam" resultType="com.kkk26kkk.bbs.model.Comment">
 		SELECT 
-                A.COMMENT_ID, A.ARTICLE_ID, A.USER_ID, A.USER_NAME , A.PARENT_ID, A.REG_DTM
-        CASE    WHEN (A.USER_ID != #{commentUserId} AND B.USER_ID != #{articleUserId}) AND A.CODE = '20' THEN '비밀 댓글입니다.'
+                A.COMMENT_ID, A.ARTICLE_ID, A.USER_ID, A.USER_NAME , A.PARENT_ID, A.REG_DTM,
+        CASE    WHEN (A.USER_ID != #{userId} AND B.USER_ID != #{userId}) AND A.CODE = '20' THEN '비밀 댓글입니다.'
                 -- WHEN 신고 댓글
                 ELSE  A.CONTENTS
         END     CONTENTS
