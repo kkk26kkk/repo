@@ -3,8 +3,7 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="Board">
-    <select id="getArticleList" parameterType="com.kkk26kkk.common.model.PageListParam" resultType="com.kkk26kkk.bbs.model.Article">
-    <![CDATA[
+    <select id="getArticleList" parameterType="com.kkk26kkk.common.model.ArticleParam" resultType="com.kkk26kkk.bbs.model.Article">
     SELECT
             W.*
     FROM    (
@@ -39,7 +38,7 @@
 								                            A.* -- TODO 테이블 첫번째 접근시에는 읽어올 컬럼 명시 (전체더라도 전체 다 명시)
 								                    FROM    TB_ARTICLE A
 								                    WHERE   1          = 1
-								                    AND     (#{field} IS NULL OR FILED    = #{field})
+								                    AND     (#{field} IS NULL OR FIELD    = #{field})
 								                    START WITH
 								                            PARENT_ID  = 0 -- 기본값 null로 두고, 이 라인 = 0 을 IS NULL 로 변경
 								                    CONNECT BY
@@ -49,8 +48,11 @@
 								                ) Y
 					                ) Z
 			            ) X
-                WHERE X.RNUM <= 10
+	            <![CDATA[
+                WHERE X.RNUM <= 10 
+                ]]>
             ) W
+    <![CDATA[
     WHERE W.RNUM >= 1
     ]]>
     </select>
