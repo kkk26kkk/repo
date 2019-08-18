@@ -23,7 +23,7 @@
 		SET 
 			title = #{title},
 			contents = #{contents}
-			-- reg_date ? // XXX 날짜를 수정해도 글 목록의 순서는 그대로??
+			-- reg_date ? // XXX 날짜를 수정해도 글 목록의 순서는 그대로?? // TODO 필요필드 : 작성일, 작성자, 수정일, 수정자
 		WHERE article_id = #{articleId}
 	</update>
 	
