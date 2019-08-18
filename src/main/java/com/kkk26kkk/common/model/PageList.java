@@ -28,10 +28,10 @@ public class PageList<E> {
 	public int getPageSize() {
 		return pageSize;
 	}
-	public int getTotalCount() { // 리스트 수
+	public int getTotalCount() {
 		return totalCount;
 	}
-	public int getTotalPage() { // 페이지 수
+	public int getTotalPage() {
 		return (this.totalCount + this.pageSize - 1) / this.pageSize;
 	}
 	public boolean hasNext() {

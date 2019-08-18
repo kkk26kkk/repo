@@ -32,4 +32,9 @@ public class Article extends ArticleVo {
 		
 		return false;
 	}
+	
+	@Override
+	public String getArticleId() {
+		return super.getArticleId();
+	}
 }

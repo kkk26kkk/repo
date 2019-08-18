@@ -107,18 +107,18 @@ public class BoardController {
 //				.sort(sort)
 				.build();
 		
-        // XXX ±Û¸®½ºÆ®, ´ñ±Û¸®½ºÆ®¸¦ service´Ü¿¡¼­ °°ÀÌ Ã³¸®ÇØ¾ß ÇÒ±î¿ä?
-        // TODO ±Û¸®½ºÆ®´Â ¼­ºñ½º¿¡¼­ DAO Á÷Á¢ È£ÃâÇÏ°í, ±Ûº° ´ñ±Û¸®½ºÆ®¸¦ ºÙÀÌ´Â AOP °³¹ß (1°³, List, PageList ´ëÀÀ)
+        // XXX ê¸€ë¦¬ìŠ¤íŠ¸, ëŒ“ê¸€ë¦¬ìŠ¤íŠ¸ë¥¼ serviceë‹¨ì—ì„œ ê°™ì´ ì²˜ë¦¬í•´ì•¼ í• ê¹Œìš”?
+        // TODO ê¸€ë¦¬ìŠ¤íŠ¸ëŠ” ì„œë¹„ìŠ¤ì—ì„œ DAO ì§ì ‘ í˜¸ì¶œí•˜ê³ , ê¸€ë³„ ëŒ“ê¸€ë¦¬ìŠ¤íŠ¸ë¥¼ ë¶™ì´ëŠ” AOP ê°œë°œ (1ê°œ, List, PageList ëŒ€ì‘)
 		PageList<Article> pageArticleList = boardService.getFeedList(articleParam); 
 		List<Article> articleList = pageArticleList.getList();
 		
         String articleIdList = articleList.stream()
-        // TODO Article¿¡ getArticleId() ¿À¹ö¶óÀÌµå, super.getArticleId() È£Ãâ
-			.map(Article::getArticleId) // XXX getArticleId() -> publicÀ¸·Î ¿­¾îÁà¾ßÇÏÁö ¾ÊÀ»±î¿ä?
+        // TODO Articleì— getArticleId() ì˜¤ë²„ë¼ì´ë“œ, super.getArticleId() í˜¸ì¶œ
+			.map(Article::getArticleId) // XXX getArticleId() -> publicìœ¼ë¡œ ì—´ì–´ì¤˜ì•¼í•˜ì§€ ì•Šì„ê¹Œìš”?
 			.collect(Collectors.joining(","));
 		
-        // XXX totalPage ¹æ½ÄÀ¸·Î ÇÏ·Á¸é totalCount Ã³¸®¸¦ ¾î¶»°Ô ÇØ¾ßÇÒ±î¿ä?
-        // TODO Param¿¡¼­ useMore(true) »©°í useTotal(true) »ç¿ë -> PageList¿¡¼­ getTotalPage() »ç¿ë
+        // XXX totalPage ë°©ì‹ìœ¼ë¡œ í•˜ë ¤ë©´ totalCount ì²˜ë¦¬ë¥¼ ì–´ë–»ê²Œ í•´ì•¼í• ê¹Œìš”?
+        // TODO Paramì—ì„œ useMore(true) ë¹¼ê³  useTotal(true) ì‚¬ìš© -> PageListì—ì„œ getTotalPage() ì‚¬ìš©
 		CommentParam commentParam = new CommentParam
 				.Builder(5, articleIdList)
 				.useMore(true)
@@ -127,12 +127,12 @@ public class BoardController {
 		
 		PageList<Comment> pageCommentList = boardService.getFeedCommentList(commentParam);
 		
-		// XXX ´ñ±Û ¸®½ºÆ®µéÀÌ ÇØ´ç ±Û ¸®½ºÆ®¿Í Â¦À» ÁöÀ¸·Á¸é ¾î¶»°Ô ÇØ¾ßÇÒ±î¿ä?
-        // TODO PageList<Comment> Á¶È¸½Ã °´Ã¼ÀÇ getArticleId() ±âÁØÀ¸·Î ±×·ìÇÎ (Comment¿¡ ¿À¹ö¶óÀÌµå ÇÊ¿ä, ±×·ì±âÁØ ¿ÜºÎÁÖÀÔ ÇÊ¿ä)
-        // Map<String, PageList<Comment>> -> ÀÌÈÄ MapÀÇ key¸¦ ±âÁØÀ¸·Î CommentDto¿Í ArticleDto¸¦ ±×·ìÇÎ
-        // ArticleDto¿¡ PageList<CommentDto> Ãß°¡ ¶Ç´Â MapÀ¸·Î ArticleDto¿Í PageList<CommentDto> Á¶ÇÕ
-        // ÆÑÅä¸® °´Ã¼ Ãß°¡ °í·Á -> PageList<Article>°ú PageList<Comment>¸¦ °¢°¢ PageList<ArticleDto>¿Í PageList<CommentDto>·Î º¯È¯ÇÏ´Â
-        // VO¿Í DTOÀÇ ÇÊµå±¸Á¶°¡ ¸¹ÀÌ ´Ş¶óÁ³À» ¶§ ºûÀ» ¹ßÇÔ, °°Àº ÇÊµå´õ¶óµµ ºñÁî´Ï½º ·ÎÁ÷¿¡ ÀÇÇØ °ªÀÌ °¡°ø µÇ¾úÀ» ¶§µµ ºûÀ» ¹ßÇÔ
+		// XXX ëŒ“ê¸€ ë¦¬ìŠ¤íŠ¸ë“¤ì´ í•´ë‹¹ ê¸€ ë¦¬ìŠ¤íŠ¸ì™€ ì§ì„ ì§€ìœ¼ë ¤ë©´ ì–´ë–»ê²Œ í•´ì•¼í• ê¹Œìš”?
+        // TODO PageList<Comment> ì¡°íšŒì‹œ ê°ì²´ì˜ getArticleId() ê¸°ì¤€ìœ¼ë¡œ ê·¸ë£¹í•‘ (Commentì— ì˜¤ë²„ë¼ì´ë“œ í•„ìš”, ê·¸ë£¹ê¸°ì¤€ ì™¸ë¶€ì£¼ì… í•„ìš”)
+        // Map<String, PageList<Comment>> -> ì´í›„ Mapì˜ keyë¥¼ ê¸°ì¤€ìœ¼ë¡œ CommentDtoì™€ ArticleDtoë¥¼ ê·¸ë£¹í•‘
+        // ArticleDtoì— PageList<CommentDto> ì¶”ê°€ ë˜ëŠ” Mapìœ¼ë¡œ ArticleDtoì™€ PageList<CommentDto> ì¡°í•©
+        // íŒ©í† ë¦¬ ê°ì²´ ì¶”ê°€ ê³ ë ¤ -> PageList<Article>ê³¼ PageList<Comment>ë¥¼ ê°ê° PageList<ArticleDto>ì™€ PageList<CommentDto>ë¡œ ë³€í™˜í•˜ëŠ”
+        // VOì™€ DTOì˜ í•„ë“œêµ¬ì¡°ê°€ ë§ì´ ë‹¬ë¼ì¡Œì„ ë•Œ ë¹›ì„ ë°œí•¨, ê°™ì€ í•„ë“œë”ë¼ë„ ë¹„ì¦ˆë‹ˆìŠ¤ ë¡œì§ì— ì˜í•´ ê°’ì´ ê°€ê³µ ë˜ì—ˆì„ ë•Œë„ ë¹›ì„ ë°œí•¨
 
 		return "/board/feedList";
 	}

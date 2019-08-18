@@ -19,8 +19,8 @@ public class Comment extends CommentVo {
 	@Override
 	public String getCode() {
 		if(true) {
-			// ºñÁî´Ï½º ¿ä±¸»çÇ×ÀÌ ¹Ù²î¾î¼­, Æ¯Á¤ ÄÉÀÌ½º°¡ Ãß°¡µÇ¾úÀ» ¶§
-			// ½ÇÁ¦·Î »ç¿ëÇÏ´Â ÇÊµåÀÎ, ¿À¹ö¶óÀÌµåÇÑ ¸Þ¼Òµå¸¸ È£Ãâ ÃßÀûÇØº¸¸é ¿µÇâ¹üÀ§ ÆÄ¾ÇÀÌ ³¡³²
+			// ë¹„ì¦ˆë‹ˆìŠ¤ ìš”êµ¬ì‚¬í•­ì´ ë°”ë€Œì–´ì„œ, íŠ¹ì • ì¼€ì´ìŠ¤ê°€ ì¶”ê°€ë˜ì—ˆì„ ë•Œ
+			// ì‹¤ì œë¡œ ì‚¬ìš©í•˜ëŠ” í•„ë“œì¸, ì˜¤ë²„ë¼ì´ë“œí•œ ë©”ì†Œë“œë§Œ í˜¸ì¶œ ì¶”ì í•´ë³´ë©´ ì˜í–¥ë²”ìœ„ íŒŒì•…ì´ ëë‚¨
 		}
 		return super.getCode();
 	}

@@ -48,8 +48,8 @@ public enum Path {
 		return false;
 	}
 	
-	// TODO ~~To ´Ü¾î Ã£¾Æ¼­ ¸Ş¼Òµå ÀÌ¸§ ¼öÁ¤
-	public boolean Æ÷ÇÔµÇ´Ù¿À¸¥ÂÊ°Å¿¡(String realPath) {
+	// TODO ~~To ë‹¨ì–´ ì°¾ì•„ì„œ ë©”ì†Œë“œ ì´ë¦„ ìˆ˜ì •
+	public boolean í¬í•¨ë˜ë‹¤ì˜¤ë¥¸ìª½ê±°ì—(String realPath) {
 		if(StringUtils.contains(realPath, path)) {
 			return true;
 		}

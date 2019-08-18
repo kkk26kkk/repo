@@ -42,18 +42,18 @@ public class UserController {
 		User user = userService.getUser(userDto.getUserId());
 		
 		try {
-			if(userDto.getUserPw().equals(user.getHashPw())) { // TODO DB¿¡ ÇØ½ÌµÈ °ªÀ¸·Î ÀûÀçÇØÁÖµµ·Ï µ¥ÀÌÅÍ ¸¶ÀÌ±×·¹ÀÌ¼Ç
+			if(userDto.getUserPw().equals(user.getHashPw())) { // TODO DBì— í•´ì‹±ëœ ê°’ìœ¼ë¡œ ì ì¬í•´ì£¼ë„ë¡ ë°ì´í„° ë§ˆì´ê·¸ë ˆì´ì…˜
 //				request.getSession().setAttribute("userId", user.getUserId());
 //				request.getSession().setAttribute("userName", user.getUserName());
 				request.getSession().setAttribute("user", user);
 				result.put("code", HttpStatus.OK);
 				result.put("redirect", request.getContextPath() + "/board/list");
 			} else {
-				result.put("msg", "ÇØ´ç À¯Àú°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.");
+				result.put("msg", "í•´ë‹¹ ìœ ì €ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 	            result.put("code", HttpStatus.NOT_FOUND);
 			}
 		} catch(Exception e) {
-			result.put("msg", "ÇØ´ç À¯Àú°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.");
+			result.put("msg", "í•´ë‹¹ ìœ ì €ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
             result.put("code", HttpStatus.NOT_FOUND);
 			e.printStackTrace();
 		}

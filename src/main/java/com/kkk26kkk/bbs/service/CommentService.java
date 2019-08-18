@@ -27,7 +27,7 @@ public class CommentService {
 		
 		int resultCnt = commentDao.insertComment(commentVo);
 		if(1 != resultCnt) {
-			throw new SQLException("´ñ±Û µî·ÏÀ» ½ÇÆĞ Çß½À´Ï´Ù.");
+			throw new SQLException("ëŒ“ê¸€ ë“±ë¡ì„ ì‹¤íŒ¨ í–ˆìŠµë‹ˆë‹¤.");
 		}
 		
 		int commentId = commentDao.getCommentSeqNextVal();

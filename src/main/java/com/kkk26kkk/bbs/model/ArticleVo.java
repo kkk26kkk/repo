@@ -13,7 +13,7 @@ public class ArticleVo {
 	private int readCount;
 	private Date regDtm;
 	
-	public String getArticleId() {
+	protected String getArticleId() {
 		return articleId;
 	}
 	public void setArticleId(String articleId) {

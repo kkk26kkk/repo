@@ -39,7 +39,7 @@ public class ArticleController {
 	
 	private static final int pageSize = 10;
 	
-	// ±Û »ó¼¼º¸±â
+	// ê¸€ ìƒì„¸ë³´ê¸°
 	@RequestMapping(value = "/board/{articleId}", method = RequestMethod.GET)
 	String show(@PathVariable String articleId, Model model) {
 		Article article = articleService.getArticle(articleId);
@@ -54,15 +54,15 @@ public class ArticleController {
 		return "/board/show";
 	}
 	
-	// ±Û ÀÛ¼º Æû
-	// Ä¿½ºÅÒ ÀÎÅÍÆäÀÌ½º·Î ¿¡½ºÆåÆ® - @LoginRequire - user¿¡¼­ isLogin Ã¼Å©
+	// ê¸€ ì‘ì„± í¼
+	// ì»¤ìŠ¤í…€ ì¸í„°í˜ì´ìŠ¤ë¡œ ì—ìŠ¤í™íŠ¸ - @LoginRequire - userì—ì„œ isLogin ì²´í¬
 	@RequestMapping(value = {"/board/write", "/board/{articleId}/reply"})
 	String writeForm(HttpServletRequest request, Model model, @PathVariable String articleId, User user) {
 		ArticleDto articleDto = user.createArticle();
 		
 //		String replyForm = Path.Article.getPath() + "/" + articleId + "/reply"; 
 		
-		if(Path.ReplyForm.Æ÷ÇÔµÇ´Ù¿À¸¥ÂÊ°Å¿¡(request.getRequestURI())) {
+		if(Path.ReplyForm.í¬í•¨ë˜ë‹¤ì˜¤ë¥¸ìª½ê±°ì—(request.getRequestURI())) {
 			Article article = articleService.getArticle(articleId);
 			ArticleDto parentArticleDto = article.showContent();
 			
@@ -77,7 +77,7 @@ public class ArticleController {
 		return "/board/write";
 	}
 	
-	// ±Û ¼öÁ¤ Æû
+	// ê¸€ ìˆ˜ì • í¼
 	@RequestMapping(value = "/board/{articleId}/update")
 	String updateForm(@PathVariable String articleId, Model model) {
 		Article article = articleService.getArticle(articleId);
@@ -88,7 +88,7 @@ public class ArticleController {
 		return "/board/update";
 	}
 	
-	// ±Û µî·Ï Ã³¸®
+	// ê¸€ ë“±ë¡ ì²˜ë¦¬
 	@RequestMapping(value = "/board", method = RequestMethod.POST)
 	@ResponseBody
 	Map<String, Object> write(HttpServletRequest request, @RequestBody ArticleDto articleDto, User user) {
@@ -107,14 +107,14 @@ public class ArticleController {
 		return result;
 	}
 	
-	// ±Û ¼öÁ¤ Ã³¸®
+	// ê¸€ ìˆ˜ì • ì²˜ë¦¬
 	@RequestMapping(value = "/board/{articleId}", method = RequestMethod.PUT)
 	@ResponseBody
 	Map<String, Object> update(@PathVariable String articleId, @RequestBody ArticleDto articleDto, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		if(!user.isUserId(articleDto.getUserId())) {
-			result.put("msg", "·Î±×ÀÎ Á¤º¸°¡ ´Ù¸¨´Ï´Ù.");
+			result.put("msg", "ë¡œê·¸ì¸ ì •ë³´ê°€ ë‹¤ë¦…ë‹ˆë‹¤.");
             result.put("code", HttpStatus.FORBIDDEN);
 		}
 		
@@ -127,7 +127,7 @@ public class ArticleController {
             result.put("code", HttpStatus.INTERNAL_SERVER_ERROR);
             e.printStackTrace();
 		} catch(Exception e) {
-			result.put("msg", "ÇØ´ç ±ÛÀÌ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.");
+			result.put("msg", "í•´ë‹¹ ê¸€ì´ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
             result.put("code", HttpStatus.NOT_FOUND);
             e.printStackTrace();
 		}
@@ -135,14 +135,14 @@ public class ArticleController {
 		return result;
 	}
 	
-	// ±Û »èÁ¦ Ã³¸®
+	// ê¸€ ì‚­ì œ ì²˜ë¦¬
 	@RequestMapping(value = "/board/{articleId}", method = RequestMethod.DELETE)
 	@ResponseBody
 	Map<String, Object> remove(@PathVariable String articleId, @RequestBody ArticleDto articleDto, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		if(!user.isUserId(articleDto.getUserId())) {
-			result.put("msg", "·Î±×ÀÎ Á¤º¸°¡ ´Ù¸¨´Ï´Ù.");
+			result.put("msg", "ë¡œê·¸ì¸ ì •ë³´ê°€ ë‹¤ë¦…ë‹ˆë‹¤.");
             result.put("code", HttpStatus.FORBIDDEN);
 		}
 		
@@ -150,12 +150,12 @@ public class ArticleController {
 			articleService.deleteArticle(articleId);
 			result.put("code", HttpStatus.OK);
 			result.put("redirect", Path.ArticleList.getPath());
-		}/* catch(BizException e) { // Ä¿½ºÅÒ ¿¹¿Ü ¿¹½Ã -> updateArticleExample
+		}/* catch(BizException e) { // ì»¤ìŠ¤í…€ ì˜ˆì™¸ ì˜ˆì‹œ -> updateArticleExample
 			result.put("msg", e.getMessage());
             result.put("code", HttpStatus.INTERNAL_SERVER_ERROR);
             e.printStackTrace();
 		}*/ catch(Exception e) {
-			result.put("msg", "ÇØ´ç ±ÛÀÌ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.");
+			result.put("msg", "í•´ë‹¹ ê¸€ì´ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
             result.put("code", HttpStatus.NOT_FOUND);
             e.printStackTrace();
 		}
@@ -163,7 +163,7 @@ public class ArticleController {
 		return result;
 	}
 	
-	// ´ñ±Û µî·Ï
+	// ëŒ“ê¸€ ë“±ë¡
 	@RequestMapping(value = "/board/comment", method = RequestMethod.POST)
 	@ResponseBody
 	Map<String, Object> comment(@RequestBody CommentDto commentDto, HttpServletRequest request, User user) {
@@ -171,12 +171,12 @@ public class ArticleController {
 		
 		try {
 			int resultCommentId = commentService.insertComment(commentDto, user);
-			// XXX ´ñ±Û µî·Ï ÈÄ ºä´Ü¿¡¼­  µî·ÏµÈ ´ñ±ÛÀÌ ½Ç½Ã°£À¸·Î Ç¥ÃâµÇ·Á¸é ¾î¶»°Ô ÇØ¾ß ÇÒ±î¿ä?
+			// XXX ëŒ“ê¸€ ë“±ë¡ í›„ ë·°ë‹¨ì—ì„œ  ë“±ë¡ëœ ëŒ“ê¸€ì´ ì‹¤ì‹œê°„ìœ¼ë¡œ í‘œì¶œë˜ë ¤ë©´ ì–´ë–»ê²Œ í•´ì•¼ í• ê¹Œìš”?
 			Comment comment = commentService.getComment(resultCommentId);			
 			result.put("comment", comment.showContent());
 			result.put("code", HttpStatus.OK);
 		} catch(Exception e) {
-			result.put("msg", "ÇØ´ç ±ÛÀÌ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.");
+			result.put("msg", "í•´ë‹¹ ê¸€ì´ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
             result.put("code", HttpStatus.NOT_FOUND);
             e.printStackTrace();
 		}
@@ -184,7 +184,7 @@ public class ArticleController {
 		return result;
 	}
 	
-	// ´ñ±Û ¸®½ºÆ®
+	// ëŒ“ê¸€ ë¦¬ìŠ¤íŠ¸
 	@RequestMapping(value = "/board/comment", method = RequestMethod.GET) // TODO @PathVariable
 	@ResponseBody List<CommentDto> getCommentList(@RequestParam String articleId, @RequestParam(defaultValue = "0") int page, HttpServletRequest request, User user) {
 		CommentParam commentParam = new CommentParam
@@ -194,18 +194,18 @@ public class ArticleController {
 				.userId(user.getUserId())
 				.build();
 		
-		// TODO pageList·Î
+		// TODO pageListë¡œ
 		List<Comment> list = commentService.getCommentList(commentParam);
 		
 //		list.stream()
 //			.filter(comment -> Code.COMMENT_SECRET_TYPE_PRIVATE.compare(comment.getCode()))
 //			.filter(comment -> !user.isUserId(comment.getUserId()))
 //			.filter(comment -> !user.isUserId(articleUserId))
-//			.forEach(comment -> comment.setContents("ºñ¹Ğ ´ñ±ÛÀÔ´Ï´Ù."));
+//			.forEach(comment -> comment.setContents("ë¹„ë°€ ëŒ“ê¸€ì…ë‹ˆë‹¤."));
 		
 //		list.stream()
 //			.filter(comment -> /* TODO !UserGrade.SUPER_USER.compare(user.getGrade()) && */ Code.COMMENT_SECRET_TYPE_REPORTED.compare(comment.getCode()))
-//			.forEach(comment -> comment.setContents("½Å°í Á¢¼öµÈ ´ñ±ÛÀÔ´Ï´Ù."));
+//			.forEach(comment -> comment.setContents("ì‹ ê³  ì ‘ìˆ˜ëœ ëŒ“ê¸€ì…ë‹ˆë‹¤."));
 		
 		List<CommentDto> commentList = list.stream()
 				.map(Comment::showContent)

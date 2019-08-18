@@ -30,7 +30,7 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
 			user = new User();
 			user.setUserId(StringUtils.EMPTY);
 			user.setUserPw(StringUtils.EMPTY);
-			user.setUserName("�մ�");
+			user.setUserName("게스트");
 		}
 		
 		return user;

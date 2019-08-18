@@ -33,7 +33,7 @@ public class ArticleService {
 		
 		int resultCnt = articleDao.insertArticle(articleVo);
 		if(1 != resultCnt) {
-			throw new SQLException("°Ô½Ã±Û µî·ÏÀ» ½ÇÆĞ Çß½À´Ï´Ù.");
+			throw new SQLException("ê²Œì‹œê¸€ ë“±ë¡ì„ ì‹¤íŒ¨ í–ˆìŠµë‹ˆë‹¤.");
 		}
 
 		if(articleDto.isNotice()) {
@@ -45,7 +45,7 @@ public class ArticleService {
 		int resultCnt = articleDao.insertNoticeArticle(articleId);
 		
 		if(1 != resultCnt) {
-			throw new SQLException("°øÁö±Û µî·ÏÀ» ½ÇÆĞ Çß½À´Ï´Ù.");
+			throw new SQLException("ê³µì§€ê¸€ ë“±ë¡ì„ ì‹¤íŒ¨ í–ˆìŠµë‹ˆë‹¤.");
 		}
 	}
 	
@@ -57,14 +57,14 @@ public class ArticleService {
 		
 		int resultCnt = articleDao.updateArticle(articleVo);
 		if(1 != resultCnt) {
-			throw new SQLException("°Ô½Ã±Û ¼öÁ¤À» ½ÇÆĞ Çß½À´Ï´Ù.");
+			throw new SQLException("ê²Œì‹œê¸€ ìˆ˜ì •ì„ ì‹¤íŒ¨ í–ˆìŠµë‹ˆë‹¤.");
 		}
 	}
 
 	public void deleteArticle(String articleId) throws SQLException {
 		int resultCnt = articleDao.deleteArticle(articleId);
 		if(1 != resultCnt) {
-			throw new SQLException("°Ô½Ã±Û »èÁ¦¸¦ ½ÇÆĞÇß½À´Ï´Ù.");
+			throw new SQLException("ê²Œì‹œê¸€ ì‚­ì œë¥¼ ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 		}
 	}
 	
@@ -76,7 +76,7 @@ public class ArticleService {
 		
 		int resultCnt = articleDao.updateArticle(articleVo);
 		if(1 != resultCnt) {
-			throw new BizException("°Ô½Ã±Û ¼öÁ¤À» ½ÇÆĞ Çß½À´Ï´Ù.");
+			throw new BizException("ê²Œì‹œê¸€ ìˆ˜ì •ì„ ì‹¤íŒ¨ í–ˆìŠµë‹ˆë‹¤.");
 		}
 	}
 }
