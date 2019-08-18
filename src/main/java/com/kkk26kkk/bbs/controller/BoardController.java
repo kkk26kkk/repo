@@ -3,6 +3,7 @@ package com.kkk26kkk.bbs.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +98,9 @@ public class BoardController {
 		
 		return map;
 	}
+
+	// TODO VO > DTO 적재를 서비스단으로 이동
+	// AOP로 적재를 해주기 위함
 	
 	@RequestMapping(value = "/board/feedList", method = RequestMethod.GET)
 	String feedList(Model model, @RequestParam(defaultValue = "0") int page, User user) {
@@ -113,8 +117,7 @@ public class BoardController {
 		List<Article> articleList = pageArticleList.getList();
 		
         String articleIdList = articleList.stream()
-        // TODO Article에 getArticleId() 오버라이드, super.getArticleId() 호출
-			.map(Article::getArticleId) // XXX getArticleId() -> public으로 열어줘야하지 않을까요?
+			.map(Article::getArticleId)
 			.collect(Collectors.joining(","));
 		
         // XXX totalPage 방식으로 하려면 totalCount 처리를 어떻게 해야할까요?
@@ -124,6 +127,8 @@ public class BoardController {
 				.useMore(true)
 				.userId(user.getUserId())
 				.build();
+        
+        Function<Comment, String> groupById = v->v.getArticleId();
 		
 		PageList<Comment> pageCommentList = boardService.getFeedCommentList(commentParam);
 		

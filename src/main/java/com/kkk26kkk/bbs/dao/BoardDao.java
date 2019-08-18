@@ -30,8 +30,18 @@ public class BoardDao extends BaseDao {
 	public List<Article> getArticleListMore(ArticleParam articleParam) {
 		return sqlSession.selectList("getArticleList", articleParam);
 	}
+	
+	// TODO @AddComments
+	public List<Article> getArticleListMoreAddComments(ArticleParam articleParam) {
+		return sqlSession.selectList("getArticleList", articleParam);
+	}
 
 	public PageList<Article> getFeedArticleList(ArticleParam articleParam) {
+		return super.getPageListTotal("getFeedArticleList", "getArticleCount", articleParam);
+	}
+
+	// TODO @AddComments
+	public PageList<Article> getFeedArticleListAddComments(ArticleParam articleParam) {
 		return super.getPageListTotal("getFeedArticleList", "getArticleCount", articleParam);
 	}
 

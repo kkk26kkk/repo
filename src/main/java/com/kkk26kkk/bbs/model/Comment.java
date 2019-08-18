@@ -29,4 +29,9 @@ public class Comment extends CommentVo {
 	public String getUserId() {
 		return super.getUserId();
 	}
+	
+	@Override
+	public String getArticleId() {
+		return super.getArticleId();
+	}
 }

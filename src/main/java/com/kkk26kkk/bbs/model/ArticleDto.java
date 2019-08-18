@@ -1,5 +1,7 @@
 package com.kkk26kkk.bbs.model;
 
+import com.kkk26kkk.common.model.PageList;
+
 public class ArticleDto {
 	private String articleId;
 	private String parentId;
@@ -11,6 +13,8 @@ public class ArticleDto {
 	private String regDtm;
 	private String link;
 	private boolean isNotice;
+	
+	PageList<CommentDto> commentList;
 
 	public ArticleDto() {}
 	
