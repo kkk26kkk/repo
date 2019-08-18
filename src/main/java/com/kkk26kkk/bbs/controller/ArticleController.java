@@ -41,7 +41,7 @@ public class ArticleController {
 	
 	// 글 상세보기
 	@RequestMapping(value = "/board/{articleId}", method = RequestMethod.GET)
-	String show(@PathVariable int articleId, Model model) {
+	String show(@PathVariable String articleId, Model model) {
 		Article article = articleService.getArticle(articleId);
 		
 		model.addAttribute("article", article.showContent());
@@ -57,7 +57,7 @@ public class ArticleController {
 	// 글 작성 폼
 	// 커스텀 인터페이스로 에스펙트 - @LoginRequire - user에서 isLogin 체크
 	@RequestMapping(value = {"/board/write", "/board/{articleId}/reply"})
-	String writeForm(HttpServletRequest request, Model model, @PathVariable int articleId, User user) {
+	String writeForm(HttpServletRequest request, Model model, @PathVariable String articleId, User user) {
 		ArticleDto articleDto = user.createArticle();
 		
 //		String replyForm = Path.Article.getPath() + "/" + articleId + "/reply"; 
@@ -79,7 +79,7 @@ public class ArticleController {
 	
 	// 글 수정 폼
 	@RequestMapping(value = "/board/{articleId}/update")
-	String updateForm(@PathVariable int articleId, Model model) {
+	String updateForm(@PathVariable String articleId, Model model) {
 		Article article = articleService.getArticle(articleId);
 		ArticleDto articleDto = article.showContent();
 		
@@ -110,7 +110,7 @@ public class ArticleController {
 	// 글 수정 처리
 	@RequestMapping(value = "/board/{articleId}", method = RequestMethod.PUT)
 	@ResponseBody
-	Map<String, Object> update(@PathVariable int articleId, @RequestBody ArticleDto articleDto, User user) {
+	Map<String, Object> update(@PathVariable String articleId, @RequestBody ArticleDto articleDto, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		if(!user.isUserId(articleDto.getUserId())) {
@@ -138,7 +138,7 @@ public class ArticleController {
 	// 글 삭제 처리
 	@RequestMapping(value = "/board/{articleId}", method = RequestMethod.DELETE)
 	@ResponseBody
-	Map<String, Object> remove(@PathVariable int articleId, @RequestBody ArticleDto articleDto, User user) {
+	Map<String, Object> remove(@PathVariable String articleId, @RequestBody ArticleDto articleDto, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		if(!user.isUserId(articleDto.getUserId())) {
@@ -186,7 +186,7 @@ public class ArticleController {
 	
 	// 댓글 리스트
 	@RequestMapping(value = "/board/comment", method = RequestMethod.GET) // TODO @PathVariable
-	@ResponseBody List<CommentDto> getCommentList(@RequestParam int articleId, @RequestParam(defaultValue = "0") int page, HttpServletRequest request, User user) {
+	@ResponseBody List<CommentDto> getCommentList(@RequestParam String articleId, @RequestParam(defaultValue = "0") int page, HttpServletRequest request, User user) {
 		CommentParam commentParam = new CommentParam
 				.Builder(pageSize, articleId)
 				.useTotal(true)
@@ -194,6 +194,7 @@ public class ArticleController {
 				.userId(user.getUserId())
 				.build();
 		
+		// TODO pageList로
 		List<Comment> list = commentService.getCommentList(commentParam);
 		
 //		list.stream()

@@ -1,8 +1,8 @@
 package com.kkk26kkk.bbs.model;
 
 public class CommentDto {
-	private int commentId;
-	private int articleId;
+	private String commentId;
+	private String articleId;
 	private String userId;
 	private String userName;
 	private String contents;
@@ -22,16 +22,16 @@ public class CommentDto {
 	public void setEndNum(int endNum) {
 		this.endNum = endNum;
 	}
-	public int getCommentId() {
+	public String getCommentId() {
 		return commentId;
 	}
-	public void setCommentId(int commentId) {
+	public void setCommentId(String commentId) {
 		this.commentId = commentId;
 	}
-	public int getArticleId() {
+	public String getArticleId() {
 		return articleId;
 	}
-	public void setArticleId(int articleId) {
+	public void setArticleId(String articleId) {
 		this.articleId = articleId;
 	}
 	public String getUserId() {

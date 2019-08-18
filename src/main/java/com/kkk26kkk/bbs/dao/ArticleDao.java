@@ -12,7 +12,7 @@ public class ArticleDao {
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 	
-	public Article getArticle(int articleId) {
+	public Article getArticle(String articleId) {
 		return sqlSession.selectOne("getArticle", articleId);
 	}
 	
@@ -24,15 +24,15 @@ public class ArticleDao {
 		return sqlSession.update("updateArticle", articleVo);
 	}
 
-	public int deleteArticle(int articleId) {
+	public int deleteArticle(String articleId) {
 		return sqlSession.delete("deleteArticle", articleId);
 	}
 
-	public int getArticleSeqNextVal() {
+	public String getArticleSeqNextVal() {
 		return sqlSession.selectOne("getArticleSeqNextVal");
 	}
 
-	public int insertNoticeArticle(int articleId) {
+	public int insertNoticeArticle(String articleId) {
 		return sqlSession.insert("insertNoticeArticle", articleId);
 	}
 	

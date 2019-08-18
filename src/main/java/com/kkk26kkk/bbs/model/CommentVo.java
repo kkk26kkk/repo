@@ -3,25 +3,25 @@ package com.kkk26kkk.bbs.model;
 import java.util.Date;
 
 public class CommentVo {
-	private int commentId;
-	private int articleId;
+	private String commentId;
+	private String articleId;
 	private String userId;
 	private String userName;
 	private String contents;
-	private int parentId;
+	private String parentId;
 	private Date regDtm;
 	private String code;
 	
-	protected int getCommentId() {
+	protected String getCommentId() {
 		return commentId;
 	}
-	public void setCommentId(int commentId) {
+	public void setCommentId(String commentId) {
 		this.commentId = commentId;
 	}
-	protected int getArticleId() {
+	protected String getArticleId() {
 		return articleId;
 	}
-	public void setArticleId(int articleId) {
+	public void setArticleId(String articleId) {
 		this.articleId = articleId;
 	}
 	protected String getUserId() {
@@ -42,10 +42,10 @@ public class CommentVo {
 	public void setContents(String contents) {
 		this.contents = contents;
 	}
-	protected int getParentId() {
+	protected String getParentId() {
 		return parentId;
 	}
-	public void setParentId(int parentId) {
+	public void setParentId(String parentId) {
 		this.parentId = parentId;
 	}
 	protected Date getRegDtm() {

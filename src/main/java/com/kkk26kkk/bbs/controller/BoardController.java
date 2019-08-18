@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.kkk26kkk.bbs.model.Article;
 import com.kkk26kkk.bbs.model.ArticleDto;
 import com.kkk26kkk.bbs.model.ArticleParam;
+import com.kkk26kkk.bbs.model.Comment;
+import com.kkk26kkk.bbs.model.CommentParam;
+import com.kkk26kkk.bbs.model.User;
 import com.kkk26kkk.bbs.service.BoardService;
-import com.kkk26kkk.common.model.BaseParam;
 import com.kkk26kkk.common.model.PageList;
 import com.kkk26kkk.common.model.Path;
 
@@ -94,5 +96,36 @@ public class BoardController {
 		map.put("page", page);
 		
 		return map;
+	}
+	
+	@RequestMapping(value = "/board/feedList", method = RequestMethod.GET)
+	String feedList(Model model, @RequestParam(defaultValue = "0") int page, User user) {
+		ArticleParam articleParam = new ArticleParam
+				.Builder(pageSize)
+				.useTotal(true)
+//				.useMore(true)
+//				.sort(sort)
+				.build();
+		
+		// XXX 글리스트, 댓글리스트를 service단에서 같이 처리해야 할까요?
+		PageList<Article> pageArticleList = boardService.getFeedList(articleParam); 
+		List<Article> articleList = pageArticleList.getList();
+		
+		String articleIdList = articleList.stream()
+			.map(Article::getArticleId) // XXX getArticleId() -> public으로 열어줘야하지 않을까요?
+			.collect(Collectors.joining(","));
+		
+		// XXX totalPage 방식으로 하려면 totalCount 처리를 어떻게 해야할까요?
+		CommentParam commentParam = new CommentParam
+				.Builder(5, articleIdList)
+				.useMore(true)
+				.userId(user.getUserId())
+				.build();
+		
+		PageList<Comment> pageCommentList = boardService.getFeedCommentList(commentParam);
+		
+		// XXX 댓글 리스트들이 해당 글 리스트와 짝을 지으려면 어떻게 해야할까요?
+		
+		return "/board/feedList";
 	}
 }

@@ -17,7 +17,7 @@ public class ArticleService {
 	@Autowired
 	private ArticleDao articleDao;
 	
-	public Article getArticle(int articleId) {
+	public Article getArticle(String articleId) {
 		return articleDao.getArticle(articleId);
 	}
 
@@ -28,7 +28,7 @@ public class ArticleService {
 		articleVo.setTitle(articleDto.getTitle());
 		articleVo.setContents(articleDto.getContents());
 		
-		int articleId = articleDao.getArticleSeqNextVal();
+		String articleId = articleDao.getArticleSeqNextVal();
 		articleVo.setArticleId(articleId);
 		
 		int resultCnt = articleDao.insertArticle(articleVo);
@@ -41,7 +41,7 @@ public class ArticleService {
 		}
 	}
 	
-	private void insertNoticeArticle(int articleId) throws SQLException {
+	private void insertNoticeArticle(String articleId) throws SQLException {
 		int resultCnt = articleDao.insertNoticeArticle(articleId);
 		
 		if(1 != resultCnt) {
@@ -49,7 +49,7 @@ public class ArticleService {
 		}
 	}
 	
-	public void updateArticle(int articleId, ArticleDto articleDto) throws SQLException {
+	public void updateArticle(String articleId, ArticleDto articleDto) throws SQLException {
 		ArticleVo articleVo = new ArticleVo();
 		articleVo.setArticleId(articleId);
 		articleVo.setTitle(articleDto.getTitle());
@@ -61,14 +61,14 @@ public class ArticleService {
 		}
 	}
 
-	public void deleteArticle(int articleId) throws SQLException {
+	public void deleteArticle(String articleId) throws SQLException {
 		int resultCnt = articleDao.deleteArticle(articleId);
 		if(1 != resultCnt) {
 			throw new SQLException("게시글 삭제를 실패했습니다.");
 		}
 	}
 	
-	public void updateArticleExample(int articleId, ArticleDto articleDto) throws BizException {
+	public void updateArticleExample(String articleId, ArticleDto articleDto) throws BizException {
 		ArticleVo articleVo = new ArticleVo();
 		articleVo.setArticleId(articleId);
 		articleVo.setTitle(articleDto.getTitle());

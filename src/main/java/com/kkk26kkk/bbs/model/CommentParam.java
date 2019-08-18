@@ -3,24 +3,24 @@ package com.kkk26kkk.bbs.model;
 import com.kkk26kkk.common.model.BaseParam;
 
 public class CommentParam extends BaseParam {
-	private final int articleId;
+	private final String articleId;
 	private final String userId;
 	
 	public static class Builder extends BaseParam.Builder<Builder> {
-		private int articleId;
+		private String articleId;
 		private String userId;
 		
-		public Builder(int pageSize, int articleId) {
+		public Builder(int pageSize, String articleId) {
 			super(pageSize);
 			this.articleId = articleId;
 		}
 		
-		public Builder(int startNum, int endNum, int articleId) {
+		public Builder(int startNum, int endNum, String articleId) {
 			super(startNum, endNum);
 			this.articleId = articleId;
 		}
 		
-		public Builder articleId(int articleId) {
+		public Builder articleId(String articleId) {
 			this.articleId = articleId;
 			return this;
 		}
@@ -43,7 +43,7 @@ public class CommentParam extends BaseParam {
 		this.userId = builder.userId;
 	}
 
-	public int getArticleId() {
+	public String getArticleId() {
 		return articleId;
 	}
 	

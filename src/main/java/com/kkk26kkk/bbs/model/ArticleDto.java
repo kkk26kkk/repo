@@ -1,8 +1,8 @@
 package com.kkk26kkk.bbs.model;
 
 public class ArticleDto {
-	private int articleId;
-	private int parentId;
+	private String articleId;
+	private String parentId;
 	private String userId;
 	private String userName;
 	private String title;
@@ -14,23 +14,23 @@ public class ArticleDto {
 
 	public ArticleDto() {}
 	
-	ArticleDto(int articleId, String userName, String title) {
+	ArticleDto(String articleId, String userName, String title) {
 		this.articleId = articleId;
 		this.userName = userName;
 		this.title = title;
 	}
 	
-	ArticleDto(int articleId, String userName, String title, String contents) {
+	ArticleDto(String articleId, String userName, String title, String contents) {
 		this.articleId = articleId;
 		this.userName = userName;
 		this.title = title;
 		this.contents = contents;
 	}
 	
-	public int getArticleId() {
+	public String getArticleId() {
 		return articleId;
 	}
-	public void setArticleId(int articleId) {
+	public void setArticleId(String articleId) {
 		this.articleId = articleId;
 	}
 	public String getUserId() {
@@ -63,10 +63,10 @@ public class ArticleDto {
 	public void setContents(String contents) {
 		this.contents = contents;
 	}
-	public int getParentId() {
+	public String getParentId() {
 		return parentId;
 	}
-	public void setParentId(int parentId) {
+	public void setParentId(String parentId) {
 		this.parentId = parentId;
 	}
 	public String getRegDtm() {
