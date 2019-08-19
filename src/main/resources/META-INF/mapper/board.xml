@@ -4,92 +4,98 @@
 
 <mapper namespace="Board">
     <select id="getArticleList" parameterType="com.kkk26kkk.common.model.ArticleParam" resultType="com.kkk26kkk.bbs.model.Article">
-    SELECT
-            W.*
-    FROM    (
-			    SELECT
-			            X.*
-			    FROM    (    
-					        SELECT  
-					                Z.*, ROWNUM RNUM
-					        FROM    (
-					                    SELECT 
-					                            B.*
-					                    FROM    TB_ARTICLE B
-					                    INNER JOIN 
-					                            TB_NOTICE_ARTICLE C 
-					                    ON C.ARTICLE_ID = B.ARTICLE_ID
-					                    /*
-                                        SELECT  /*+ ORDERED USE_NL(C B) INDEX(C 인덱스이름) INDEX(B 인덱스이름) */
-                                                B.*
-                                        FROM    TB_NOTICE		C
-                                              , TB_ARTICLE		B
-                                        WHERE   1               = 1
-                                        AND     SYSDATE         BETWEEN NOTICE_STT_DTM  AND NOTICE_END_DTM
-                                        AND     C.ARTICLE_ID    = B.ARTICLE_ID
-                                        */
-                                        
-					                    UNION ALL
-					                    
-								        SELECT
-								                Y.*
-								        FROM    ( -- TODO 인덱스 추가 (PARENT_ID, ARTICLE_ID)
-								                    SELECT  /*+ INDEX_DESC(A SYS_C007000) */
-								                            A.* -- TODO 테이블 첫번째 접근시에는 읽어올 컬럼 명시 (전체더라도 전체 다 명시)
-								                    FROM    TB_ARTICLE A
-                                                        <if test="sort != null">
-								                    INNER JOIN
-								                      		TB_ARTICLE_RANK R -- // TODO 이거 조인은 쓸 때만 하도록
-								                   	ON		R.ARTICLE_ID = A.ARTICLE_ID
-                                                        </if>
-								                    WHERE   1          = 1
-								                    AND     NOT EXISTS (
-	                                                                        SELECT 
-	                                                                                'X'
-	                                                                        FROM    TB_NOTICE
-	                                                                        WHERE   ARTICLE_ID = A.ARTICLE_ID
-								                                        )
-								                    --AND     (#{field} IS NULL OR FIELD    = #{field})
-								                    START WITH
-								                            PARENT_ID  = 0 -- 기본값 null로 두고, 이 라인 = 0 을 IS NULL 로 변경
-								                    CONNECT BY
-								                            PARENT_ID  = PRIOR ARTICLE_ID
-								                    ORDER SIBLINGS BY -- CHOOSE 기반으로 변경
-								                    	<if test="sort == null">
-								                            ARTICLE_ID DESC
-								                    	</if>
-								                        <if test="sort == 'commentCount'">
-								                        	(
-				                                            	SELECT
-				                                                		COUNT(1)
-				                                                FROM	TB_COMMENT B
-				                                            	WHERE	B.ARTICLE_ID = A.ARTICLE_ID
-				                                           	) DESC
-				                                        --	R.COMMENT_COUNT_RANK DESC
-								                        </if>
-								                        <if test="sort == 'readCount'">
-								                        	A.READ_COUNT DESC
-								                       	--	R.READ_COUNT_RANK DESC
-								                        </if>
-								                        <if test="sort == 'popularity'">
-								                        	R.POPULARITY_RANK DESC
-								                        </if>
-								                        <if test="sort == 'best'">
-								                        	R.BEST_RANK DESC
-								                        </if>
-								                        <if test="sort == 'rising'">
-								                        	R.RISING_RANK DESC
-								                        </if>
-								                ) Y
-					                ) Z
-			            ) X
-	            <![CDATA[
-                WHERE X.RNUM <= ${endNum} 
-                ]]>
-            ) W
-    <![CDATA[
-    WHERE W.RNUM >= {startNum}
-    ]]>
+	    SELECT
+	            W.*
+	    FROM    (
+				    SELECT
+				            X.*
+				    FROM    (    
+						        SELECT  
+						                Z.*
+						              , ROWNUM RNUM
+						        FROM    (
+						                    SELECT 
+						                            B.*
+						                    FROM    TB_ARTICLE		B
+						                    INNER JOIN 
+						                            TB_NOTICE		C 
+						                    ON 		C.ARTICLE_ID 	= B.ARTICLE_ID
+						                    /*
+	                                        SELECT  /*+ ORDERED USE_NL(C B) INDEX(C 인덱스이름) INDEX(B 인덱스이름) */
+	                                                B.*
+	                                        FROM    TB_NOTICE		C
+	                                              , TB_ARTICLE		B
+	                                        WHERE   1               = 1
+	                                        AND     SYSDATE         BETWEEN NOTICE_STT_DTM  AND NOTICE_END_DTM
+	                                        AND     C.ARTICLE_ID    = B.ARTICLE_ID
+	                                        */
+	                                        
+						                    UNION ALL
+						                    
+									        SELECT
+									                Y.*
+									        FROM    ( -- TODO 인덱스 추가 (PARENT_ID, ARTICLE_ID)
+									                    SELECT  /*+ INDEX_DESC(A PK_TB_ARTICLE) */
+									                            A.ARTICLE_ID
+									                          , A.USER_ID
+									                          , A.USER_NAME
+									                          , A.TITLE
+									                          , A.CONTENTS
+									                          , A.PARENT_ID
+									                          , A.READ_COUNT
+									                          , A.REG_DTM
+									                    FROM    TB_ARTICLE		A
+	                                                <if test="sort != null">
+									                    INNER JOIN
+									                      		TB_ARTICLE_RANK R
+									                   	ON		R.ARTICLE_ID 	=	A.ARTICLE_ID
+	                                                </if>
+									                    WHERE   1          		= 	1
+									                    AND     NOT EXISTS (
+		                                                                        SELECT 
+		                                                                                'X'
+		                                                                        FROM    TB_NOTICE
+		                                                                        WHERE   ARTICLE_ID = A.ARTICLE_ID
+									                                        )
+									                    AND     (#{field} IS NULL OR FIELD = #{field})
+									                    START WITH
+									                            PARENT_ID 	IS	NULL 
+									                    CONNECT BY
+									                            PARENT_ID 	=	PRIOR ARTICLE_ID
+									                    ORDER SIBLINGS BY
+								                    	<choose>
+								                    		<when test="sort == 'commentCount'">
+								                    			(
+					                                            	SELECT
+					                                                		COUNT(1)
+					                                                FROM	TB_COMMENT		B
+					                                            	WHERE	B.ARTICLE_ID 	= A.ARTICLE_ID
+					                                           	) DESC
+					                                        --	R.COMMENT_COUNT_RANK DESC
+								                    		</when>
+								                    		<when test="sort == 'readCount'">
+								                    			A.READ_COUNT DESC
+									                       	--	R.READ_COUNT_RANK DESC
+								                    		</when>
+								                    		<when test="sort == 'popularity'">
+								                    			R.POPULARITY_RANK DESC
+								                    		</when>
+								                    		<when test="sort == 'best'">
+								                    			R.BEST_RANK DESC
+								                    		</when>
+								                    		<when test="sort == 'rising'">
+								                    			R.RISING_RANK DESC
+								                    		</when>
+								                    		<otherwise>
+								                    			ARTICLE_ID DESC
+								                    		</otherwise>
+								                    	</choose>
+									                ) Y
+						                ) Z
+				            ) X
+	                WHERE X.RNUM &lt;= ${endNum} 
+	            ) W
+	    WHERE W.RNUM &gt;= {startNum}
     </select>
     
     <select id="getArticleCount" resultType="int">
@@ -105,46 +111,61 @@
 				    		Y.*
 				   	FROM	(
 							    SELECT	
-							    		Z.*, ROWNUM RNUM
+							    		Z.*
+							    	  ,	ROWNUM RNUM
 							    FROM	(
-									    	SELECT
-									    			A.ARTICLE_ID, A.USER_ID, A.USER_NAME, A.TITLE, A.CONTENTS,
-									    			A.PARENT_ID, A.READ_COUNT, A.REG_DTM
-									    	FROM	TB_ARTICLE	A
+									    	SELECT	/*+ INDEX_DESC(A PK_TB_ARTICLE) */
+									    			A.ARTICLE_ID
+									    		  , A.USER_ID
+									    		  , A.USER_NAME
+									    		  , A.TITLE
+									    		  , A.CONTENTS
+									    		  , A.PARENT_ID
+									    		  , A.READ_COUNT
+									    		  , A.REG_DTM
+									    	FROM	TB_ARTICLE		A
 									    	START WITH
-									                A.PARENT_ID	IS NULL -- 기본값 null로 두고, 이 라인 = 0 을 IS NULL 로 변경
+									                A.PARENT_ID		IS NULL
 									        CONNECT BY
-									                A.PARENT_ID	= PRIOR A.ARTICLE_ID
+									                A.PARENT_ID		= PRIOR A.ARTICLE_ID
 									        ORDER SIBLINGS BY
-									        		A.ARTICLE_ID DESC
+									        		A.ARTICLE_ID 	DESC
 										) Z
 							) Y
-					<![CDATA[
-			        WHERE Y.RNUM <= ${endNum} 
-			        ]]>
+			        WHERE	Y.RNUM	&lt;=	${endNum} 
 				) X
-		<![CDATA[
-		WHERE	X.RNUM >= ${startNum}
-		]]>
+		WHERE	X.RNUM	&gt;=	${startNum}
     </select>
     
     <select id="getFeedCommentList" parameterType="com.kkk26kkk.common.model.CommentParam" resultType="com.kkk26kkk.bbs.model.Comment">
-    <![CDATA[
     	SELECT	
     			Y.*
 		FROM	(
 					SELECT 
 							Z.*
 					FROM	(
-						        SELECT  /*+ INDEX_DESC(C TB_COMMENT_PK) */
-						        		C.*
+						        SELECT  /*+ INDEX_DESC(C PK_TB_COMMENT) */
+						        		C.COMMENT_ID
+						        	  , C.ARTICLE_ID
+						        	  , C.USER_ID
+						        	  , C.USER_NAME
+						        	  , C.REG_DTM
+						       	CASE	WHEN (A.USER_ID != #{userId} AND B.USER_ID != #{userId}) AND A.CODE = '20'
+						       				THEN NULL
+						       		 --	WHEN 신고 댓글
+						       		 	ELSE C.CONTENTS
 						        	  , ROW_NUMBER() OVER(PARTITION BY ARTICLE_ID ORDER BY REG_DTM DESC) AS RNUM
 						        FROM	TB_COMMENT		C
-						        WHERE	C.ARTICLE_ID	IN	(${articleId}) -- TODO
+						        WHERE	C.ARTICLE_ID	IN	(
+						        								SELECT 
+						        										regexp_substr(${articleId}, '[^,]+', 1, LEVEL) AS ARTICLE_ID
+																FROM	DUAL
+																CONNECT	BY
+																		LEVEL &lt;= length(regexp_replace(${articleId}, '[^,]+', '')) + 1
+						        							) 
       						) Z
-			        WHERE Z.RNUM <= ${endNum} 
+			        WHERE	Z.RNUM	&lt;=	${endNum}
 				) Y
-		WHERE Y.RNUM >= {startNum}
-        ]]>
+		WHERE	Y.RNUM	&gt;=	{startNum}
     </select>
 </mapper>
