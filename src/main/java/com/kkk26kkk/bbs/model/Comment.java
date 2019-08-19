@@ -10,7 +10,7 @@ public class Comment extends CommentVo {
 		dto.setCommentId(getCommentId());
 		dto.setArticleId(getArticleId());
 		dto.setUserName(getUserName());
-		dto.setContents(getContents());
+		dto.setContents(null == getContents() ? "비밀 댓글입니다." : getContents());
 		dto.setRegDtm(fdf.format(getRegDtm()));
 		
 		return dto;
@@ -34,4 +34,5 @@ public class Comment extends CommentVo {
 	public String getArticleId() {
 		return super.getArticleId();
 	}
+	
 }

@@ -196,17 +196,7 @@ public class ArticleController {
 		
 		// TODO pageList로
 		List<Comment> list = commentService.getCommentList(commentParam);
-		
-//		list.stream()
-//			.filter(comment -> Code.COMMENT_SECRET_TYPE_PRIVATE.compare(comment.getCode()))
-//			.filter(comment -> !user.isUserId(comment.getUserId()))
-//			.filter(comment -> !user.isUserId(articleUserId))
-//			.forEach(comment -> comment.setContents("비밀 댓글입니다."));
-		
-//		list.stream()
-//			.filter(comment -> /* TODO !UserGrade.SUPER_USER.compare(user.getGrade()) && */ Code.COMMENT_SECRET_TYPE_REPORTED.compare(comment.getCode()))
-//			.forEach(comment -> comment.setContents("신고 접수된 댓글입니다."));
-		
+				
 		List<CommentDto> commentList = list.stream()
 				.map(Comment::showContent)
 				.collect(Collectors.toList());
