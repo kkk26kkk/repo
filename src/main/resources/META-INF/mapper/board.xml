@@ -3,7 +3,7 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="Board">
-    <select id="getArticleList" parameterType="com.kkk26kkk.common.model.ArticleParam" resultType="com.kkk26kkk.bbs.model.Article">
+    <select id="getArticleList" parameterType="com.kkk26kkk.bbs.model.ArticleParam" resultType="com.kkk26kkk.bbs.model.Article">
 	    SELECT
 	            W.*
 	    FROM    (
@@ -103,7 +103,7 @@
         FROM tb_article
     </select>
     
-    <select id="getFeedArticleList" parameterType="com.kkk26kkk.common.model.ArticleParam" resultType="com.kkk26kkk.bbs.model.Article">
+    <select id="getFeedArticleList" parameterType="com.kkk26kkk.bbs.model.ArticleParam" resultType="com.kkk26kkk.bbs.model.Article">
 	    SELECT	
 	    		X.*
 	    FROM	(
@@ -137,7 +137,7 @@
 		WHERE	X.RNUM	&gt;=	${startNum}
     </select>
     
-    <select id="getFeedCommentList" parameterType="com.kkk26kkk.common.model.CommentParam" resultType="com.kkk26kkk.bbs.model.Comment">
+    <select id="getFeedCommentList" parameterType="com.kkk26kkk.bbs.model.CommentParam" resultType="com.kkk26kkk.bbs.model.Comment">
     	SELECT	
     			Y.*
 		FROM	(
