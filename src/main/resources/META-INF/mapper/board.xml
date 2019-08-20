@@ -15,7 +15,14 @@
 						              , ROWNUM RNUM
 						        FROM    (
 						                    SELECT 
-						                            B.*
+						                            B.ARTICLE_ID
+						                          , B.USER_ID
+						                          , B.USER_NAME
+						                          , B.TITLE
+						                          , B.CONTENTS
+						                          , B.PARENT_ID
+						                          , B.READ_COUNT
+						                          , B.REG_DTM
 						                    FROM    TB_ARTICLE		B
 						                    INNER JOIN 
 						                            TB_NOTICE		C 
@@ -57,7 +64,6 @@
 		                                                                        FROM    TB_NOTICE
 		                                                                        WHERE   ARTICLE_ID = A.ARTICLE_ID
 									                                        )
-									                    AND     (#{field} IS NULL OR FIELD = #{field})
 									                    START WITH
 									                            PARENT_ID 	IS	NULL 
 									                    CONNECT BY
@@ -95,7 +101,7 @@
 				            ) X
 	                WHERE X.RNUM &lt;= ${endNum} 
 	            ) W
-	    WHERE W.RNUM &gt;= {startNum}
+	    WHERE W.RNUM &gt;= ${startNum}
     </select>
     
     <select id="getArticleCount" resultType="int">
