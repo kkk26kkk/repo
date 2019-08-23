@@ -4,9 +4,11 @@
 
 <mapper namespace="Comment">
 	<insert id="insertComment" parameterType="com.kkk26kkk.bbs.model.CommentVo">
-		INSERT INTO tb_comment
-		VALUES (tb_comment_seq.nextval, #{articleId}, #{userId}, #{userName},
-				#{contents}, #{parentId}, sysdate)
+		INSERT INTO TB_COMMENT
+				(COMMENT_ID, ARTICLE_ID, USER_ID, USER_NAME,
+				CONTENTS, REG_DTM, CODE)
+		VALUES	(#{commentId}, #{articleId}, #{userId}, #{userName},
+				 #{contents}, sysdate, #{code})
 	</insert>
 	
 	<select id="getCommentList" parameterType="com.kkk26kkk.bbs.model.CommentParam" resultType="com.kkk26kkk.bbs.model.Comment">
@@ -24,17 +26,22 @@
 		WHERE A.ARTICLE_ID = #{articleId}
 	</select>
 	
-	<select id="getCommentSeqNextVal" resultType="int">
+	<select id="getCommentSeqNextVal" resultType="String">
 		SELECT 
 				TB_COMMENT_SEQ.NEXTVAL
 		FROM	DUAL
 	</select>
 	
-	<select id="getComment" parameterType="int" resultType="com.kkk26kkk.bbs.model.Comment">
+	<select id="getComment" parameterType="String" resultType="com.kkk26kkk.bbs.model.Comment">
 		SELECT
-				*
+				COMMENT_ID
+			  , ARTICLE_ID
+			  , USER_ID
+			  , USER_NAME
+			  , CONTENTS
+			  , REG_DTM
 		FROM	TB_COMMENT
-		WHERE	ARTICLE_ID = #{articleId}
+		WHERE	COMMENT_ID = #{commentId}
 	</select>
     
     <insert id="insertNoticeArticle" parameterType="int">

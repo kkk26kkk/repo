@@ -16,7 +16,7 @@ com.kkk26kkk.bbs.comments = (function() {
 			}
 		}).done(function(result){
 //			var commentList = JSON.parse(result);
-			var commentList = result;
+			var commentList = result.commentList;
 			
 			var comments = commentList
 			.map(function(comment) {

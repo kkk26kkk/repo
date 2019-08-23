@@ -51,8 +51,7 @@ public enum Path {
 		return false;
 	}
 	
-	// TODO ~~To 단어 찾아서 메소드 이름 수정
-	public boolean 포함되다오른쪽거에(String realPath) {
+	public boolean containedTo(String realPath) {
 		if(StringUtils.contains(realPath, path)) {
 			return true;
 		}

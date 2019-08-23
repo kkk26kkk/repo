@@ -21,13 +21,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kkk26kkk.bbs.model.Article;
 import com.kkk26kkk.bbs.model.ArticleDto;
-import com.kkk26kkk.bbs.model.CommentParam;
 import com.kkk26kkk.bbs.model.Comment;
 import com.kkk26kkk.bbs.model.CommentDto;
+import com.kkk26kkk.bbs.model.CommentParam;
 import com.kkk26kkk.bbs.model.User;
 import com.kkk26kkk.bbs.service.ArticleService;
 import com.kkk26kkk.bbs.service.CommentService;
-import com.kkk26kkk.common.model.Code;
+import com.kkk26kkk.common.model.PageList;
 import com.kkk26kkk.common.model.Path;
 
 @Controller
@@ -46,10 +46,11 @@ public class ArticleController {
 		
 		model.addAttribute("article", article.showContent());
 		
-		model.addAttribute("updateFormLink", Path.Board.getPath() + "/" + articleId + "/update");
-		model.addAttribute("replyFormLink", Path.Board.getPath() + "/" + articleId + "/reply");
-		model.addAttribute("deleteLink", Path.Board.getPath() + "/" + articleId);
+		model.addAttribute("updateFormLink", Path.UpdateForm.getRestPath(articleId));
+		model.addAttribute("replyFormLink", Path.ReplyForm.getRestPath(articleId));
+		model.addAttribute("deleteLink", Path.Board.getRestPath(articleId));
 		model.addAttribute("commentLink", Path.Comment.getPath());
+		model.addAttribute("commentListLink", Path.Comment.getRestPath(articleId));
 		
 		return "/board/show";
 	}
@@ -57,12 +58,10 @@ public class ArticleController {
 	// 글 작성 폼
 	// 커스텀 인터페이스로 에스펙트 - @LoginRequire - user에서 isLogin 체크
 	@RequestMapping(value = {"/board/write", "/board/{articleId}/reply"})
-	String writeForm(HttpServletRequest request, Model model, @PathVariable String articleId, User user) {
+	String writeForm(HttpServletRequest request, Model model, @PathVariable(required = false) String articleId, User user) {
 		ArticleDto articleDto = user.createArticle();
 		
-//		String replyForm = Path.Article.getPath() + "/" + articleId + "/reply"; 
-		
-		if(Path.ReplyForm.포함되다오른쪽거에(request.getRequestURI())) {
+		if(Path.ReplyForm.containedTo(request.getRequestURI())) {
 			Article article = articleService.getArticle(articleId);
 			ArticleDto parentArticleDto = article.showContent();
 			
@@ -91,7 +90,7 @@ public class ArticleController {
 	// 글 등록 처리
 	@RequestMapping(value = "/board", method = RequestMethod.POST)
 	@ResponseBody
-	Map<String, Object> write(HttpServletRequest request, @RequestBody ArticleDto articleDto, User user) {
+	Map<String, Object> write(@RequestBody ArticleDto articleDto, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		try {
@@ -166,12 +165,11 @@ public class ArticleController {
 	// 댓글 등록
 	@RequestMapping(value = "/board/comment", method = RequestMethod.POST)
 	@ResponseBody
-	Map<String, Object> comment(@RequestBody CommentDto commentDto, HttpServletRequest request, User user) {
+	Map<String, Object> comment(@RequestBody CommentDto commentDto, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		try {
-			int resultCommentId = commentService.insertComment(commentDto, user);
-			// XXX 댓글 등록 후 뷰단에서  등록된 댓글이 실시간으로 표출되려면 어떻게 해야 할까요?
+			String resultCommentId = commentService.insertComment(commentDto, user);
 			Comment comment = commentService.getComment(resultCommentId);			
 			result.put("comment", comment.showContent());
 			result.put("code", HttpStatus.OK);
@@ -185,8 +183,10 @@ public class ArticleController {
 	}
 	
 	// 댓글 리스트
-	@RequestMapping(value = "/board/comment", method = RequestMethod.GET) // TODO @PathVariable
-	@ResponseBody List<CommentDto> getCommentList(@RequestParam String articleId, @RequestParam(defaultValue = "0") int page, HttpServletRequest request, User user) {
+	@RequestMapping(value = "/board/comment", method = RequestMethod.GET)
+	@ResponseBody Map<String, Object> getCommentList(@RequestParam String articleId/* XXX PathVariable로 바꿔야할까요? */, @RequestParam(defaultValue = "0") int page, User user) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		
 		CommentParam commentParam = new CommentParam
 				.Builder(pageSize, articleId)
 				.useTotal(true)
@@ -194,13 +194,16 @@ public class ArticleController {
 				.userId(user.getUserId())
 				.build();
 		
-		// TODO pageList로
-		List<Comment> list = commentService.getCommentList(commentParam);
+		PageList<Comment> pageList = commentService.getCommentList(commentParam);
+		List<Comment> list = pageList.getList();
 				
 		List<CommentDto> commentList = list.stream()
 				.map(Comment::showContent)
 				.collect(Collectors.toList());
 		
-		return commentList;
+		result.put("page", page);
+		result.put("commentList", commentList);
+		
+		return result;
 	}
 }

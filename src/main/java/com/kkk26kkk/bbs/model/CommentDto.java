@@ -9,6 +9,7 @@ public class CommentDto {
 	private String regDtm;
 	private int startNum;
 	private int endNum;
+	private boolean isSecret;
 
 	public int getStartNum() {
 		return startNum;
@@ -59,4 +60,11 @@ public class CommentDto {
 		this.regDtm = regDtm;
 	}
 
+	public boolean isSecret() {
+		return isSecret;
+	}
+	
+	public void setSecret(boolean isSecret) {
+		this.isSecret = isSecret;
+	}
 }

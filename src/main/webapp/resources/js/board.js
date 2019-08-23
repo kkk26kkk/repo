@@ -34,6 +34,11 @@ function writeComment(link) {
 	var data = {};
 	data.articleId = $("#title").attr("data-article-id");
 	data.contents = $('#c-contents').val();
+	if(true == $('#isSecret').is(':checked')) {
+		data.isSecret = true;
+	} else {
+		data.isSecret = false;
+	}
 	
 	$.ajax({
 		url : link,
@@ -44,9 +49,9 @@ function writeComment(link) {
 	}).done(function(result){
 		var str = '';
 		str += '<tr>'
-			 + '<td>' + result.userName + '</td>'
-			 + '<td>' + result.contents + '</td>'
-			 + '<td>' + getTimeStamp() + '</td>'
+			 + '<td>' + result.comment.userName + '</td>'
+			 + '<td>' + result.comment.contents + '</td>'
+			 + '<td>' + result.comment.regDtm + '</td>'
 			 + '</tr>';
 			 
 		$('#tb-comment').append(str);

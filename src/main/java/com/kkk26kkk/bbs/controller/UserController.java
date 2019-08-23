@@ -35,7 +35,7 @@ public class UserController {
 	
 	@RequestMapping("/user/signUp")
 	@ResponseBody
-	Map<String, Object> signUp(@RequestBody UserDto userDto, HttpServletRequest request) {
+	Map<String, Object> signUp(@RequestBody UserDto userDto) {
 		Map<String, Object> result = new HashMap<>();
 		
 		try {

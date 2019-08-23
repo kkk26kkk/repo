@@ -11,6 +11,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
 <link rel="stylesheet" href="/resources/css/board.css" />
+<script src="/resources/js/board.js"></script>
 <script src="/resources/js/comment.js"></script>
 </head>
 <body>
@@ -58,6 +59,7 @@
 		</table>
 		
 		<textarea id=c-contents rows="2" cols="120"></textarea>
+		<input type="checkbox" id="isSecret" name="isSecret"> 
 		<button type="button" onclick="writeComment('${commentLink}')">댓글 등록</button>
 	</div>
 </div>
