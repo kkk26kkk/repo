@@ -14,8 +14,8 @@
 						                Z.*
 						              , ROWNUM RNUM
 						        FROM    (
-						                    SELECT 
-						                            B.ARTICLE_ID
+	                                        SELECT  /*+ ORDERED USE_NL(C B) INDEX(C IDX_TB_NOTICE_ARTICLEID) INDEX(B PK_TB_ARTICLE) */
+	                                                B.ARTICLE_ID
 						                          , B.USER_ID
 						                          , B.USER_NAME
 						                          , B.TITLE
@@ -23,25 +23,17 @@
 						                          , B.PARENT_ID
 						                          , B.READ_COUNT
 						                          , B.REG_DTM
-						                    FROM    TB_ARTICLE		B
-						                    INNER JOIN 
-						                            TB_NOTICE		C 
-						                    ON 		C.ARTICLE_ID 	= B.ARTICLE_ID
-						                    /*
-	                                        SELECT  /*+ ORDERED USE_NL(C B) INDEX(C 인덱스이름) INDEX(B 인덱스이름) */
-	                                                B.*
 	                                        FROM    TB_NOTICE		C
 	                                              , TB_ARTICLE		B
 	                                        WHERE   1               = 1
 	                                        AND     SYSDATE         BETWEEN NOTICE_STT_DTM  AND NOTICE_END_DTM
 	                                        AND     C.ARTICLE_ID    = B.ARTICLE_ID
-	                                        */
 	                                        
 						                    UNION ALL
 						                    
 									        SELECT
 									                Y.*
-									        FROM    ( -- TODO 인덱스 추가 (PARENT_ID, ARTICLE_ID)
+									        FROM    ( 
 									                    SELECT  /*+ INDEX_DESC(A PK_TB_ARTICLE) */
 									                            A.ARTICLE_ID
 									                          , A.USER_ID
@@ -67,7 +59,7 @@
 									                    START WITH
 									                            PARENT_ID 	IS	NULL 
 									                    CONNECT BY
-									                            PARENT_ID 	=	PRIOR ARTICLE_ID
+									                            PARENT_ID 	=	PRIOR A.ARTICLE_ID
 									                    ORDER SIBLINGS BY
 								                    	<choose>
 								                    		<when test="sort == 'commentCount'">
