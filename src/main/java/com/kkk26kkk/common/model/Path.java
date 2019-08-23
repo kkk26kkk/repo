@@ -8,7 +8,10 @@ public enum Path {
 	UpdateForm("/update", Path.Board),
 	ReplyForm("/reply", Path.Board),
 	ArticleList("/list", Path.Board),
-	Comment("/comment", Path.Board);
+	Comment("/comment", Path.Board),
+	LoginForm("/user/loginForm"),
+	SignUpForm("/user/signUpForm"),
+	Logout("/user/logout");
 	
 	private String path;
 	private Path parent;

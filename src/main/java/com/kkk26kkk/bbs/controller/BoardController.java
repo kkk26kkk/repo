@@ -67,7 +67,10 @@ public class BoardController {
 //				.limit(10)
 				.collect(Collectors.toList());
 
+		model.addAttribute("loginFormLink", Path.LoginForm.getPath());
+		model.addAttribute("signUpFormLink", Path.SignUpForm.getPath());
 		model.addAttribute("writeFormLink", Path.WriteForm.getPath());
+		model.addAttribute("logoutLink", Path.Logout.getPath());
 		model.addAttribute("boardContents", boardContents);
 		model.addAttribute("page", page);
 		

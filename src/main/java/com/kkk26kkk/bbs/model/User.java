@@ -8,9 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import com.kkk26kkk.common.model.Path;
 
 public class User extends UserVo {
-	
-//	private boolean login = false;
-	
 	public boolean isUserId(String userId) {
 		if(StringUtils.equals(userId, this.getUserId())) {
 			return true;
@@ -21,10 +18,6 @@ public class User extends UserVo {
 	
 	public boolean isLogin() {
 		return StringUtils.isNotEmpty(super.getUserId());
-	}
-	
-	public String getHashPw() {
-		return User.hash(super.getUserPw());
 	}
 	
     public static String hash(String str) {
@@ -51,7 +44,6 @@ public class User extends UserVo {
     	ArticleDto dto = new ArticleDto();
     	dto.setUserId(this.getUserId());
     	dto.setUserName(this.getUserName());
-//    	dto.setLink(Path.Write.getPath());
     	
     	return dto;
     }
@@ -65,4 +57,9 @@ public class User extends UserVo {
 	public String getUserName() {
 		return super.getUserName();
 	}
+    
+    @Override
+    public String getUserPw() {
+    	return super.getUserPw();
+    }
 }

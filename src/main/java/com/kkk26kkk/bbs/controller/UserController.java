@@ -16,25 +16,41 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.kkk26kkk.bbs.model.User;
 import com.kkk26kkk.bbs.model.UserDto;
 import com.kkk26kkk.bbs.service.UserService;
+import com.kkk26kkk.common.model.Path;
 
 @Controller
 public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	@RequestMapping("/login")
-	String login() {
-		return "/user/login";
+	@RequestMapping("/user/signUpForm")
+	String signUpForm() {
+		return "/user/signUpForm";
 	}
 	
-	@RequestMapping("/logout")
-	String logout(HttpServletRequest request) {
-		request.getSession().invalidate();
+	@RequestMapping("/user/loginForm")
+	String loginForm() {
+		return "/user/loginForm";
+	}
+	
+	@RequestMapping("/user/signUp")
+	@ResponseBody
+	Map<String, Object> signUp(@RequestBody UserDto userDto, HttpServletRequest request) {
+		Map<String, Object> result = new HashMap<>();
 		
-		return "redirect:/board/list";
+		try {
+			userService.insertUser(userDto);
+			result.put("code", HttpStatus.OK);
+			result.put("redirect", Path.ArticleList.getPath());
+		} catch(Exception e) {
+			result.put("msg", e.getMessage());
+			result.put("code", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return result;
 	}
 	
-	@RequestMapping(value = "/login_ok", method = RequestMethod.POST, headers = "Content-Type=application/json")
+	@RequestMapping(value = "/user/login", method = RequestMethod.POST, headers = "Content-Type=application/json")
 	@ResponseBody
 	Map<String, Object> loginOk(@RequestBody UserDto userDto, HttpServletRequest request) {
 		Map<String, Object> result = new HashMap<>();
@@ -42,12 +58,10 @@ public class UserController {
 		User user = userService.getUser(userDto.getUserId());
 		
 		try {
-			if(userDto.getUserPw().equals(user.getHashPw())) { // TODO DB에 해싱된 값으로 적재해주도록 데이터 마이그레이션
-//				request.getSession().setAttribute("userId", user.getUserId());
-//				request.getSession().setAttribute("userName", user.getUserName());
+			if(User.hash(userDto.getUserPw()).equals(user.getUserPw())) {
 				request.getSession().setAttribute("user", user);
 				result.put("code", HttpStatus.OK);
-				result.put("redirect", request.getContextPath() + "/board/list");
+				result.put("redirect", Path.ArticleList.getPath());
 			} else {
 				result.put("msg", "해당 유저가 존재하지 않습니다.");
 	            result.put("code", HttpStatus.NOT_FOUND);
@@ -61,4 +75,16 @@ public class UserController {
 		return result;
 	}
 	
+	@RequestMapping("/user/logout")
+	@ResponseBody
+	Map<String, Object> logout(HttpServletRequest request) {
+		Map<String, Object> result = new HashMap<>();
+		
+		request.getSession().invalidate();
+		
+		result.put("code", HttpStatus.OK);
+		result.put("redirect", Path.ArticleList.getPath());
+		
+		return result;
+	}
 }

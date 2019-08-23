@@ -8,4 +8,9 @@
 		FROM tb_user
 		WHERE user_id = #{userId}
 	</select>
+	
+	<insert id="insertUser" parameterType="com.kkk26kkk.bbs.model.UserVo">
+		INSERT INTO TB_USER
+		VALUES (#{userId}, #{userPw}, #{userName}, #{userGrade})
+	</insert>
 </mapper>

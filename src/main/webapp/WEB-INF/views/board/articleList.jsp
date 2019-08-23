@@ -6,10 +6,15 @@
 <head>
 <meta charset="UTF-8">
 <title>게시판</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
 <link rel="stylesheet" href="/resources/css/board.css" />
+<script src="/resources/js/board.js"></script>
+<script>
+
+</script>
 </head>
 <body>
 <div id="wrap">
@@ -17,13 +22,14 @@
 		<h3>게시판</h3>
 		<div>
 			<c:if test="${sessionScope.user.userId == null }">
-				<a href="/login">로그인</a>
+				<a href="${loginFormLink }">로그인</a>
+				<a href="${signUpFormLink }">회원가입</a>
 			</c:if>
 			
 			<c:if test="${sessionScope.user.userId != null }">
 					<span>아이디 : ${sessionScope.user.userId } 이름 : ${sessionScope.user.userName }</span>
 					<a href="${writeFormLink }">글쓰기</a>
-					<a href="/logout">로그아웃</a>
+					<a href="#" onclick="userLogout('${logoutLink }')">로그아웃</a>
 			</c:if>
 		</div>
 		<table class="table table-striped">
