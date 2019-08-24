@@ -44,6 +44,8 @@
 	    <aop:pointcut id="controllerTx" expression="execution(* com.kkk26kkk.bbs.service..*(..))" />
 	    <aop:advisor advice-ref="txAdvice" pointcut-ref="controllerTx" />
     </aop:config>
+    
+	<aop:aspectj-autoproxy />
 	
 	<!-- JsonMessageConverter -->
 	<beans:bean id="jsonMessageConverter"
@@ -68,6 +70,6 @@
         </argument-resolvers>
     </annotation-driven>
 		
-	<context:component-scan base-package="com.kkk26kkk.bbs" />
+	<context:component-scan base-package="com.kkk26kkk" />
 	
 </beans:beans>
