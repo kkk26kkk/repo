@@ -45,7 +45,7 @@ public class BaseParam {
 				this.page = 1;
 			}
 			
-			if(0 != this.startNum && 0 != this.endNum) {
+			if(0 == this.startNum && 0 == this.endNum) {
 				this.startNum = (page - 1) * pageSize + 1;
 				this.endNum = page * pageSize;
 			}

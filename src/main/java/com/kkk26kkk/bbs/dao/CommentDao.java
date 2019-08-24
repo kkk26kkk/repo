@@ -1,5 +1,8 @@
 package com.kkk26kkk.bbs.dao;
 
+import java.util.Map;
+import java.util.function.Function;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -22,6 +25,10 @@ public class CommentDao extends BaseDao {
 	public PageList<Comment> getCommentList(CommentParam commentParam) {
 //		return sqlSession.selectList("getCommentList", commentParam);
 		return super.getPageListMore("getCommentList", commentParam);
+	}
+	
+	public Map<String, PageList<Comment>> getFeedCommentList(CommentParam commentParam, Function<Comment, String> groupById) {
+		return super.getPageListMore("getFeedCommentList", commentParam, groupById);
 	}
 
 	public Comment getComment(String commentId) {

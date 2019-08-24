@@ -8,8 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kkk26kkk.bbs.model.Article;
 import com.kkk26kkk.bbs.model.ArticleParam;
-import com.kkk26kkk.bbs.model.Comment;
-import com.kkk26kkk.bbs.model.CommentParam;
+import com.kkk26kkk.common.aop.AddComments;
 import com.kkk26kkk.common.dao.BaseDao;
 import com.kkk26kkk.common.model.PageList;
 
@@ -31,22 +30,19 @@ public class BoardDao extends BaseDao {
 		return sqlSession.selectList("getArticleList", articleParam);
 	}
 	
-	// TODO @AddComments
+	@AddComments
 	public List<Article> getArticleListMoreAddComments(ArticleParam articleParam) {
 		return sqlSession.selectList("getArticleList", articleParam);
 	}
 
-	public PageList<Article> getFeedArticleList(ArticleParam articleParam) {
+	@AddComments
+	public PageList<Article> getFeedArticleListAddCommentsTotal(ArticleParam articleParam) {
 		return super.getPageListTotal("getFeedArticleList", "getArticleCount", articleParam);
 	}
-
-	// TODO @AddComments
-	public PageList<Article> getFeedArticleListAddComments(ArticleParam articleParam) {
-		return super.getPageListTotal("getFeedArticleList", "getArticleCount", articleParam);
-	}
-
-	public PageList<Comment> getFeedCommentList(CommentParam commentParam) {
-		return super.getPageListMore("getFeedCommentList", commentParam);
+	
+	@AddComments
+	public PageList<Article> getFeedArticleListAddCommentsMore(ArticleParam articleParam) {
+		return super.getPageListMore("getFeedArticleList", articleParam);
 	}
 	
 }

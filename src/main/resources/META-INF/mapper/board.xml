@@ -91,9 +91,9 @@
 									                ) Y
 						                ) Z
 				            ) X
-	                WHERE X.RNUM &lt;= ${endNum} 
+	                WHERE X.RNUM &lt;= #{endNum} 
 	            ) W
-	    WHERE W.RNUM &gt;= ${startNum}
+	    WHERE W.RNUM &gt;= #{startNum}
     </select>
     
     <select id="getArticleCount" resultType="int">
@@ -130,9 +130,9 @@
 									        		A.ARTICLE_ID 	DESC
 										) Z
 							) Y
-			        WHERE	Y.RNUM	&lt;=	${endNum} 
+			        WHERE	Y.RNUM	&lt;=	#{endNum} 
 				) X
-		WHERE	X.RNUM	&gt;=	${startNum}
+		WHERE	X.RNUM	&gt;=	#{startNum}
     </select>
     
     <select id="getFeedCommentList" parameterType="com.kkk26kkk.bbs.model.CommentParam" resultType="com.kkk26kkk.bbs.model.Comment">
@@ -148,22 +148,26 @@
 						        	  , C.USER_ID
 						        	  , C.USER_NAME
 						        	  , C.REG_DTM
-						       	CASE	WHEN (A.USER_ID != #{userId} AND B.USER_ID != #{userId}) AND A.CODE = '20'
+						        	  ,
+						       	CASE	WHEN (C.USER_ID != #{userId} AND A.USER_ID != #{userId}) AND C.CODE = '20'
 						       				THEN NULL
 						       		 --	WHEN 신고 댓글
 						       		 	ELSE C.CONTENTS
-						        	  , ROW_NUMBER() OVER(PARTITION BY ARTICLE_ID ORDER BY REG_DTM DESC) AS RNUM
+						       	END		CONTENTS
+						        	  , ROW_NUMBER() OVER(PARTITION BY C.ARTICLE_ID ORDER BY C.REG_DTM DESC) AS RNUM
 						        FROM	TB_COMMENT		C
-						        WHERE	C.ARTICLE_ID	IN	(
+						        	  , TB_ARTICLE		A
+						       	WHERE	C.ARTICLE_ID	=	A.ARTICLE_ID
+						        AND		C.ARTICLE_ID	IN	(
 						        								SELECT 
-						        										regexp_substr(${articleId}, '[^,]+', 1, LEVEL) AS ARTICLE_ID
+						        										regexp_substr(#{articleId}, '[^,]+', 1, LEVEL) AS ARTICLE_ID
 																FROM	DUAL
 																CONNECT	BY
-																		LEVEL &lt;= length(regexp_replace(${articleId}, '[^,]+', '')) + 1
+																		LEVEL &lt;= length(regexp_replace(#{articleId}, '[^,]+', '')) + 1
 						        							) 
       						) Z
-			        WHERE	Z.RNUM	&lt;=	${endNum}
+			        WHERE	Z.RNUM	&lt;=	#{endNum}
 				) Y
-		WHERE	Y.RNUM	&gt;=	{startNum}
+		WHERE	Y.RNUM	&gt;=	#{startNum}
     </select>
 </mapper>
