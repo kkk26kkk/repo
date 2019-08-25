@@ -46,4 +46,11 @@
 		VALUES	
 				(TB_NOTICE_SEQ.NEXTVAL, #{articleId}, SYSDATE, SYSDATE + (INTERVAL '14' DAY))
 	</insert>
+	
+	<insert id="insertReadCount" parameterType="com.kkk26kkk.bbs.model.ArticleReadCountVo">
+		INSERT
+		INTO	TB_ARTICLE_READ_COUNT
+				(ARTICLE_ID, USER_ID)
+		VALUES	(#{articleId}, #{userId})
+	</insert>
 </mapper>

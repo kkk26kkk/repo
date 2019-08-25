@@ -41,8 +41,14 @@ public class ArticleController {
 	
 	// 글 상세보기
 	@RequestMapping(value = "/board/{articleId}", method = RequestMethod.GET)
-	String show(@PathVariable String articleId, Model model) {
+	String show(@PathVariable String articleId, Model model, User user) {
 		Article article = articleService.getArticle(articleId);
+		
+		try {
+			articleService.insertReadCount(articleId, user.getUserId());
+		} catch (SQLException e) {
+			 e.printStackTrace();
+		}
 		
 		model.addAttribute("article", article.showContent());
 		

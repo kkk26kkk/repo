@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.kkk26kkk.bbs.dao.ArticleDao;
 import com.kkk26kkk.bbs.model.Article;
 import com.kkk26kkk.bbs.model.ArticleDto;
+import com.kkk26kkk.bbs.model.ArticleReadCountVo;
 import com.kkk26kkk.bbs.model.ArticleVo;
 import com.kkk26kkk.bbs.model.User;
 import com.kkk26kkk.common.exception.BizException;
@@ -78,6 +79,17 @@ public class ArticleService {
 		int resultCnt = articleDao.updateArticle(articleVo);
 		if(1 != resultCnt) {
 			throw new BizException("게시글 수정을 실패 했습니다.");
+		}
+	}
+
+	public void insertReadCount(String articleId, String userId) throws SQLException {
+		ArticleReadCountVo articleReadCountVo = new ArticleReadCountVo();
+		articleReadCountVo.setArticleId(articleId);
+		articleReadCountVo.setUserId(userId);
+		
+		int resultCnt = articleDao.insertReadCount(articleReadCountVo);
+		if(1 != resultCnt) {
+			throw new SQLException("조회수 증가 처리를 실패 했습니다.");
 		}
 	}
 }
