@@ -1,6 +1,10 @@
 package com.kkk26kkk.bbs.service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.kkk26kkk.bbs.dao.ArticleDao;
 import com.kkk26kkk.bbs.model.Article;
 import com.kkk26kkk.bbs.model.ArticleDto;
+import com.kkk26kkk.bbs.model.ArticleRankVo;
 import com.kkk26kkk.bbs.model.ArticleReadCountVo;
 import com.kkk26kkk.bbs.model.ArticleVo;
 import com.kkk26kkk.bbs.model.User;
@@ -92,4 +97,38 @@ public class ArticleService {
 			throw new SQLException("조회수 증가 처리를 실패 했습니다.");
 		}
 	}
+
+	public void saveRanking() {
+		List<Article> readCountList = articleDao.getReadCountList();
+		List<Article> commentCountList = articleDao.getCommentCountList();
+		
+		int listSize = readCountList.size();
+		List<ArticleRankVo> articleRankVoList = new ArrayList<>();
+		
+		int rank = 1;
+		readCountList.sort(Comparator.comparing(Article::getReadCount).reversed());
+		for(Article article : readCountList) {
+			article.setRank(rank++);
+		}
+		readCountList.sort(Comparator.comparing(Article::getArticleId));
+		
+		rank = 1;
+		commentCountList.sort(Comparator.comparing(Article::getCommentCount).reversed());
+		for(Article article : commentCountList) {
+			article.setRank(rank++);
+		}
+		commentCountList.sort(Comparator.comparing(Article::getArticleId));
+		
+		for(int i=0; i<listSize; i++) {
+			ArticleRankVo articleRankVo = new ArticleRankVo();
+			articleRankVo.setArticleId(readCountList.get(i).getArticleId());
+			articleRankVo.setReadCountRank(readCountList.get(i).getRank());
+			articleRankVo.setCommentCountRank(commentCountList.get(i).getRank());
+			articleRankVoList.add(articleRankVo);
+		}
+		
+		articleDao.deleteArticleRank();
+		articleDao.insertArticleRank(articleRankVoList);
+	}
+	
 }

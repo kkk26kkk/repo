@@ -212,4 +212,13 @@ public class ArticleController {
 		
 		return result;
 	}
+	
+	@RequestMapping(value = "/board/ranking")
+	@ResponseBody Map<String, Object> orderingArticle() {
+		Map<String, Object> result = new HashMap<String, Object>();
+		
+		articleService.saveRanking();
+		
+		return result;
+	}
 }

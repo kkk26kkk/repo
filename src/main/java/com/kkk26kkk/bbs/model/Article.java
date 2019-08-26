@@ -13,6 +13,9 @@ public class Article extends ArticleVo {
 	private static final FastDateFormat fdf = FastDateFormat.getInstance("yyyy-MM-dd HH:mm");
 	
 	private PageList<Comment> commentList;
+	private int readCount;
+	private int commentCount;
+	private int rank;
 
 	public PageList<Comment> getCommentList() {
 		return commentList;
@@ -63,4 +66,29 @@ public class Article extends ArticleVo {
 	public String getArticleId() {
 		return super.getArticleId();
 	}
+
+	public int getReadCount() {
+		return this.readCount;
+	}
+
+	public void setReadCount(int readCount) {
+		this.readCount = readCount;
+	}
+
+	public int getCommentCount() {
+		return commentCount;
+	}
+	
+	public void setCommentCount(int commentCount) {
+		this.commentCount = commentCount;
+	}
+
+	public int getRank() {
+		return rank;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
+	}
+	
 }
