@@ -1,6 +1,7 @@
 package com.kkk26kkk.bbs.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,18 @@ public class BoardService {
 	public PageList<Article> getFeedList(ArticleParam articleParam) {
 		PageList<Article> pageArticleList = boardDao.getFeedArticleListAddCommentsMore(articleParam);
 		return pageArticleList;
+	}
+
+	public String getArticleIdList(String userId) {
+		List<String> list = boardDao.getArticleIdList(userId);
+		String articleIdList = list.stream().collect(Collectors.joining(","));
+		
+		return articleIdList;
+	}
+
+	public PageList<Article> getClipboardList(ArticleParam articleParam) {
+		PageList<Article> pageClipboardList = boardDao.getClipboardListAddCommentsMore(articleParam);
+		return pageClipboardList;
 	}
 	
 }
