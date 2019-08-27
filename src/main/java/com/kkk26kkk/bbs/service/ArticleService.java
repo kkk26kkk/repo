@@ -2,8 +2,6 @@ package com.kkk26kkk.bbs.service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,29 +99,32 @@ public class ArticleService {
 	public void saveRanking() {
 		List<Article> readCountList = articleDao.getReadCountList();
 		List<Article> commentCountList = articleDao.getCommentCountList();
-		
 		int listSize = readCountList.size();
+		List<Article> popularityList = new ArrayList<>();
+		for(int i=0; i<listSize; i++) {
+			int readCountPoint = readCountList.get(i).getReadCount() * 2;
+			int commentCountPoint = commentCountList.get(i).getCommentCount() * 3;
+			int popularity = readCountPoint + commentCountPoint;
+			
+			Article article = new Article();
+			article.setArticleId(readCountList.get(i).getArticleId());
+			article.setPopularity(popularity);
+			
+			popularityList.add(article);
+		}
+		
 		List<ArticleRankVo> articleRankVoList = new ArrayList<>();
 		
-		int rank = 1;
-		readCountList.sort(Comparator.comparing(Article::getReadCount).reversed());
-		for(Article article : readCountList) {
-			article.setRank(rank++);
-		}
-		readCountList.sort(Comparator.comparing(Article::getArticleId));
-		
-		rank = 1;
-		commentCountList.sort(Comparator.comparing(Article::getCommentCount).reversed());
-		for(Article article : commentCountList) {
-			article.setRank(rank++);
-		}
-		commentCountList.sort(Comparator.comparing(Article::getArticleId));
+		Article.ranking(readCountList, "readCount");
+		Article.ranking(commentCountList, "commentCount");
+		Article.ranking(popularityList, "popularity");
 		
 		for(int i=0; i<listSize; i++) {
 			ArticleRankVo articleRankVo = new ArticleRankVo();
 			articleRankVo.setArticleId(readCountList.get(i).getArticleId());
 			articleRankVo.setReadCountRank(readCountList.get(i).getRank());
 			articleRankVo.setCommentCountRank(commentCountList.get(i).getRank());
+			articleRankVo.setPopularityRank(popularityList.get(i).getRank());
 			articleRankVoList.add(articleRankVo);
 		}
 		

@@ -1,9 +1,9 @@
 package com.kkk26kkk.bbs.model;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 
 import com.kkk26kkk.common.model.PageList;
@@ -15,6 +15,7 @@ public class Article extends ArticleVo {
 	private PageList<Comment> commentList;
 	private int readCount;
 	private int commentCount;
+	private int popularity;
 	private int rank;
 
 	public PageList<Comment> getCommentList() {
@@ -45,21 +46,29 @@ public class Article extends ArticleVo {
 					.map(Comment::showContent)
 					.collect(Collectors.toList());
 			
+			// XXX ArticleDto에 PageList<CommentDto> 필드를 추가해야 할까요? 아니면 List<CommentDto>필드를 추가해야 할까요?
 			dto.setCommentList(commentDtoList);
+			dto.setCommentPage(commentList.getPage());
+			dto.setCommentHasNext(commentList.hasNext());
 		}
-		// TODO 댓글 더보기를 위한 set 추가 필요
-		// dto.setCommentPage()
-		// dto.setCommentHasNext()
 		
 		return dto;
 	}
-	
-	public boolean isArticleWriter(String userId) {
-		if(StringUtils.equals(this.getUserId(), userId)) {
-			return true;
-		}
 		
-		return false;
+	public static void ranking(List<Article> list, String keyword) {
+		int rank = 1;
+		
+		if("readCount".equals(keyword)) {
+			list.sort(Comparator.comparing(Article::getReadCount).reversed());
+		} else if("commentCount".equals(keyword)) {
+			list.sort(Comparator.comparing(Article::getCommentCount).reversed());
+		} else if("popularity".equals(keyword)) {
+			list.sort(Comparator.comparing(Article::getPopularity).reversed());
+		}
+		for(Article article : list) {
+			article.setRank(rank++);
+		}
+		list.sort(Comparator.comparing(Article::getArticleId));
 	}
 	
 	@Override
@@ -81,6 +90,14 @@ public class Article extends ArticleVo {
 	
 	public void setCommentCount(int commentCount) {
 		this.commentCount = commentCount;
+	}
+
+	public int getPopularity() {
+		return popularity;
+	}
+
+	public void setPopularity(int popularity) {
+		this.popularity = popularity;
 	}
 
 	public int getRank() {

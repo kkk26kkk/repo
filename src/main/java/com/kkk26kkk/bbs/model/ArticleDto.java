@@ -2,8 +2,6 @@ package com.kkk26kkk.bbs.model;
 
 import java.util.List;
 
-import com.kkk26kkk.common.model.PageList;
-
 public class ArticleDto {
 	private String articleId;
 	private String parentId;
@@ -17,6 +15,8 @@ public class ArticleDto {
 	private boolean isNotice;
 	
 	List<CommentDto> commentList;
+	private int commentPage;
+	private boolean commentHasNext;
 
 	public ArticleDto() {}
 	
@@ -98,6 +98,22 @@ public class ArticleDto {
 	}
 	public void setCommentList(List<CommentDto> commentList) {
 		this.commentList = commentList;
+	}
+	
+	public int getCommentPage() {
+		return commentPage;
+	}
+
+	public void setCommentPage(int commentPage) {
+		this.commentPage = commentPage;
+	}
+
+	public boolean isCommentHasNext() {
+		return commentHasNext;
+	}
+
+	public void setCommentHasNext(boolean commentHasNext) {
+		this.commentHasNext = commentHasNext;
 	}
 	
 }
