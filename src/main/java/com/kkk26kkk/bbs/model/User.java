@@ -5,8 +5,6 @@ import java.security.NoSuchAlgorithmException;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.kkk26kkk.common.model.Path;
-
 public class User extends UserVo {
 	public boolean isUserId(String userId) {
 		if(StringUtils.equals(userId, this.getUserId())) {
