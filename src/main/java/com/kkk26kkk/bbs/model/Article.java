@@ -46,7 +46,8 @@ public class Article extends ArticleVo {
 					.map(Comment::showContent)
 					.collect(Collectors.toList());
 			
-			// XXX ArticleDto에 PageList<CommentDto> 필드를 추가해야 할까요? 아니면 List<CommentDto>필드를 추가해야 할까요?
+            // XXX ArticleDto에 PageList<CommentDto> 필드를 추가해야 할까요? 아니면 List<CommentDto>필드를 추가해야 할까요?
+            // TODO PageList<CommentDto>, List<CommentDto> 둘 다 필요
 			dto.setCommentList(commentDtoList);
 			dto.setCommentPage(commentList.getPage());
 			dto.setCommentHasNext(commentList.hasNext());

@@ -49,7 +49,8 @@ public class ArticleAddContentsAspect {
 		String articleIdList = articleList.stream()
 				.map(Article::getArticleId)
 				.collect(Collectors.joining(","));
-		
+        
+        // TODO HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest(); 사용
 		CommentParam commentParam = new CommentParam
 				.Builder(COMMENT_PAGE_SIZE, articleIdList)
 				.useMore(true)

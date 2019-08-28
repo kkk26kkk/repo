@@ -189,7 +189,7 @@ public class ArticleController {
 	}
 	
 	// 댓글 리스트
-	@RequestMapping(value = "/board/comment", method = RequestMethod.GET)
+    @RequestMapping(value = "/board/comment", method = RequestMethod.GET) // TODO /articles/{articleId}/comment-list/{page}
 	@ResponseBody Map<String, Object> getCommentList(@RequestParam String articleId/* XXX PathVariable로 바꿔야할까요? */, @RequestParam(defaultValue = "0") int page, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		
