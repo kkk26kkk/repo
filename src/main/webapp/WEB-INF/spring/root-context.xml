@@ -21,6 +21,7 @@
 	</bean>
 		
 	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
-		<constructor-arg ref="sqlSession" index="0"/>
+		<constructor-arg index="0" ref="sqlSession"/>
+        <constructor-arg index="1" value="BATCH" />
 	</bean>
 </beans>

@@ -1,8 +1,10 @@
 package com.kkk26kkk.bbs.service;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +12,7 @@ import org.springframework.stereotype.Service;
 import com.kkk26kkk.bbs.dao.ArticleDao;
 import com.kkk26kkk.bbs.model.Article;
 import com.kkk26kkk.bbs.model.ArticleDto;
-import com.kkk26kkk.bbs.model.ArticleRankVo;
+import com.kkk26kkk.bbs.model.ArticleRank;
 import com.kkk26kkk.bbs.model.ArticleReadCountVo;
 import com.kkk26kkk.bbs.model.ArticleVo;
 import com.kkk26kkk.bbs.model.User;
@@ -97,39 +99,37 @@ public class ArticleService {
 	}
 
 	public void saveRanking() {
-		List<Article> readCountList = articleDao.getReadCountList();
-		List<Article> commentCountList = articleDao.getCommentCountList();
-		int listSize = readCountList.size();
-		List<Article> popularityList = new ArrayList<>();
-		for(int i=0; i<listSize; i++) {
-			int readCountPoint = readCountList.get(i).getReadCount() * 2;
-			int commentCountPoint = commentCountList.get(i).getCommentCount() * 3;
-			int popularity = readCountPoint + commentCountPoint;
-			
-			Article article = new Article();
-			article.setArticleId(readCountList.get(i).getArticleId());
-			article.setPopularity(popularity);
-			
-			popularityList.add(article);
-		}
+		List<Article> articleList = articleDao.selectArticleList();
+		Map<String, Map<String, Object>> readCountMap = articleDao.getReadCountList();
+		Map<String, Map<String, Object>> commentCountMap = articleDao.getCommentCountList();
 		
-		List<ArticleRankVo> articleRankVoList = new ArrayList<>();
-		
-		Article.ranking(readCountList, "readCount");
-		Article.ranking(commentCountList, "commentCount");
-		Article.ranking(popularityList, "popularity");
-		
-		for(int i=0; i<listSize; i++) {
-			ArticleRankVo articleRankVo = new ArticleRankVo();
-			articleRankVo.setArticleId(readCountList.get(i).getArticleId());
-			articleRankVo.setReadCountRank(readCountList.get(i).getRank());
-			articleRankVo.setCommentCountRank(commentCountList.get(i).getRank());
-			articleRankVo.setPopularityRank(popularityList.get(i).getRank());
-			articleRankVoList.add(articleRankVo);
-		}
+		List<ArticleRank> articleRankList = articleList.stream()
+			.peek(article -> {
+				Map<String, Object> temp = readCountMap.get(article.getArticleId());
+				if(null != temp) {
+					BigDecimal bd = (BigDecimal)temp.get("count");
+					int readCountRank = bd.intValue();
+					article.getArticleRank().setReadCountRank(readCountRank);
+				}
+			})
+			.peek(article -> {
+				Map<String, Object> temp = commentCountMap.get(article.getArticleId());
+				if(null != temp) {
+					BigDecimal bd = (BigDecimal)temp.get("count");
+					int commentCountRank = bd.intValue();
+					article.getArticleRank().setCommentCountRank(commentCountRank);
+				}
+			})
+			.peek(article -> {
+				int readCountPoint = article.getArticleRank().getReadCountRank() * 2;
+				int commentCountPoint = article.getArticleRank().getCommentCountRank() * 3;
+				article.getArticleRank().setPopularityRank(readCountPoint + commentCountPoint);
+			})
+			.map(Article::getArticleRank)
+			.collect(Collectors.toList());
 		
 		articleDao.deleteArticleRank();
-		articleDao.insertArticleRank(articleRankVoList);
+		articleDao.insertArticleRank(articleRankList);
 	}
 	
 }

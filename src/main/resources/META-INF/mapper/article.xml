@@ -59,28 +59,41 @@
 			,	#{userId}
 		)
 	</insert>
+    
+    <select id="selectArticleList" resultType="com.kkk26kkk.bbs.model.Article">
+        SELECT article_ID
+        FROM tb_article
+    </select>
+    
+    <resultMap id="readCountResultMap" type="java.util.HashMap">
+        <result property="articleId" column="ARTICLE_ID"/>
+        <result property="count" column="COUNT"/>
+	</resultMap>
 	
-	<select id="getReadCountList" resultType="com.kkk26kkk.bbs.model.Article">
+	<select id="getReadCountList" resultMap="readCountResultMap">
 		SELECT	
 				ARTICLE_ID 
-    		  , COUNT(ARTICLE_ID) AS READ_COUNT
-       		--, RANK() OVER(ORDER BY COUNT(ARTICLE_ID) DESC) AS READ_COUNT_RANK
+    		  , COUNT(1) AS COUNT
 		FROM	
 				TB_ARTICLE_READ_COUNT
 		GROUP BY 
 				ARTICLE_ID
 	</select>
+    
+    <resultMap id="commentCountResultMap" type="java.util.HashMap">
+        <result property="articleId" column="ARTICLE_ID"/>
+        <result property="count" column="COUNT"/>
+    </resultMap>
 	
-	<select id="getCommentCountList" resultType="com.kkk26kkk.bbs.model.Article">
+	<select id="getCommentCountList" resultMap="commentCountResultMap">
 		SELECT
 				A.ARTICLE_ID
-			  , COUNT(B.ARTICLE_ID) AS COMMENT_COUNT
-			--, RANK() OVER(ORDER BY COUNT(B.ARTICLE_ID) DESC) AS COMMENT_COUNT_RANK
+			  , COUNT(B.ARTICLE_ID) AS COUNT
 		FROM   
-				TB_COMMENT B
-			  , TB_ARTICLE A
+				TB_ARTICLE A
+			  , TB_COMMENT B
 		WHERE   
-				B.ARTICLE_ID (+) = A.ARTICLE_ID
+				A.ARTICLE_ID    = B.ARTICLE_ID
 		GROUP BY 
 				A.ARTICLE_ID
 	</select>

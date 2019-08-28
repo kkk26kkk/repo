@@ -6,16 +6,21 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.kkk26kkk.bbs.dao.CommentDao;
 import com.kkk26kkk.bbs.model.Article;
 import com.kkk26kkk.bbs.model.Comment;
 import com.kkk26kkk.bbs.model.CommentParam;
+import com.kkk26kkk.bbs.model.User;
 import com.kkk26kkk.common.model.PageList;
 
 @Aspect
@@ -50,11 +55,13 @@ public class ArticleAddContentsAspect {
 				.map(Article::getArticleId)
 				.collect(Collectors.joining(","));
         
-        // TODO HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest(); 사용
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        User user = (User) request.getSession().getAttribute("user");
+        
 		CommentParam commentParam = new CommentParam
 				.Builder(COMMENT_PAGE_SIZE, articleIdList)
 				.useMore(true)
-				.userId("abcd") // XXX 현재 접속한 유저 아이디를 어떻게 주입시켜야 할까요?
+				.userId(user.getUserId())
 				.build();
 		
 		Function<Comment, String> groupById = c -> c.getArticleId();

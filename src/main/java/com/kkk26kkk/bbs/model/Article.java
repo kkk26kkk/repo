@@ -13,10 +13,7 @@ public class Article extends ArticleVo {
 	private static final FastDateFormat fdf = FastDateFormat.getInstance("yyyy-MM-dd HH:mm");
 	
 	private PageList<Comment> commentList;
-	private int readCount;
-	private int commentCount;
-	private int popularity;
-	private int rank;
+	ArticleRank articleRank;
 
 	public PageList<Comment> getCommentList() {
 		return commentList;
@@ -49,27 +46,9 @@ public class Article extends ArticleVo {
             // XXX ArticleDto에 PageList<CommentDto> 필드를 추가해야 할까요? 아니면 List<CommentDto>필드를 추가해야 할까요?
             // TODO PageList<CommentDto>, List<CommentDto> 둘 다 필요
 			dto.setCommentList(commentDtoList);
-			dto.setCommentPage(commentList.getPage());
-			dto.setCommentHasNext(commentList.hasNext());
 		}
 		
 		return dto;
-	}
-		
-	public static void ranking(List<Article> list, String keyword) {
-		int rank = 1;
-		
-		if("readCount".equals(keyword)) {
-			list.sort(Comparator.comparing(Article::getReadCount).reversed());
-		} else if("commentCount".equals(keyword)) {
-			list.sort(Comparator.comparing(Article::getCommentCount).reversed());
-		} else if("popularity".equals(keyword)) {
-			list.sort(Comparator.comparing(Article::getPopularity).reversed());
-		}
-		for(Article article : list) {
-			article.setRank(rank++);
-		}
-		list.sort(Comparator.comparing(Article::getArticleId));
 	}
 	
 	@Override
@@ -77,36 +56,15 @@ public class Article extends ArticleVo {
 		return super.getArticleId();
 	}
 
-	public int getReadCount() {
-		return this.readCount;
+	public ArticleRank getArticleRank() {
+		if(null == articleRank) {
+			this.articleRank = new ArticleRank(super.getArticleId());
+		}
+		return articleRank;
 	}
 
-	public void setReadCount(int readCount) {
-		this.readCount = readCount;
-	}
-
-	public int getCommentCount() {
-		return commentCount;
-	}
-	
-	public void setCommentCount(int commentCount) {
-		this.commentCount = commentCount;
-	}
-
-	public int getPopularity() {
-		return popularity;
-	}
-
-	public void setPopularity(int popularity) {
-		this.popularity = popularity;
-	}
-
-	public int getRank() {
-		return rank;
-	}
-
-	public void setRank(int rank) {
-		this.rank = rank;
+	public void setArticleRank(ArticleRank articleRank) {
+		this.articleRank = articleRank;
 	}
 	
 }

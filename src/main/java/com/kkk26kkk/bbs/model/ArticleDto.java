@@ -18,8 +18,6 @@ public class ArticleDto {
     // TODO 데코레이터 적용? 아니면 그냥 속성 둘 다 ArticleDto에 추가? - 이슈는 없을 듯?
     List<CommentDto> commentList;
     // TODO 아래 두 속성 제거 - 이런 속성들이 DTO에 있으면, 공통화의 의미가 없어진다
-	private int commentPage;
-	private boolean commentHasNext;
 
 	public ArticleDto() {}
 	
@@ -101,22 +99,6 @@ public class ArticleDto {
 	}
 	public void setCommentList(List<CommentDto> commentList) {
 		this.commentList = commentList;
-	}
-	
-	public int getCommentPage() {
-		return commentPage;
-	}
-
-	public void setCommentPage(int commentPage) {
-		this.commentPage = commentPage;
-	}
-
-	public boolean isCommentHasNext() {
-		return commentHasNext;
-	}
-
-	public void setCommentHasNext(boolean commentHasNext) {
-		this.commentHasNext = commentHasNext;
 	}
 	
 }

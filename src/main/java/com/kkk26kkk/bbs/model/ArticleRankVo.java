@@ -8,37 +8,37 @@ public class ArticleRankVo {
 	private int bestRank;
 	private int risingRank;
 	
-	public String getArticleId() {
+	protected String getArticleId() {
 		return articleId;
 	}
 	public void setArticleId(String articleId) {
 		this.articleId = articleId;
 	}
-	public int getCommentCountRank() {
+	protected int getCommentCountRank() {
 		return commentCountRank;
 	}
 	public void setCommentCountRank(int commentCountRank) {
 		this.commentCountRank = commentCountRank;
 	}
-	public int getReadCountRank() {
+	protected int getReadCountRank() {
 		return readCountRank;
 	}
 	public void setReadCountRank(int readCountRank) {
 		this.readCountRank = readCountRank;
 	}
-	public int getPopularityRank() {
+	protected int getPopularityRank() {
 		return popularityRank;
 	}
 	public void setPopularityRank(int popularityRank) {
 		this.popularityRank = popularityRank;
 	}
-	public int getBestRank() {
+	protected int getBestRank() {
 		return bestRank;
 	}
 	public void setBestRank(int bestRank) {
 		this.bestRank = bestRank;
 	}
-	public int getRisingRank() {
+	protected int getRisingRank() {
 		return risingRank;
 	}
 	public void setRisingRank(int risingRank) {
