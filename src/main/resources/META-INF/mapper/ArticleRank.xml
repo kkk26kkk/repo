@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="bbs.articleRank.dao">
+	<select id="selectArticleIdListForRank" resultType="com.kkk26kkk.bbs.model.ArticleRank">
+        SELECT	ARTICLE_ID
+        FROM	TB_ARTICLE
+    </select>
+    
+    <resultMap id="readCountResultMap" type="java.util.HashMap">
+        <result property="articleId" column="ARTICLE_ID"/>
+        <result property="count" column="COUNT" javaType="int"/>
+	</resultMap>
+	
+	<select id="selectReadCountList" resultMap="readCountResultMap">
+		SELECT	
+				ARTICLE_ID 
+    		  , COUNT(1) AS COUNT
+		FROM	
+				TB_ARTICLE_READ_COUNT
+		GROUP BY 
+				ARTICLE_ID
+	</select>
+    
+    <resultMap id="commentCountResultMap" type="java.util.HashMap">
+        <result property="articleId" column="ARTICLE_ID"/>
+        <result property="count" column="COUNT" javaType="int"/>
+    </resultMap>
+	
+	<select id="selectCommentCountList" resultMap="commentCountResultMap">
+		SELECT
+				A.ARTICLE_ID
+			  , COUNT(B.ARTICLE_ID) AS COUNT
+		FROM   
+				TB_ARTICLE A
+			  , TB_COMMENT B
+		WHERE   
+				A.ARTICLE_ID    = B.ARTICLE_ID
+		GROUP BY 
+				A.ARTICLE_ID
+	</select>
+	
+	<delete id="deleteArticleRank">
+		DELETE
+		FROM	TB_ARTICLE_RANK
+	</delete>
+	
+	<insert id="insertArticleRank" parameterType="com.kkk26kkk.bbs.model.ArticleRankVo">
+		INSERT INTO TB_ARTICLE_RANK
+		(
+				ARTICLE_ID
+			,	COMMENT_COUNT_RANK
+			, 	READ_COUNT_RANK
+			,	POPULARITY_RANK
+			,	BEST_RANK
+			,	RISING_RANK
+		)
+		VALUES
+		(
+				#{articleId}
+			,	#{commentCountRank}
+			,	#{readCountRank}
+			,	#{popularityRank}
+			,	#{bestRank}
+			,	#{risingRank}
+		)
+	</insert>
+</mapper>

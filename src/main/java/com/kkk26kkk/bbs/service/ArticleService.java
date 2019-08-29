@@ -97,39 +97,5 @@ public class ArticleService {
 			throw new SQLException("조회수 증가 처리를 실패 했습니다.");
 		}
 	}
-
-	public void saveRanking() {
-		List<Article> articleList = articleDao.selectArticleList();
-		Map<String, Map<String, Object>> readCountMap = articleDao.getReadCountList();
-		Map<String, Map<String, Object>> commentCountMap = articleDao.getCommentCountList();
-		
-		List<ArticleRank> articleRankList = articleList.stream()
-			.peek(article -> {
-				Map<String, Object> temp = readCountMap.get(article.getArticleId());
-				if(null != temp) {
-					BigDecimal bd = (BigDecimal)temp.get("count");
-					int readCountRank = bd.intValue();
-					article.getArticleRank().setReadCountRank(readCountRank);
-				}
-			})
-			.peek(article -> {
-				Map<String, Object> temp = commentCountMap.get(article.getArticleId());
-				if(null != temp) {
-					BigDecimal bd = (BigDecimal)temp.get("count");
-					int commentCountRank = bd.intValue();
-					article.getArticleRank().setCommentCountRank(commentCountRank);
-				}
-			})
-			.peek(article -> {
-				int readCountPoint = article.getArticleRank().getReadCountRank() * 2;
-				int commentCountPoint = article.getArticleRank().getCommentCountRank() * 3;
-				article.getArticleRank().setPopularityRank(readCountPoint + commentCountPoint);
-			})
-			.map(Article::getArticleRank)
-			.collect(Collectors.toList());
-		
-		articleDao.deleteArticleRank();
-		articleDao.insertArticleRank(articleRankList);
-	}
 	
 }

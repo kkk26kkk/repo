@@ -1,14 +1,10 @@
 package com.kkk26kkk.bbs.dao;
 
-import java.util.List;
-import java.util.Map;
-
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kkk26kkk.bbs.model.Article;
-import com.kkk26kkk.bbs.model.ArticleRank;
 import com.kkk26kkk.bbs.model.ArticleReadCountVo;
 import com.kkk26kkk.bbs.model.ArticleVo;
 
@@ -44,28 +40,6 @@ public class ArticleDao {
 
 	public int insertReadCount(ArticleReadCountVo articleReadCountVo) {
 		return sqlSession.insert("insertReadCount", articleReadCountVo);
-	}
-
-	public List<Article> selectArticleList() {
-		return sqlSession.selectList("selectArticleList");
-	}
-
-	public Map<String, Map<String, Object>> getReadCountList() {
-		return sqlSession.selectMap("getReadCountList", "articleId");
-	}
-
-	public Map<String, Map<String, Object>> getCommentCountList() {
-		return sqlSession.selectMap("getCommentCountList", "articleId");
-	}
-	
-	public void insertArticleRank(List<ArticleRank> articleRankVoList) {
-		for(ArticleRank articleRank : articleRankVoList) {
-			sqlSession.insert("insertArticleRank", articleRank);
-		}
-	}
-	
-	public void deleteArticleRank() {
-		sqlSession.delete("deleteArticleRank");
 	}
 	
 }

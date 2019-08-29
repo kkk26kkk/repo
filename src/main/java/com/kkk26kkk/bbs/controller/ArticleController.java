@@ -25,6 +25,7 @@ import com.kkk26kkk.bbs.model.Comment;
 import com.kkk26kkk.bbs.model.CommentDto;
 import com.kkk26kkk.bbs.model.CommentParam;
 import com.kkk26kkk.bbs.model.User;
+import com.kkk26kkk.bbs.service.ArticleRankService;
 import com.kkk26kkk.bbs.service.ArticleService;
 import com.kkk26kkk.bbs.service.CommentService;
 import com.kkk26kkk.common.model.PageList;
@@ -36,6 +37,8 @@ public class ArticleController {
 	private ArticleService articleService;
 	@Autowired
 	private CommentService commentService;
+	@Autowired
+	private ArticleRankService articleRankService;
 	
 	private static final int pageSize = 10;
 	
@@ -217,7 +220,7 @@ public class ArticleController {
 	@ResponseBody Map<String, Object> orderingArticle() {
 		Map<String, Object> result = new HashMap<String, Object>();
 		
-		articleService.saveRanking();
+		articleRankService.saveRanking();
 		
 		return result;
 	}

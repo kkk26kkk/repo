@@ -1,6 +1,5 @@
 package com.kkk26kkk.bbs.model;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,7 +12,7 @@ public class Article extends ArticleVo {
 	private static final FastDateFormat fdf = FastDateFormat.getInstance("yyyy-MM-dd HH:mm");
 	
 	private PageList<Comment> commentList;
-	ArticleRank articleRank;
+//	ArticleRank articleRank;
 
 	public PageList<Comment> getCommentList() {
 		return commentList;
@@ -56,15 +55,15 @@ public class Article extends ArticleVo {
 		return super.getArticleId();
 	}
 
-	public ArticleRank getArticleRank() {
-		if(null == articleRank) {
-			this.articleRank = new ArticleRank(super.getArticleId());
-		}
-		return articleRank;
-	}
-
-	public void setArticleRank(ArticleRank articleRank) {
-		this.articleRank = articleRank;
-	}
+//	public ArticleRank getArticleRank() {
+//		if(null == articleRank) {
+//			this.articleRank = new ArticleRank(super.getArticleId());
+//		}
+//		return articleRank;
+//	}
+//
+//	public void setArticleRank(ArticleRank articleRank) {
+//		this.articleRank = articleRank;
+//	}
 	
 }
