@@ -11,4 +11,6 @@ public abstract class ArticleDecorator implements Article {
 	public abstract ArticleDto showHeader();
 	@Override
 	public abstract ArticleDto showContent();
+	@Override
+	public abstract String getArticleId();
 }

@@ -47,7 +47,7 @@ public class BoardDao extends BaseDao {
 	}
 	
 	@AddComments
-	public PageList<Article1> getFeedArticleListAddCommentsMore(ArticleParam articleParam) {
+	public PageList<Article> getFeedArticleListAddCommentsMore(ArticleParam articleParam) {
 		return super.getPageListMore("getFeedArticleList", articleParam);
 	}
 

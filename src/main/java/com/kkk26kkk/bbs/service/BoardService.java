@@ -29,16 +29,13 @@ public class BoardService {
 		return boardDao.getArticleListMore(articleParam);
 	}
 
-	public PageList<Article1> getFeedList(ArticleParam articleParam) {
-		PageList<Article1> pageArticleList = boardDao.getFeedArticleListAddCommentsMore(articleParam);
-		return pageArticleList;
+	public PageList<Article> getFeedList(ArticleParam articleParam) {
+		return boardDao.getFeedArticleListAddCommentsMore(articleParam);
 	}
 
 	public String getArticleIdList(String userId) {
 		List<String> list = boardDao.getArticleIdList(userId);
-		String articleIdList = list.stream().collect(Collectors.joining(","));
-		
-		return articleIdList;
+		return list.stream().collect(Collectors.joining(","));
 	}
 
 	public PageList<Article1> getClipboardList(ArticleParam articleParam) {

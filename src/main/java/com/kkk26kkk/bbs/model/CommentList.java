@@ -8,14 +8,6 @@ import com.kkk26kkk.common.model.PageList;
 public class CommentList extends ArticleDecorator {
 	private PageList<Comment> commentList;
 	
-	public PageList<Comment> getCommentList() {
-		return commentList;
-	}
-
-	public void setCommentList(PageList<Comment> commentList) {
-		this.commentList = commentList;
-	}
-	
 	public CommentList(Article article) {
 		super(article);
 	}
@@ -29,23 +21,22 @@ public class CommentList extends ArticleDecorator {
 	public ArticleDto showHeader() {
 		return article.showHeader();
 	}
-	
+	@Override
 	public ArticleDto showContent() {
 		ArticleDto dto = article.showContent();
 		
 		if(null != commentList) {
-			List<CommentDto> commentDtoList = commentList.getList().stream()
+			List<CommentDto> list = commentList.getList().stream()
 					.map(Comment::showContent)
 					.collect(Collectors.toList());
+			PageList<CommentDto> commentDtoList = new PageList<CommentDto>(list, commentList.getPage(), commentList.getPageSize(), commentList.getTotalCount(), commentList.hasNext());
 			dto.setCommentList(commentDtoList);
 		}
 		
 		return dto;
 	}
-
-	// TODO 여기서 반환하는게 맞을까?
 	@Override
 	public String getArticleId() {
-		return null;
+		return article.getArticleId();
 	}
 }

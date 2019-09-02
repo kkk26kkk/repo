@@ -76,10 +76,10 @@ public class ArticleAddContentsAspect {
 		
 //		articleList.stream()
 //			.forEach(a -> a.setCommentList(commentListMap.get(a.getArticleId())));
-		articleList.stream()
-			.peek(a -> new CommentList(a, commentListMap.get(a.getArticleId())))
+		articleList = articleList.stream()
+			.map(a -> new CommentList(a, commentListMap.get(a.getArticleId())))
 			.collect(Collectors.toList());
-				
+		
 		return obj;
 	}
 }

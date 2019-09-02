@@ -101,7 +101,7 @@
         FROM tb_article
     </select>
     
-    <select id="getFeedArticleList" parameterType="com.kkk26kkk.bbs.model.ArticleParam" resultType="com.kkk26kkk.bbs.model.Article">
+    <select id="getFeedArticleList" parameterType="com.kkk26kkk.bbs.model.ArticleParam" resultType="com.kkk26kkk.bbs.model.XArticle">
 	    SELECT	
 	    		X.*
 	    FROM	(
