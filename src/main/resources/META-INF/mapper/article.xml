@@ -3,7 +3,7 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="Article">
-	<select id="getArticle" parameterType="String" resultType="com.kkk26kkk.bbs.model.Article">
+	<select id="getArticle" parameterType="String" resultType="com.kkk26kkk.bbs.model.XArticle">
 		SELECT *
 		FROM tb_article
 		WHERE article_id = #{articleId}

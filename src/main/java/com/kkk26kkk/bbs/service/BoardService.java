@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.kkk26kkk.bbs.dao.BoardDao;
 import com.kkk26kkk.bbs.model.Article;
+import com.kkk26kkk.bbs.model.Article1;
 import com.kkk26kkk.bbs.model.ArticleParam;
 import com.kkk26kkk.common.model.PageList;
 
@@ -16,16 +17,20 @@ public class BoardService {
 	@Autowired
 	BoardDao boardDao;
 
+//	public PageList<Article1> getArticleList(ArticleParam articleParam) {
+//		return boardDao.getArticleList(articleParam);
+//	}
+	
 	public PageList<Article> getArticleList(ArticleParam articleParam) {
 		return boardDao.getArticleList(articleParam);
 	}
 	
-	public List<Article> getArticleListMore(ArticleParam articleParam) {
+	public List<Article1> getArticleListMore(ArticleParam articleParam) {
 		return boardDao.getArticleListMore(articleParam);
 	}
 
-	public PageList<Article> getFeedList(ArticleParam articleParam) {
-		PageList<Article> pageArticleList = boardDao.getFeedArticleListAddCommentsMore(articleParam);
+	public PageList<Article1> getFeedList(ArticleParam articleParam) {
+		PageList<Article1> pageArticleList = boardDao.getFeedArticleListAddCommentsMore(articleParam);
 		return pageArticleList;
 	}
 
@@ -36,8 +41,8 @@ public class BoardService {
 		return articleIdList;
 	}
 
-	public PageList<Article> getClipboardList(ArticleParam articleParam) {
-		PageList<Article> pageClipboardList = boardDao.getClipboardListAddCommentsMore(articleParam);
+	public PageList<Article1> getClipboardList(ArticleParam articleParam) {
+		PageList<Article1> pageClipboardList = boardDao.getClipboardListAddCommentsMore(articleParam);
 		return pageClipboardList;
 	}
 	

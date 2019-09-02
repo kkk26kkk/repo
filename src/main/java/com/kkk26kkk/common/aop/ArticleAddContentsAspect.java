@@ -18,7 +18,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.kkk26kkk.bbs.dao.CommentDao;
 import com.kkk26kkk.bbs.model.Article;
+import com.kkk26kkk.bbs.model.Article1;
 import com.kkk26kkk.bbs.model.Comment;
+import com.kkk26kkk.bbs.model.CommentList;
 import com.kkk26kkk.bbs.model.CommentParam;
 import com.kkk26kkk.bbs.model.User;
 import com.kkk26kkk.common.model.PageList;
@@ -51,6 +53,10 @@ public class ArticleAddContentsAspect {
 			return obj;
 		}
 		
+//		articleList.stream()
+//			.peek(a -> new CommentList(a))
+//			.collect(Collectors.toList());
+		
 		String articleIdList = articleList.stream()
 				.map(Article::getArticleId)
 				.collect(Collectors.joining(","));
@@ -68,8 +74,11 @@ public class ArticleAddContentsAspect {
 		
 		Map<String, PageList<Comment>> commentListMap = commentDao.getFeedCommentList(commentParam, groupById);
 		
+//		articleList.stream()
+//			.forEach(a -> a.setCommentList(commentListMap.get(a.getArticleId())));
 		articleList.stream()
-			.forEach(a -> a.setCommentList(commentListMap.get(a.getArticleId())));
+			.peek(a -> new CommentList(a, commentListMap.get(a.getArticleId())))
+			.collect(Collectors.toList());
 				
 		return obj;
 	}

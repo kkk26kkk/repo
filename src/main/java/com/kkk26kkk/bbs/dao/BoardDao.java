@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kkk26kkk.bbs.model.Article;
+import com.kkk26kkk.bbs.model.Article1;
 import com.kkk26kkk.bbs.model.ArticleParam;
 import com.kkk26kkk.common.aop.AddComments;
 import com.kkk26kkk.common.dao.BaseDao;
@@ -17,6 +18,11 @@ public class BoardDao extends BaseDao {
 	@Autowired
 	SqlSessionTemplate sqlSession;
 	
+//	public PageList<Article1> getArticleList(ArticleParam articleParam) {
+//		return super.getPageListTotal("getArticleList", "getArticleCount", articleParam);
+////		return super.getPageListMore("getArticleList", pageListParam);
+//	}
+	
 	public PageList<Article> getArticleList(ArticleParam articleParam) {
 		return super.getPageListTotal("getArticleList", "getArticleCount", articleParam);
 //		return super.getPageListMore("getArticleList", pageListParam);
@@ -26,22 +32,22 @@ public class BoardDao extends BaseDao {
 		return sqlSession.selectOne("getArticleCount");
 	}
 	
-	public List<Article> getArticleListMore(ArticleParam articleParam) {
+	public List<Article1> getArticleListMore(ArticleParam articleParam) {
 		return sqlSession.selectList("getArticleList", articleParam);
 	}
 	
 	@AddComments
-	public List<Article> getArticleListMoreAddComments(ArticleParam articleParam) {
+	public List<Article1> getArticleListMoreAddComments(ArticleParam articleParam) {
 		return sqlSession.selectList("getArticleList", articleParam);
 	}
 
 	@AddComments
-	public PageList<Article> getFeedArticleListAddCommentsTotal(ArticleParam articleParam) {
+	public PageList<Article1> getFeedArticleListAddCommentsTotal(ArticleParam articleParam) {
 		return super.getPageListTotal("getFeedArticleList", "getArticleCount", articleParam);
 	}
 	
 	@AddComments
-	public PageList<Article> getFeedArticleListAddCommentsMore(ArticleParam articleParam) {
+	public PageList<Article1> getFeedArticleListAddCommentsMore(ArticleParam articleParam) {
 		return super.getPageListMore("getFeedArticleList", articleParam);
 	}
 
@@ -50,7 +56,7 @@ public class BoardDao extends BaseDao {
 	}
 
 	@AddComments
-	public PageList<Article> getClipboardListAddCommentsMore(ArticleParam articleParam) {
+	public PageList<Article1> getClipboardListAddCommentsMore(ArticleParam articleParam) {
 		return super.getPageListMore("getClipboardList", articleParam);
 	}
 	

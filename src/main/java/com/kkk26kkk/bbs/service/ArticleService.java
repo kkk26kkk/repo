@@ -1,10 +1,6 @@
 package com.kkk26kkk.bbs.service;
 
-import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.kkk26kkk.bbs.dao.ArticleDao;
 import com.kkk26kkk.bbs.model.Article;
 import com.kkk26kkk.bbs.model.ArticleDto;
-import com.kkk26kkk.bbs.model.ArticleRank;
 import com.kkk26kkk.bbs.model.ArticleReadCountVo;
 import com.kkk26kkk.bbs.model.ArticleVo;
 import com.kkk26kkk.bbs.model.User;

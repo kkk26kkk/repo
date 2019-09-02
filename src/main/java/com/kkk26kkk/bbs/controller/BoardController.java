@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kkk26kkk.bbs.model.Article;
+import com.kkk26kkk.bbs.model.Article1;
 import com.kkk26kkk.bbs.model.ArticleDto;
 import com.kkk26kkk.bbs.model.ArticleParam;
 import com.kkk26kkk.bbs.model.User;
@@ -50,6 +51,7 @@ public class BoardController {
 				.sort(sort)
 				.build();
 		
+//	    PageList<Article1> pageList = boardService.getArticleList(articleParam);
 	    PageList<Article> pageList = boardService.getArticleList(articleParam);
 	    articleParam = null;
 	    
@@ -88,9 +90,9 @@ public class BoardController {
 				.Builder(pageSize)
 				.build();
 		
-		List<Article> articleList = boardService.getArticleListMore(articleParam);
+		List<Article1> articleList = boardService.getArticleListMore(articleParam);
 		List<ArticleDto> boardContents = articleList.stream()
-				.map(Article::showHeader)
+				.map(Article1::showHeader)
 				.collect(Collectors.toList());
 		
 		map.put("boardContents", boardContents);
@@ -108,15 +110,15 @@ public class BoardController {
 				.useMore(true)
 				.build();
 		
-		PageList<Article> pageArticleList = boardService.getFeedList(articleParam); 
+		PageList<Article1> pageArticleList = boardService.getFeedList(articleParam); 
 		
-		List<Article> articleList = pageArticleList.getList();
+		List<Article1> articleList = pageArticleList.getList();
 		int totalPage = pageArticleList.getTotalPage();
 		int totalCount = pageArticleList.getTotalCount();
 		boolean hasNext = pageArticleList.hasNext();
 
 		List<ArticleDto> articleDtoList = articleList.stream()
-			.map(Article::showContent)
+			.map(Article1::showContent)
 			.collect(Collectors.toList());
 		
 		map.put("articleList", articleDtoList);
@@ -139,14 +141,14 @@ public class BoardController {
 				.articleIdList(articleIdList)
 				.build();
 		
-		PageList<Article> pageArticleList = boardService.getClipboardList(articleParam);
-		List<Article> articleList = pageArticleList.getList();
+		PageList<Article1> pageArticleList = boardService.getClipboardList(articleParam);
+		List<Article1> articleList = pageArticleList.getList();
 //		int totalPage = pageArticleList.getTotalPage();
 //		int totalCount = pageArticleList.getTotalCount();
 //		boolean hasNext = pageArticleList.hasNext();
 		
 		List<ArticleDto> articleDtoList = articleList.stream()
-				.map(Article::showContent)
+				.map(Article1::showContent)
 				.collect(Collectors.toList());
 			
 		map.put("articleList", articleDtoList);
