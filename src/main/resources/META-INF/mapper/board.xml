@@ -177,7 +177,7 @@
     	WHERE	USER_ID = #{userId}
     </select>
     
-    <select id="getClipboardList" parameterType="com.kkk26kkk.bbs.model.ArticleParam" resultType="com.kkk26kkk.bbs.model.Article">
+    <select id="getClipboardList" parameterType="com.kkk26kkk.bbs.model.ArticleParam" resultType="com.kkk26kkk.bbs.model.XArticle">
     	SELECT	
     			X.*
     	FROM	(

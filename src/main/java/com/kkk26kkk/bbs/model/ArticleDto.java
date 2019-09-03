@@ -1,7 +1,5 @@
 package com.kkk26kkk.bbs.model;
 
-import java.util.List;
-
 import com.kkk26kkk.common.model.PageList;
 
 public class ArticleDto {
@@ -15,11 +13,7 @@ public class ArticleDto {
 	private String regDtm;
 	private String link;
 	private boolean isNotice;
-    
-    // TODO List<CommentDto>, PageList<CommentDto> 각각 서브셋 구조로?
-    // TODO 데코레이터 적용? 아니면 그냥 속성 둘 다 ArticleDto에 추가? - 이슈는 없을 듯?
-	PageList<CommentDto> commentList;
-//    List<CommentDto> commentList;
+	private PageList<CommentDto> commentList;
 
 	public ArticleDto() {}
 	

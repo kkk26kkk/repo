@@ -19,6 +19,10 @@ public class PageList<E> {
 		this.hasNext = hasNext;
 	}
 	
+	public void setList(List<E> list) {
+		this.list = list;
+		this.totalCount = list.size();		
+	}
 	public List<E> getList() {
 		return list;
 	}

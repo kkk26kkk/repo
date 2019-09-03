@@ -42,20 +42,17 @@ public class ArticleAddContentsAspect {
 			e.printStackTrace();
 		}
 		
-		List<Article> articleList = new LinkedList<>();
+		List<Article> articleList = null;
 		if (obj instanceof PageList) {
 			articleList = ((PageList<Article>) obj).getList();
 		} else if (obj instanceof List) {
 			articleList = (List<Article>) obj;
 		} else if (obj instanceof Article) {
+			articleList = new LinkedList<>();
 			articleList.add((Article) obj);
 		} else {	
 			return obj;
 		}
-		
-//		articleList.stream()
-//			.peek(a -> new CommentList(a))
-//			.collect(Collectors.toList());
 		
 		String articleIdList = articleList.stream()
 				.map(Article::getArticleId)
@@ -74,12 +71,13 @@ public class ArticleAddContentsAspect {
 		
 		Map<String, PageList<Comment>> commentListMap = commentDao.getFeedCommentList(commentParam, groupById);
 		
-//		articleList.stream()
-//			.forEach(a -> a.setCommentList(commentListMap.get(a.getArticleId())));
 		articleList = articleList.stream()
 			.map(a -> new CommentList(a, commentListMap.get(a.getArticleId())))
 			.collect(Collectors.toList());
 		
+		if (obj instanceof PageList) {
+			((PageList<Article>) obj).setList(articleList);
+		}
 		return obj;
 	}
 }

@@ -18,11 +18,6 @@ public class BoardDao extends BaseDao {
 	@Autowired
 	SqlSessionTemplate sqlSession;
 	
-//	public PageList<Article1> getArticleList(ArticleParam articleParam) {
-//		return super.getPageListTotal("getArticleList", "getArticleCount", articleParam);
-////		return super.getPageListMore("getArticleList", pageListParam);
-//	}
-	
 	public PageList<Article> getArticleList(ArticleParam articleParam) {
 		return super.getPageListTotal("getArticleList", "getArticleCount", articleParam);
 //		return super.getPageListMore("getArticleList", pageListParam);
@@ -32,7 +27,7 @@ public class BoardDao extends BaseDao {
 		return sqlSession.selectOne("getArticleCount");
 	}
 	
-	public List<Article1> getArticleListMore(ArticleParam articleParam) {
+	public List<Article> getArticleListMore(ArticleParam articleParam) {
 		return sqlSession.selectList("getArticleList", articleParam);
 	}
 	
@@ -56,7 +51,7 @@ public class BoardDao extends BaseDao {
 	}
 
 	@AddComments
-	public PageList<Article1> getClipboardListAddCommentsMore(ArticleParam articleParam) {
+	public PageList<Article> getClipboardListAddCommentsMore(ArticleParam articleParam) {
 		return super.getPageListMore("getClipboardList", articleParam);
 	}
 	

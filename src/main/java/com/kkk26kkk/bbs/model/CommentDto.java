@@ -7,22 +7,8 @@ public class CommentDto {
 	private String userName;
 	private String contents;
 	private String regDtm;
-	private int startNum;
-	private int endNum;
 	private boolean isSecret;
 
-	public int getStartNum() {
-		return startNum;
-	}
-	public void setStartNum(int startNum) {
-		this.startNum = startNum;
-	}
-	public int getEndNum() {
-		return endNum;
-	}
-	public void setEndNum(int endNum) {
-		this.endNum = endNum;
-	}
 	public String getCommentId() {
 		return commentId;
 	}
@@ -59,11 +45,9 @@ public class CommentDto {
 	public void setRegDtm(String regDtm) {
 		this.regDtm = regDtm;
 	}
-
 	public boolean isSecret() {
 		return isSecret;
 	}
-	
 	public void setSecret(boolean isSecret) {
 		this.isSecret = isSecret;
 	}
