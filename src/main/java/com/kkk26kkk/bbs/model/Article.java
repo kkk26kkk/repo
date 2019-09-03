@@ -12,7 +12,6 @@ public class Article extends ArticleVo {
 	private static final FastDateFormat fdf = FastDateFormat.getInstance("yyyy-MM-dd HH:mm");
 	
 	private PageList<Comment> commentList;
-//	ArticleRank articleRank;
 
 	public PageList<Comment> getCommentList() {
 		return commentList;
@@ -38,12 +37,10 @@ public class Article extends ArticleVo {
 		dto.setRegDtm(fdf.format(getRegDtm()));
 		
 		if(null != commentList) {
-			List<CommentDto> commentDtoList = commentList.getList().stream()
+			List<CommentDto> list = commentList.getList().stream()
 					.map(Comment::showContent)
 					.collect(Collectors.toList());
-			
-            // XXX ArticleDto에 PageList<CommentDto> 필드를 추가해야 할까요? 아니면 List<CommentDto>필드를 추가해야 할까요?
-            // TODO PageList<CommentDto>, List<CommentDto> 둘 다 필요
+			PageList<CommentDto> commentDtoList = new PageList<CommentDto>(list, commentList.getPage(), commentList.getPageSize(), commentList.getTotalCount(), commentList.hasNext());
 			dto.setCommentList(commentDtoList);
 		}
 		
@@ -54,16 +51,5 @@ public class Article extends ArticleVo {
 	public String getArticleId() {
 		return super.getArticleId();
 	}
-
-//	public ArticleRank getArticleRank() {
-//		if(null == articleRank) {
-//			this.articleRank = new ArticleRank(super.getArticleId());
-//		}
-//		return articleRank;
-//	}
-//
-//	public void setArticleRank(ArticleRank articleRank) {
-//		this.articleRank = articleRank;
-//	}
 	
 }

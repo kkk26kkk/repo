@@ -1,6 +1,6 @@
 package com.kkk26kkk.bbs.model;
 
-import java.util.List;
+import com.kkk26kkk.common.model.PageList;
 
 public class ArticleDto {
 	private String articleId;
@@ -14,10 +14,7 @@ public class ArticleDto {
 	private String link;
 	private boolean isNotice;
     
-    // TODO List<CommentDto>, PageList<CommentDto> 각각 서브셋 구조로?
-    // TODO 데코레이터 적용? 아니면 그냥 속성 둘 다 ArticleDto에 추가? - 이슈는 없을 듯?
-    List<CommentDto> commentList;
-    // TODO 아래 두 속성 제거 - 이런 속성들이 DTO에 있으면, 공통화의 의미가 없어진다
+	PageList<CommentDto> commentList;
 
 	public ArticleDto() {}
 	
@@ -94,11 +91,11 @@ public class ArticleDto {
 	public void setNotice(boolean isNotice) {
 		this.isNotice = isNotice;
 	}
-	public List<CommentDto> getCommentList() {
+	public PageList<CommentDto> getCommentList() {
 		return commentList;
 	}
-	public void setCommentList(List<CommentDto> commentList) {
-		this.commentList = commentList;
+	public void setCommentList(PageList<CommentDto> commentDtoList) {
+		this.commentList = commentDtoList;
 	}
 	
 }
