@@ -47,7 +47,9 @@
 	</delete>
 	
 	<insert id="insertArticleRank" parameterType="com.kkk26kkk.bbs.model.ArticleRankVo">
-		INSERT INTO TB_ARTICLE_RANK
+		INSERT	ALL
+	<foreach collection="list" item="articleRank" separator=" " open="" close="">
+		INTO	TB_ARTICLE_RANK
 		(
 				ARTICLE_ID
 			,	COMMENT_COUNT_RANK
@@ -58,12 +60,15 @@
 		)
 		VALUES
 		(
-				#{articleId}
-			,	#{commentCountRank}
-			,	#{readCountRank}
-			,	#{popularityRank}
-			,	#{bestRank}
-			,	#{risingRank}
+				#{articleRank.articleId}
+			,	#{articleRank.commentCountRank}
+			,	#{articleRank.readCountRank}
+			,	#{articleRank.popularityRank}
+			,	#{articleRank.bestRank}
+			,	#{articleRank.risingRank}
 		)
+	</foreach>
+		SELECT	'X'
+		FROM	DUAL
 	</insert>
 </mapper>

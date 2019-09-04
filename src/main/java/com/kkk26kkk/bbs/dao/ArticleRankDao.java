@@ -28,10 +28,7 @@ public class ArticleRankDao {
 	}
 	
 	public void insertArticleRank(List<ArticleRank> articleRankList) {
-		// TODO batch 처리
-		for(ArticleRank articleRank : articleRankList) {
-			sqlSession.insert(NAME_SPACE + "insertArticleRank", articleRank);
-		}
+		sqlSession.insert(NAME_SPACE + "insertArticleRank", articleRankList);
 	}
 	
 	public void deleteArticleRank() {
