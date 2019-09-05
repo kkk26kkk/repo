@@ -170,13 +170,7 @@
 				) Y
 		WHERE	Y.RNUM	&gt;=	#{startNum}
     </select>
-    
-    <select id="getArticleIdList" parameterType="String" resultType="String">
-    	SELECT	ARTICLE_ID
-    	FROM	TB_ARTICLE
-    	WHERE	USER_ID = #{userId}
-    </select>
-    
+
     <select id="getClipboardList" parameterType="com.kkk26kkk.bbs.model.ArticleParam" resultType="com.kkk26kkk.bbs.model.XArticle">
     	SELECT	
     			X.*
@@ -194,29 +188,39 @@
 									    		  , A.USER_NAME
 									    		  , A.TITLE
 									    		  , A.CONTENTS
-									    		  , A.PARENT_ID
 									    		  , A.READ_COUNT
 									    		  , A.REG_DTM
+									    		  , CONNECT_BY_ROOT A.ARTICLE_ID AS ROOT_ID
 											FROM	TB_ARTICLE	A
-											WHERE	ARTICLE_ID	IN	(
-																		SELECT CONNECT_BY_ROOT ARTICLE_ID AS ARTICLE_ID
-																		FROM	TB_ARTICLE
-																		WHERE	ARTICLE_ID IN	(
-																									SELECT 
-																											regexp_substr(#{articleIdList}, '[^,]+', 1, LEVEL) AS ARTICLE_ID
-																									FROM	DUAL
-																									CONNECT	BY
-																											LEVEL	&lt;= length(regexp_replace(#{articleIdList}, '[^,]+', '')) + 1
-																								) 
-																		START WITH 
-																				PARENT_ID 	IS	NULL 
-																		CONNECT BY 
-																				PARENT_ID 	=	PRIOR ARTICLE_ID
-																	)
+											WHERE	1			=	1
+											AND		USER_ID		=	#{userId}
+											START WITH
+													PARENT_ID	IS	NULL
+											CONNECT BY
+													PARENT_ID	=	PRIOR ARTICLE_ID
 										) Z
 							) Y
 					WHERE Y.RNUM &lt;= #{endNum}
 				) X
 		WHERE X.RNUM &gt;= #{startNum}
+    </select>
+    
+    <select id="selectParentArticleList" parameterType="com.kkk26kkk.bbs.model.ArticleParam" resultType="com.kkk26kkk.bbs.model.XArticle">
+		SELECT  /*+ INDEX_DESC(A PK_TB_ARTICLE) */
+    			A.ARTICLE_ID
+    		  , A.USER_ID
+    		  , A.USER_NAME
+    		  , A.TITLE
+    		  , A.CONTENTS
+    		  , A.READ_COUNT
+    		  , A.REG_DTM
+		FROM	TB_ARTICLE A
+		WHERE	ARTICLE_ID IN (
+		                       		SELECT 
+		                        			regexp_substr(#{articleId}, '[^,]+', 1, LEVEL) AS ARTICLE_ID
+		                        	FROM	DUAL
+		                        	CONNECT	BY
+		                            		LEVEL &lt;= length(regexp_replace(#{articleId}, '[^,]+', '')) + 1
+		                      )      
     </select>
 </mapper>

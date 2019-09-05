@@ -4,11 +4,13 @@ import com.kkk26kkk.common.model.BaseParam;
 
 public class ArticleParam extends BaseParam {
 	private final String sort;
-	private final String articleIdList;
+	private final String userId;
+	private final String articleId;
 	
 	public static class Builder extends BaseParam.Builder<Builder> {
 		private String sort;
-		private String articleIdList;
+		private String userId;
+		private String articleId;
 		
 		public Builder(int pageSize) {
 			super(pageSize);
@@ -19,8 +21,13 @@ public class ArticleParam extends BaseParam {
 			return this;
 		}
 		
-		public Builder articleIdList(String articleIdList) {
-			this.articleIdList = articleIdList;
+		public Builder articleId(String articleId) {
+			this.articleId = articleId;
+			return this;
+		}
+		
+		public Builder userId(String userId) {
+			this.userId = userId;
 			return this;
 		}
 		
@@ -34,15 +41,20 @@ public class ArticleParam extends BaseParam {
 	public ArticleParam(Builder builder) {
 		super(builder);
 		this.sort = builder.sort;
-		this.articleIdList = builder.articleIdList;
+		this.articleId = builder.articleId;
+		this.userId = builder.userId;
 	}
 	
 	public String getSort() {
 		return sort;
 	}
 
-	public String getArticleIdList() {
-		return articleIdList;
+	public String getArticleId() {
+		return articleId;
+	}
+	
+	public String getUserId() {
+		return userId;
 	}
 	
 }

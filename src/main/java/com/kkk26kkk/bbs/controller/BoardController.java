@@ -131,28 +131,26 @@ public class BoardController {
 	@ResponseBody Map<String, Object> clipboard(@RequestParam(defaultValue = "0") int page, User user) {
 		Map<String, Object> map = new HashMap<>();
 		
-		String articleIdList = boardService.getArticleIdList(user.getUserId());
-		
 		ArticleParam articleParam = new ArticleParam
 				.Builder(pageSize)
 				.useMore(true)
-				.articleIdList(articleIdList)
+				.userId(user.getUserId())
 				.build();
 		
 		PageList<Article> pageArticleList = boardService.getClipboardList(articleParam);
 		List<Article> articleList = pageArticleList.getList();
-//		int totalPage = pageArticleList.getTotalPage();
-//		int totalCount = pageArticleList.getTotalCount();
-//		boolean hasNext = pageArticleList.hasNext();
+		int totalPage = pageArticleList.getTotalPage();
+		int totalCount = pageArticleList.getTotalCount();
+		boolean hasNext = pageArticleList.hasNext();
 		
 		List<ArticleDto> articleDtoList = articleList.stream()
 				.map(Article::showContent)
 				.collect(Collectors.toList());
 			
 		map.put("articleList", articleDtoList);
-//		map.put("totalPage", totalPage);
-//		map.put("totalCount", totalCount);
-//		map.put("hasNext", hasNext);
+		map.put("totalPage", totalPage);
+		map.put("totalCount", totalCount);
+		map.put("hasNext", hasNext);
 		
 		return map;
 	}

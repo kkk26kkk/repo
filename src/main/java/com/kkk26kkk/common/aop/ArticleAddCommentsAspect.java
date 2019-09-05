@@ -18,7 +18,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.kkk26kkk.bbs.dao.CommentDao;
 import com.kkk26kkk.bbs.model.Article;
-import com.kkk26kkk.bbs.model.Article1;
 import com.kkk26kkk.bbs.model.Comment;
 import com.kkk26kkk.bbs.model.CommentList;
 import com.kkk26kkk.bbs.model.CommentParam;
@@ -27,7 +26,7 @@ import com.kkk26kkk.common.model.PageList;
 
 @Aspect
 @Component
-public class ArticleAddContentsAspect {
+public class ArticleAddCommentsAspect {
 	@Autowired
 	private CommentDao commentDao;
 	

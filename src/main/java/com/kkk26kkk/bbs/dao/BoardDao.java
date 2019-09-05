@@ -10,6 +10,7 @@ import com.kkk26kkk.bbs.model.Article;
 import com.kkk26kkk.bbs.model.Article1;
 import com.kkk26kkk.bbs.model.ArticleParam;
 import com.kkk26kkk.common.aop.AddComments;
+import com.kkk26kkk.common.aop.AddRootArticle;
 import com.kkk26kkk.common.dao.BaseDao;
 import com.kkk26kkk.common.model.PageList;
 
@@ -46,11 +47,8 @@ public class BoardDao extends BaseDao {
 		return super.getPageListMore("getFeedArticleList", articleParam);
 	}
 
-	public List<String> getArticleIdList(String userId) {
-		return sqlSession.selectList("getArticleIdList", userId);
-	}
-
 	@AddComments
+	@AddRootArticle
 	public PageList<Article> getClipboardListAddCommentsMore(ArticleParam articleParam) {
 		return super.getPageListMore("getClipboardList", articleParam);
 	}

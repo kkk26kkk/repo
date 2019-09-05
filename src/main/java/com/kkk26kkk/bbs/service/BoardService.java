@@ -27,12 +27,7 @@ public class BoardService {
 	public PageList<Article> getFeedList(ArticleParam articleParam) {
 		return boardDao.getFeedArticleListAddCommentsMore(articleParam);
 	}
-
-	public String getArticleIdList(String userId) {
-		List<String> list = boardDao.getArticleIdList(userId);
-		return list.stream().collect(Collectors.joining(","));
-	}
-
+	
 	public PageList<Article> getClipboardList(ArticleParam articleParam) {
 		return boardDao.getClipboardListAddCommentsMore(articleParam);
 	}

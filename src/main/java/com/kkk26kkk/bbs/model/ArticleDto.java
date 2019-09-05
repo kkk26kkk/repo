@@ -14,6 +14,7 @@ public class ArticleDto {
 	private String link;
 	private boolean isNotice;
 	private PageList<CommentDto> commentList;
+	private ArticleDto rootArticle;
 
 	public ArticleDto() {}
 	
@@ -95,6 +96,12 @@ public class ArticleDto {
 	}
 	public void setCommentList(PageList<CommentDto> commentList) {
 		this.commentList = commentList;
+	}
+	public ArticleDto getRootArticle() {
+		return rootArticle;
+	}
+	public void setRootArticle(ArticleDto rootArticle) {
+		this.rootArticle = rootArticle;
 	}
 	
 }

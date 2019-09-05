@@ -7,6 +7,15 @@ import com.kkk26kkk.common.model.Path;
 public class XArticle extends ArticleVo implements Article {
 	private static final FastDateFormat fdf = FastDateFormat.getInstance("yyyy-MM-dd HH:mm");
 	
+	private String rootId;
+	
+	public String getRootId() {
+		return rootId;
+	}
+	public void setRootId(String rootId) {
+		this.rootId = rootId;
+	}
+	
 	@Override
 	public ArticleDto showHeader() {
 		ArticleDto dto = new ArticleDto(getArticleId(), getUserName(), getTitle());
