@@ -10,12 +10,32 @@
 	</select>
 
 	<insert id="insertArticle" parameterType="com.kkk26kkk.bbs.model.ArticleVo">
-		INSERT 
-		INTO 	TB_ARTICLE
-				(ARTICLE_ID, BOARD_ID, USER_ID, USER_NAME, TITLE,
-				 CONTENTS, PARENT_ID, READ_COUNT, REG_DTM)
-		VALUES	(#{articleId}, #{boardId}, #{userId}, #{userName}, #{title},
-				 #{contents}, #{parentId}, 0, sysdate)
+		INSERT INTO TB_ARTICLE
+		(           
+		      ARTICLE_ID
+		   ,  BOARD_ID
+		   ,  USER_ID
+		   ,  USER_NAME
+		   ,  TITLE
+		   ,  CONTENTS
+		   ,  PARENT_ID
+		   ,  GRADE
+		   ,  READ_COUNT
+		   ,  REG_DTM
+		)
+		VALUES
+		(
+		      #{articleId}
+		   ,  #{boardId}
+		   ,  #{userId}
+		   ,  #{userName}
+		   ,  #{title}
+		   ,  #{contents}
+		   ,  #{parentId}
+		   ,  #{grade}
+		   ,  0
+		   ,  sysdate
+		)
 	</insert>
 	
 	<update id="updateArticle" parameterType="com.kkk26kkk.bbs.model.ArticleVo">

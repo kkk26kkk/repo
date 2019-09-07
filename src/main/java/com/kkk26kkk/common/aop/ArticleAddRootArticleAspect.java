@@ -6,16 +6,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.kkk26kkk.bbs.dao.ArticleDao;
 import com.kkk26kkk.bbs.model.Article;
 import com.kkk26kkk.bbs.model.ArticleParam;
 import com.kkk26kkk.bbs.model.RootArticle;
+import com.kkk26kkk.bbs.model.User;
 import com.kkk26kkk.bbs.model.XArticle;
 import com.kkk26kkk.common.model.PageList;
 
@@ -49,9 +54,13 @@ public class ArticleAddRootArticleAspect {
 		String rootIdList = articleList.stream()
 				.map(a -> ((XArticle) a).getRootId())
 				.collect(Collectors.joining(","));
+		
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        User user = (User) request.getSession().getAttribute("user");
 				
 		ArticleParam articleParam = new ArticleParam
 				.Builder(0)
+				.userGrade(user.getUserGrade())
 				.articleId(rootIdList)
 				.build();
 		

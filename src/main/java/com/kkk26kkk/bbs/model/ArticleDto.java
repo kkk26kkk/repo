@@ -11,6 +11,7 @@ public class ArticleDto {
 	private String contents;
 	private String readCount;
 	private String regDtm;
+	private String grade;
 	private String link;
 	private boolean isNotice;
 	private PageList<CommentDto> commentList;
@@ -78,6 +79,12 @@ public class ArticleDto {
 	}
 	public void setRegDtm(String regDtm) {
 		this.regDtm = regDtm;
+	}
+	public String getGrade() {
+		return grade;
+	}
+	public void setGrade(String grade) {
+		this.grade = grade;
 	}
 	public String getReadCount() {
 		return readCount;

@@ -29,6 +29,7 @@ public class ArticleService {
 		articleVo.setTitle(articleDto.getTitle());
 		articleVo.setContents(articleDto.getContents());
 		articleVo.setParentId(articleDto.getParentId());
+		articleVo.setGrade(articleDto.getGrade());
 		
 		String articleId = articleDao.getArticleSeqNextVal();
 		articleVo.setArticleId(articleId);

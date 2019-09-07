@@ -12,6 +12,7 @@ public class ArticleVo {
 	private String parentId;
 	private int readCount;
 	private Date regDtm;
+	private String grade;
 	
 	protected String getArticleId() {
 		return articleId;
@@ -66,6 +67,12 @@ public class ArticleVo {
 	}
 	public void setRegDtm(Date regDtm) {
 		this.regDtm = regDtm;
+	}
+	protected String getGrade() {
+		return grade;
+	}
+	public void setGrade(String grade) {
+		this.grade = grade;
 	}
 
 }

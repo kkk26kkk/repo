@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +18,7 @@ import com.kkk26kkk.bbs.model.Article;
 import com.kkk26kkk.bbs.model.ArticleDto;
 import com.kkk26kkk.bbs.model.ArticleParam;
 import com.kkk26kkk.bbs.model.User;
+import com.kkk26kkk.bbs.model.UserDto;
 import com.kkk26kkk.bbs.service.BoardService;
 import com.kkk26kkk.common.model.PageList;
 import com.kkk26kkk.common.model.Path;
@@ -128,13 +130,14 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value = "/board/clipboard", method = RequestMethod.GET)
-	@ResponseBody Map<String, Object> clipboard(@RequestParam(defaultValue = "0") int page, User user) {
+	@ResponseBody Map<String, Object> clipboard(@RequestParam(defaultValue = "0") int page, @RequestBody UserDto userDto, User user) {
 		Map<String, Object> map = new HashMap<>();
 		
 		ArticleParam articleParam = new ArticleParam
 				.Builder(pageSize)
 				.useMore(true)
-				.userId(user.getUserId())
+				.userId(userDto.getUserId())
+				.userGrade(user.getUserGrade())
 				.build();
 		
 		PageList<Article> pageArticleList = boardService.getClipboardList(articleParam);

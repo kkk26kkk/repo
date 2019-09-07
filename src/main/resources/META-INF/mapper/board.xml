@@ -192,8 +192,9 @@
 									    		  , A.REG_DTM
 									    		  , CONNECT_BY_ROOT A.ARTICLE_ID AS ROOT_ID
 											FROM	TB_ARTICLE	A
-											WHERE	1			=	1
-											AND		USER_ID		=	#{userId}
+											WHERE	1			   =       1
+											AND		USER_ID		   =       #{userId}
+											AND     #{userGrade}   &gt;=   A.GRADE  
 											START WITH
 													PARENT_ID	IS	NULL
 											CONNECT BY
@@ -221,6 +222,7 @@
 		                        	FROM	DUAL
 		                        	CONNECT	BY
 		                            		LEVEL &lt;= length(regexp_replace(#{articleId}, '[^,]+', '')) + 1
-		                      )      
+		                      ) 
+		AND     #{userGrade}  &gt;=   A.GRADE 
     </select>
 </mapper>
