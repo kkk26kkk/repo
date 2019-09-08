@@ -16,31 +16,29 @@ public class ArticleRankService {
 	private ArticleRankDao articleRankDao;
 	
 	public void saveRanking() {
-		List<ArticleRank> articleRankList = articleRankDao.selectArticleIdListForRank();
-		Map<String, Map<String, Object>> readCountMap = articleRankDao.selectReadCountList();
-		Map<String, Map<String, Object>> commentCountMap = articleRankDao.selectCommentCountList();
-		
-		articleRankList.stream()
-			.peek(articleRank -> {
-				Map<String, Object> map = readCountMap.get(articleRank.getArticleId());
-				if(null != map) {
-					int readCountRank = (int) map.get("count");
-					articleRank.setReadCountRank(readCountRank);
-				}
-			})
-			.peek(articleRank -> {
-				Map<String, Object> map = commentCountMap.get(articleRank.getArticleId());
-				if(null != map) {
-					int commentCountRank = (int) map.get("count");
-					articleRank.setCommentCountRank(commentCountRank);
-				}
-			})
-			.peek(articleRank -> {
-				int readCountPoint = articleRank.getReadCountRank() * 2;
-				int commentCountPoint = articleRank.getCommentCountRank() * 3;
-				articleRank.setPopularityRank(readCountPoint + commentCountPoint);
-			})
-			.collect(Collectors.toList());
+		int limit = 99999; // TODO 외부에서 호출시 받아오도록
+		List<ArticleRank> articleRankList = articleRankDao.selectArticleIdListForRank(limit);
+		List<Map<String, Object>> readCountList = articleRankDao.selectReadCountList();
+		List<Map<String, Object>> commentCountList = articleRankDao.selectCommentCountList();
+		Map<String, Integer> readCountMap = readCountList.stream()
+				.collect(Collectors.toMap(readCount -> (String)readCount.get("articleId"), readCount -> (Integer)readCount.get("count")));
+		Map<String, Integer> commentCountMap = commentCountList.stream()
+				.collect(Collectors.toMap(readCount -> (String)readCount.get("articleId"), readCount -> (Integer)readCount.get("count")));
+
+		for(int i = 0 ; i < articleRankList.size(); i++) {
+			ArticleRank articleRank = articleRankList.get(i);
+			
+			Integer readCountRank = readCountMap.get(articleRank.getArticleId());
+			Integer commentCountRank = commentCountMap.get(articleRank.getArticleId());
+			
+			final int readCount = null != readCountRank ? readCountRank : 0;
+			final int commentCount = null != commentCountRank ? commentCountRank : 0;
+			final int Popularity = readCount * 2 + commentCount * 3;
+			
+			articleRank.setReadCountRank(readCount);
+			articleRank.setCommentCountRank(commentCount);
+			articleRank.setPopularityRank(Popularity);
+		}
 		
 		articleRankDao.deleteArticleRank();
 		articleRankDao.insertArticleRank(articleRankList);

@@ -3,9 +3,12 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="bbs.articleRank.dao">
-	<select id="selectArticleIdListForRank" resultType="com.kkk26kkk.bbs.model.ArticleRank">
-        SELECT	ARTICLE_ID
+	<select id="selectArticleIdListForRank" parameterType="int" resultType="com.kkk26kkk.bbs.model.ArticleRank">
+        SELECT	/*+ INDEX_DESC(A PK_TB_ARTICLE) */
+                ARTICLE_ID
         FROM	TB_ARTICLE
+        WHERE   1           = 1
+        AND     ROWNUM      <= #{limit}
     </select>
     
     <resultMap id="readCountResultMap" type="java.util.HashMap">

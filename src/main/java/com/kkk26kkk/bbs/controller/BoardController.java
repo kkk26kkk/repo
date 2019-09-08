@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -129,22 +130,22 @@ public class BoardController {
 		return map;
 	}
 	
-	@RequestMapping(value = "/board/clipboard", method = RequestMethod.GET)
-	@ResponseBody Map<String, Object> clipboard(@RequestParam(defaultValue = "0") int page, @RequestBody UserDto userDto, User user) {
+	@RequestMapping(value = "/board/clipboard/{userId}", method = RequestMethod.GET)
+	@ResponseBody Map<String, Object> clipboard(User user, @RequestParam(defaultValue = "0") int page, @PathVariable String userId) {
 		Map<String, Object> map = new HashMap<>();
 		
 		ArticleParam articleParam = new ArticleParam
 				.Builder(pageSize)
 				.useMore(true)
-				.userId(userDto.getUserId())
+				.userId(userId)
 				.userGrade(user.getUserGrade())
 				.build();
 		
-		PageList<Article> pageArticleList = boardService.getClipboardList(articleParam);
-		List<Article> articleList = pageArticleList.getList();
-		int totalPage = pageArticleList.getTotalPage();
-		int totalCount = pageArticleList.getTotalCount();
-		boolean hasNext = pageArticleList.hasNext();
+		PageList<Article> articlePageList = boardService.getClipboardList(articleParam);
+		List<Article> articleList = articlePageList.getList();
+		int totalPage = articlePageList.getTotalPage();
+		int totalCount = articlePageList.getTotalCount();
+		boolean hasNext = articlePageList.hasNext();
 		
 		List<ArticleDto> articleDtoList = articleList.stream()
 				.map(Article::showContent)

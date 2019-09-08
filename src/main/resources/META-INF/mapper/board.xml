@@ -45,7 +45,7 @@
 									                          , A.REG_DTM
 									                    FROM    TB_ARTICLE		A
 	                                                <if test="sort != null">
-									                    INNER JOIN
+									                    INNER JOIN -- TODO 아우터로
 									                      		TB_ARTICLE_RANK R
 									                   	ON		R.ARTICLE_ID 	=	A.ARTICLE_ID
 	                                                </if>
@@ -194,7 +194,10 @@
 											FROM	TB_ARTICLE	A
 											WHERE	1			   =       1
 											AND		USER_ID		   =       #{userId}
-											AND     #{userGrade}   &gt;=   A.GRADE  
+											AND     #{userGrade}   &gt;=   A.GRADE
+											<bind name="userId" value="userId"/>
+                                            <bind name="grade" value="A.GRADE"/>
+											<include refid="checkPublicScope" />
 											START WITH
 													PARENT_ID	IS	NULL
 											CONNECT BY
@@ -205,6 +208,10 @@
 				) X
 		WHERE X.RNUM &gt;= #{startNum}
     </select>
+    
+	<sql id="checkPublicScope">
+	    -- TODO
+	</sql>
     
     <select id="selectParentArticleList" parameterType="com.kkk26kkk.bbs.model.ArticleParam" resultType="com.kkk26kkk.bbs.model.XArticle">
 		SELECT  /*+ INDEX_DESC(A PK_TB_ARTICLE) */
@@ -223,6 +230,7 @@
 		                        	CONNECT	BY
 		                            		LEVEL &lt;= length(regexp_replace(#{articleId}, '[^,]+', '')) + 1
 		                      ) 
-		AND     #{userGrade}  &gt;=   A.GRADE 
+		AND     #{userGrade}  &gt;=   A.GRADE
+		AND     PARENT_ID     IS NULL
     </select>
 </mapper>

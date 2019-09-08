@@ -3,7 +3,6 @@ package com.kkk26kkk.common.aop;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +18,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.kkk26kkk.bbs.dao.CommentDao;
 import com.kkk26kkk.bbs.model.Article;
 import com.kkk26kkk.bbs.model.Comment;
-import com.kkk26kkk.bbs.model.CommentList;
+import com.kkk26kkk.bbs.model.CommentListDecorator;
 import com.kkk26kkk.bbs.model.CommentParam;
 import com.kkk26kkk.bbs.model.User;
 import com.kkk26kkk.common.model.PageList;
@@ -33,7 +32,7 @@ public class ArticleAddCommentsAspect {
 	private static final int COMMENT_PAGE_SIZE = 5;
 	
 	@Around("@annotation(com.kkk26kkk.common.aop.AddComments)")
-	public Object addComments(ProceedingJoinPoint joinPoint) {
+	public Object addComments(ProceedingJoinPoint joinPoint) { // TODO 리턴 안 하는 구조로 변경
 		Object obj = null;
 		try {
 			obj = joinPoint.proceed();
@@ -53,7 +52,7 @@ public class ArticleAddCommentsAspect {
 			return obj;
 		}
 		
-		String articleIdList = articleList.stream()
+		String articleIds = articleList.stream()
 				.map(Article::getArticleId)
 				.collect(Collectors.joining(","));
         
@@ -61,18 +60,36 @@ public class ArticleAddCommentsAspect {
         User user = (User) request.getSession().getAttribute("user");
         
 		CommentParam commentParam = new CommentParam
-				.Builder(COMMENT_PAGE_SIZE, articleIdList)
+				.Builder(COMMENT_PAGE_SIZE, articleIds)
 				.useMore(true)
 				.userId(user.getUserId())
 				.build();
 		
-		Function<Comment, String> groupById = c -> c.getArticleId();
+		Map<String, PageList<Comment>> commentListMap = commentDao.getFeedCommentList(commentParam, Comment::getArticleId);
 		
-		Map<String, PageList<Comment>> commentListMap = commentDao.getFeedCommentList(commentParam, groupById);
+		for(int i = 0 ; i < articleList.size(); i++) {
+			Article article = articleList.get(i);
+			
+			PageList<Comment> commentList = commentListMap.get(article.getArticleId());
+			if(null == commentList) {
+				continue;
+			}
+			
+			articleList.set(i, new CommentListDecorator(article, commentList));
+		}
 		
-		articleList = articleList.stream()
-			.map(a -> new CommentList(a, commentListMap.get(a.getArticleId())))
-			.collect(Collectors.toList());
+//		articleList = articleList.stream()
+//				.map(article -> {
+//					final String id = article.getArticleId();
+//					
+//					PageList<Comment> commentList = commentListMap.get(id);
+//					if(null == commentList) {
+//						return article;
+//					}
+//					
+//					return new CommentListDecorator(article, commentList);
+//				})
+//				.collect(Collectors.toList());
 		
 		if (obj instanceof PageList) {
 			((PageList<Article>) obj).setList(articleList);

@@ -15,16 +15,16 @@ public class ArticleRankDao {
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 	
-	public List<ArticleRank> selectArticleIdListForRank() {
-		return sqlSession.selectList(NAME_SPACE + "selectArticleIdListForRank");
+	public List<ArticleRank> selectArticleIdListForRank(int limit) {
+		return sqlSession.selectList(NAME_SPACE + "selectArticleIdListForRank", limit);
 	}
 	
-	public Map<String, Map<String, Object>> selectReadCountList() {
-		return sqlSession.selectMap(NAME_SPACE + "selectReadCountList", "articleId");
+	public List<Map<String, Object>> selectReadCountList() {
+		return sqlSession.selectList(NAME_SPACE + "selectReadCountList", "articleId");
 	}
 
-	public Map<String, Map<String, Object>> selectCommentCountList() {
-		return sqlSession.selectMap(NAME_SPACE + "selectCommentCountList", "articleId");
+	public List<Map<String, Object>> selectCommentCountList() {
+		return sqlSession.selectList(NAME_SPACE + "selectCommentCountList", "articleId");
 	}
 	
 	public void insertArticleRank(List<ArticleRank> articleRankList) {

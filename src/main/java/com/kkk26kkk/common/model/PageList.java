@@ -36,7 +36,10 @@ public class PageList<E> {
 		return totalCount;
 	}
 	public int getTotalPage() {
-		return (this.totalCount + this.pageSize - 1) / this.pageSize;
+		if(0 == this.pageSize) {
+			return 0;
+		}
+		return this.totalCount + this.pageSize - 1 / this.pageSize;
 	}
 	public boolean hasNext() {
 		return hasNext;
