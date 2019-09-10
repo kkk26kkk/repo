@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -84,6 +85,21 @@ public class UserController {
 		
 		result.put("code", HttpStatus.OK);
 		result.put("redirect", Path.ArticleList.getPath());
+		
+		return result;
+	}
+	
+	@RequestMapping("/user/follow/{userId}")
+	@ResponseBody Map<String, Object> follow(User user, @PathVariable String userId) {
+		Map<String, Object> result = new HashMap<>();
+		
+		try {
+			userService.insertUserFollow(userId, user.getUserId());
+			result.put("code", HttpStatus.OK);
+		} catch(Exception e) {
+			result.put("msg", e.getMessage());
+			result.put("code", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 		
 		return result;
 	}

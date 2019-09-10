@@ -8,7 +8,7 @@
                 ARTICLE_ID
         FROM	TB_ARTICLE
         WHERE   1           = 1
-        AND     ROWNUM      <= #{limit}
+        AND     ROWNUM      &lt;= #{limit}
     </select>
     
     <resultMap id="readCountResultMap" type="java.util.HashMap">
