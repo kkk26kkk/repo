@@ -61,8 +61,4 @@ public class User extends UserVo {
     	return super.getUserPw();
     }
     
-    @Override
-    public String getUserGrade() {
-    	return super.getUserGrade();
-    }
 }

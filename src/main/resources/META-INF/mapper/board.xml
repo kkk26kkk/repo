@@ -121,12 +121,22 @@
 									    		  , A.PARENT_ID
 									    		  , A.READ_COUNT
 									    		  , A.REG_DTM
+    											  , CONNECT_BY_ROOT A.ARTICLE_ID AS ROOT_ID
 									    	FROM	TB_ARTICLE		A
+									    	WHERE	1				=	1
+									    	AND		A.USER_ID		=	#{loginUserId}
+									    	OR		A.USER_ID		IN	(
+												                      		SELECT	regexp_substr(#{userId}, '[^,]+', 1, LEVEL) AS ARTICLE_ID
+												                      		FROM	DUAL
+												                      		CONNECT	BY
+												                        			LEVEL &lt;= length(regexp_replace(#{userId}, '[^,]+', '')) + 1
+												                    	)
+											AND		A.GRADE			&lt;= 	20  -- TODO 글 등급 필터링..
 									    	START WITH
 									                A.PARENT_ID		IS NULL
 									        CONNECT BY
 									                A.PARENT_ID		= PRIOR A.ARTICLE_ID
-									        ORDER SIBLINGS BY
+									        ORDER	BY
 									        		A.ARTICLE_ID 	DESC
 										) Z
 							) Y
@@ -194,14 +204,30 @@
 											FROM	TB_ARTICLE	A
 											WHERE	1			   =       1
 											AND		USER_ID		   =       #{userId}
-											AND     #{userGrade}   &gt;=   A.GRADE
-											<bind name="userId" value="userId"/>
-                                            <bind name="grade" value="A.GRADE"/>
-											<include refid="checkPublicScope" />
+											AND 	A.GRADE		&lt;=	( 
+																			SELECT
+														                    CASE 	WHEN #{userId} = #{loginUserId}
+														                            	THEN '30'
+														                         	WHEN EXISTS	(    
+														                         					SELECT	'X' 
+														                                          	FROM 	TB_USER_FOLLOW 
+														                                          	WHERE 	FOLLOWEE_ID 	= 	#{userId}
+														                                          	AND 	FOLLOWER_ID 	= 	#{loginUserId}
+														                                       	)
+														                            	THEN '20'
+														                        	ELSE '10'
+														                    END		GRADE
+														                    FROM DUAL 
+														                )
+<!-- 											<bind name="userId" value="userId"/> -->
+<!--                                            <bind name="grade" value="A.GRADE"/> -->
+<!-- 											<include refid="checkPublicScope" /> -->
 											START WITH
 													PARENT_ID	IS	NULL
 											CONNECT BY
 													PARENT_ID	=	PRIOR ARTICLE_ID
+											ORDER 	BY 
+													A.ARTICLE_ID 	DESC
 										) Z
 							) Y
 					WHERE Y.RNUM &lt;= #{endNum}
@@ -209,9 +235,9 @@
 		WHERE X.RNUM &gt;= #{startNum}
     </select>
     
-	<sql id="checkPublicScope">
-	    -- TODO
-	</sql>
+<!-- 	<sql id="checkPublicScope"> -->
+<!-- 	    // TODO -->
+<!-- 	</sql> -->
     
     <select id="selectParentArticleList" parameterType="com.kkk26kkk.bbs.model.ArticleParam" resultType="com.kkk26kkk.bbs.model.XArticle">
 		SELECT  /*+ INDEX_DESC(A PK_TB_ARTICLE) */
@@ -230,7 +256,6 @@
 		                        	CONNECT	BY
 		                            		LEVEL &lt;= length(regexp_replace(#{articleId}, '[^,]+', '')) + 1
 		                      ) 
-		AND     #{userGrade}  &gt;=   A.GRADE
 		AND     PARENT_ID     IS NULL
     </select>
 </mapper>

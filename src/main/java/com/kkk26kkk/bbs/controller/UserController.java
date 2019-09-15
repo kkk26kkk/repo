@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kkk26kkk.bbs.model.User;
 import com.kkk26kkk.bbs.model.UserDto;
+import com.kkk26kkk.bbs.service.UserFollowService;
 import com.kkk26kkk.bbs.service.UserService;
 import com.kkk26kkk.common.model.Path;
 
@@ -23,6 +24,8 @@ import com.kkk26kkk.common.model.Path;
 public class UserController {
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private UserFollowService userFollowService;
 	
 	@RequestMapping("/user/signUpForm")
 	String signUpForm() {
@@ -94,7 +97,7 @@ public class UserController {
 		Map<String, Object> result = new HashMap<>();
 		
 		try {
-			userService.insertUserFollow(userId, user.getUserId());
+			userFollowService.insertUserFollow(userId, user.getUserId());
 			result.put("code", HttpStatus.OK);
 		} catch(Exception e) {
 			result.put("msg", e.getMessage());

@@ -5,13 +5,13 @@ import com.kkk26kkk.common.model.BaseParam;
 public class ArticleParam extends BaseParam {
 	private final String sort;
 	private final String userId;
-	private final String userGrade;
+	private final String loginUserId;
 	private final String articleId;
 	
 	public static class Builder extends BaseParam.Builder<Builder> {
 		private String sort;
 		private String userId;
-		private String userGrade;
+		private String loginUserId;
 		private String articleId;
 		
 		public Builder(int pageSize) {
@@ -28,8 +28,8 @@ public class ArticleParam extends BaseParam {
 			return this;
 		}
 		
-		public Builder userGrade(String userGrade) {
-			this.userGrade = userGrade;
+		public Builder loginUserId(String loginUserId) {
+			this.loginUserId = loginUserId;
 			return this;
 		}
 		
@@ -49,7 +49,7 @@ public class ArticleParam extends BaseParam {
 		super(builder);
 		this.sort = builder.sort;
 		this.userId = builder.userId;
-		this.userGrade = builder.userGrade;
+		this.loginUserId = builder.loginUserId;
 		this.articleId = builder.articleId;
 	}
 	
@@ -61,8 +61,8 @@ public class ArticleParam extends BaseParam {
 		return userId;
 	}
 	
-	public String userGrade() {
-		return userGrade;
+	public String loginUserId() {
+		return loginUserId;
 	}
 	
 	public String getArticleId() {

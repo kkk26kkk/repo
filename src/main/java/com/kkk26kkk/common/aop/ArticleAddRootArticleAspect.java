@@ -6,21 +6,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.kkk26kkk.bbs.dao.ArticleDao;
 import com.kkk26kkk.bbs.model.Article;
 import com.kkk26kkk.bbs.model.ArticleParam;
 import com.kkk26kkk.bbs.model.RootArticleDecorator;
-import com.kkk26kkk.bbs.model.User;
 import com.kkk26kkk.common.model.PageList;
 
 @Aspect
@@ -53,13 +48,9 @@ public class ArticleAddRootArticleAspect {
 		String rootIds = articleList.stream()
 				.map(article -> article.getRootId())
 				.collect(Collectors.joining(","));
-		
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        User user = (User) request.getSession().getAttribute("user");
 				
 		ArticleParam articleParam = new ArticleParam
 				.Builder(0)
-				.userGrade(user.getUserGrade())
 				.articleId(rootIds)
 				.build();
 		
@@ -73,8 +64,12 @@ public class ArticleAddRootArticleAspect {
 		for(int i = 0 ; i < articleList.size(); i++) {
 			Article article = articleList.get(i);
 			
-			Article parentArticle = parentArticleMap.get(article.getArticleId());
+			Article parentArticle = parentArticleMap.get(article.getRootId());
 			if(null == parentArticle) {
+				continue;
+			}
+			// XXX 최상위 부모인 경우 부모글 붙이는 작업을 할 필요가 없다. 어떻게..?
+			if(article.getArticleId().equals(parentArticle.getArticleId())) {
 				continue;
 			}
 			

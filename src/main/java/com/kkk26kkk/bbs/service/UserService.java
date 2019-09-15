@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
 import com.kkk26kkk.bbs.dao.UserDao;
 import com.kkk26kkk.bbs.model.User;
 import com.kkk26kkk.bbs.model.UserDto;
-import com.kkk26kkk.bbs.model.UserFollowVo;
 import com.kkk26kkk.bbs.model.UserVo;
-import com.kkk26kkk.common.model.UserGrade;
 
 @Service	
 public class UserService {
@@ -26,7 +24,6 @@ public class UserService {
 		userVo.setUserId(userDto.getUserId());
 		userVo.setUserPw(User.hash(userDto.getUserPw()));
 		userVo.setUserName(userDto.getUserName());
-		userVo.setUserGrade(UserGrade.COMMON_USER.getUserGrade());
 		
 		int resultCnt = userDao.insertUser(userVo);
 		
@@ -35,15 +32,4 @@ public class UserService {
 		}
 	}
 
-	public void insertUserFollow(String followUserId, String loginUserId) throws SQLException {
-		UserFollowVo userFollowVo = new UserFollowVo();
-		userFollowVo.setFolloweeId(followUserId);
-		userFollowVo.setFollowerId(loginUserId);
-		
-		int resultCnt = userDao.insetUserFollow(userFollowVo);
-		
-		if(1 != resultCnt) {
-			throw new SQLException("팔로우 추가에 실패 했습니다.");
-		}
-	}
 }

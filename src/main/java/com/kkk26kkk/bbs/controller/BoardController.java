@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,8 +19,8 @@ import com.kkk26kkk.bbs.model.Article;
 import com.kkk26kkk.bbs.model.ArticleDto;
 import com.kkk26kkk.bbs.model.ArticleParam;
 import com.kkk26kkk.bbs.model.User;
-import com.kkk26kkk.bbs.model.UserDto;
 import com.kkk26kkk.bbs.service.BoardService;
+import com.kkk26kkk.bbs.service.UserFollowService;
 import com.kkk26kkk.common.model.PageList;
 import com.kkk26kkk.common.model.Path;
 
@@ -28,6 +28,8 @@ import com.kkk26kkk.common.model.Path;
 public class BoardController {
 	@Autowired
 	private BoardService boardService;
+	@Autowired
+	private UserFollowService userFollowService;
 //	@Autowired
 //	private Environment environment;
 	
@@ -103,12 +105,17 @@ public class BoardController {
 	}
 
 	@RequestMapping(value = "/board/feedList", method = RequestMethod.GET)
-	@ResponseBody Map<String, Object> feedList(Model model, @RequestParam(defaultValue = "0") int page, User user) {
+	@ResponseBody Map<String, Object> feedList(User user, @RequestParam(defaultValue = "0") int page) {
 		Map<String, Object> map = new HashMap<>();
+		
+		List<String> followeeIdList = userFollowService.getFolloweeIds(user.getUserId());
+		String followeeIds = StringUtils.join(followeeIdList, ",");
 		
 		ArticleParam articleParam = new ArticleParam
 				.Builder(pageSize)
 				.useMore(true)
+				.userId(followeeIds)
+				.loginUserId(user.getUserId())
 				.build();
 		
 		PageList<Article> pageArticleList = boardService.getFeedList(articleParam); 
@@ -138,7 +145,7 @@ public class BoardController {
 				.Builder(pageSize)
 				.useMore(true)
 				.userId(userId)
-				.userGrade(user.getUserGrade())
+				.loginUserId(user.getUserId())
 				.build();
 		
 		PageList<Article> articlePageList = boardService.getClipboardList(articleParam);

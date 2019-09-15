@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kkk26kkk.bbs.model.Article;
-import com.kkk26kkk.bbs.model.Article1;
 import com.kkk26kkk.bbs.model.ArticleParam;
 import com.kkk26kkk.common.aop.AddComments;
 import com.kkk26kkk.common.aop.AddRootArticle;
@@ -33,16 +32,17 @@ public class BoardDao extends BaseDao {
 	}
 	
 	@AddComments
-	public List<Article1> getArticleListMoreAddComments(ArticleParam articleParam) {
+	public List<Article> getArticleListMoreAddComments(ArticleParam articleParam) {
 		return sqlSession.selectList("getArticleList", articleParam);
 	}
 
 	@AddComments
-	public PageList<Article1> getFeedArticleListAddCommentsTotal(ArticleParam articleParam) {
+	public PageList<Article> getFeedArticleListAddCommentsTotal(ArticleParam articleParam) {
 		return super.getPageListTotal("getFeedArticleList", "getArticleCount", articleParam);
 	}
 	
 	@AddComments
+	@AddRootArticle
 	public PageList<Article> getFeedArticleListAddCommentsMore(ArticleParam articleParam) {
 		return super.getPageListMore("getFeedArticleList", articleParam);
 	}
