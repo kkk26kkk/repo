@@ -10,6 +10,7 @@ import com.kkk26kkk.bbs.model.Article;
 import com.kkk26kkk.bbs.model.ArticleParam;
 import com.kkk26kkk.common.aop.AddComments;
 import com.kkk26kkk.common.aop.AddRootArticle;
+import com.kkk26kkk.common.aop.CacheInSession;
 import com.kkk26kkk.common.dao.BaseDao;
 import com.kkk26kkk.common.model.PageList;
 
@@ -43,12 +44,14 @@ public class BoardDao extends BaseDao {
 	
 	@AddComments
 	@AddRootArticle
+	@CacheInSession(name = "BoardDao.getFeedArticleListAddCommentsMore", key = "userId,page,pageSize,sort", type = "com.kkk26kkk.bbs.model.ArticleParam")
 	public PageList<Article> getFeedArticleListAddCommentsMore(ArticleParam articleParam) {
 		return super.getPageListMore("getFeedArticleList", articleParam);
 	}
 
 	@AddComments
 	@AddRootArticle
+	@CacheInSession(name = "BoardDao.getClipboardListAddCommentsMore", key = "userId,page,pageSize,sort", type = "com.kkk26kkk.bbs.model.ArticleParam")
 	public PageList<Article> getClipboardListAddCommentsMore(ArticleParam articleParam) {
 		return super.getPageListMore("getClipboardList", articleParam);
 	}

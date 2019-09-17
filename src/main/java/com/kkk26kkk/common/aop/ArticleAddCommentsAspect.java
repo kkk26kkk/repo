@@ -78,19 +78,6 @@ public class ArticleAddCommentsAspect {
 			articleList.set(i, new CommentListDecorator(article, commentList));
 		}
 		
-//		articleList = articleList.stream()
-//				.map(article -> {
-//					final String id = article.getArticleId();
-//					
-//					PageList<Comment> commentList = commentListMap.get(id);
-//					if(null == commentList) {
-//						return article;
-//					}
-//					
-//					return new CommentListDecorator(article, commentList);
-//				})
-//				.collect(Collectors.toList());
-		
 		if (obj instanceof PageList) {
 			((PageList<Article>) obj).setList(articleList);
 		}
