@@ -15,11 +15,13 @@ public class ArticleRankService {
 	@Autowired
 	private ArticleRankDao articleRankDao;
 	
-	public void saveRanking() {
-		int limit = 99999; // TODO 외부에서 호출시 받아오도록
+	public void saveRanking(int limit) {
 		List<ArticleRank> articleRankList = articleRankDao.selectArticleIdListForRank(limit);
-		List<Map<String, Object>> readCountList = articleRankDao.selectReadCountList();
-		List<Map<String, Object>> commentCountList = articleRankDao.selectCommentCountList();
+		String articleIds = articleRankList.stream()
+				.map(ArticleRank::getArticleId)
+				.collect(Collectors.joining(","));
+		List<Map<String, Object>> readCountList = articleRankDao.selectReadCountList(articleIds);
+		List<Map<String, Object>> commentCountList = articleRankDao.selectCommentCountList(articleIds);
 		Map<String, Integer> readCountMap = readCountList.stream()
 				.collect(Collectors.toMap(readCount -> (String)readCount.get("articleId"), readCount -> (Integer)readCount.get("count")));
 		Map<String, Integer> commentCountMap = commentCountList.stream()

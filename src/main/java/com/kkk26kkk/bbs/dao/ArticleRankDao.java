@@ -19,12 +19,12 @@ public class ArticleRankDao {
 		return sqlSession.selectList(NAME_SPACE + "selectArticleIdListForRank", limit);
 	}
 	
-	public List<Map<String, Object>> selectReadCountList() {
-		return sqlSession.selectList(NAME_SPACE + "selectReadCountList", "articleId");
+	public List<Map<String, Object>> selectReadCountList(String articleIds) {
+		return sqlSession.selectList(NAME_SPACE + "selectReadCountList", articleIds);
 	}
 
-	public List<Map<String, Object>> selectCommentCountList() {
-		return sqlSession.selectList(NAME_SPACE + "selectCommentCountList", "articleId");
+	public List<Map<String, Object>> selectCommentCountList(String articleIds) {
+		return sqlSession.selectList(NAME_SPACE + "selectCommentCountList", articleIds);
 	}
 	
 	public void insertArticleRank(List<ArticleRank> articleRankList) {
