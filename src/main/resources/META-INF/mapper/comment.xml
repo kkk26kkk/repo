@@ -11,27 +11,6 @@
 				 #{contents}, sysdate, #{code})
 	</insert>
 	
-	<select id="getCommentList" parameterType="com.kkk26kkk.bbs.model.CommentParam" resultType="com.kkk26kkk.bbs.model.Comment">
-		SELECT 
-                A.COMMENT_ID, A.ARTICLE_ID, A.USER_ID, A.USER_NAME , A.PARENT_ID, A.REG_DTM,
-        CASE    WHEN (A.USER_ID != #{userId} AND B.USER_ID != #{userId}) AND A.CODE = '20'
-                    THEN NULL -- // TODO 명시적으로 CONTENTS에 NULL이 들어있으면 WAS 단에서 비즈니스 로직 태운다 ("비밀댓글입니다")
-                -- WHEN 신고 댓글
-                ELSE  A.CONTENTS
-        END     CONTENTS
-		FROM    TB_COMMENT A
-		INNER JOIN
-		        TB_ARTICLE B
-		ON A.ARTICLE_ID = B.ARTICLE_ID
-		WHERE A.ARTICLE_ID = #{articleId}
-	</select>
-	
-	<select id="getCommentSeqNextVal" resultType="String">
-		SELECT 
-				TB_COMMENT_SEQ.NEXTVAL
-		FROM	DUAL
-	</select>
-	
 	<select id="getComment" parameterType="String" resultType="com.kkk26kkk.bbs.model.Comment">
 		SELECT
 				COMMENT_ID
@@ -43,10 +22,74 @@
 		FROM	TB_COMMENT
 		WHERE	COMMENT_ID = #{commentId}
 	</select>
+	
+	<select id="getCommentList" parameterType="com.kkk26kkk.bbs.model.CommentParam" resultType="com.kkk26kkk.bbs.model.Comment">
+		SELECT 
+                A.COMMENT_ID, A.ARTICLE_ID, A.USER_ID, A.USER_NAME , A.PARENT_ID, A.REG_DTM,
+        CASE    WHEN (A.USER_ID != #{userId} AND B.USER_ID != #{userId}) AND A.CODE = '20'
+                    THEN NULL
+                -- WHEN 신고 댓글
+                ELSE  A.CONTENTS
+        END     CONTENTS
+		FROM    TB_COMMENT A
+		INNER JOIN
+		        TB_ARTICLE B
+		ON A.ARTICLE_ID = B.ARTICLE_ID
+		WHERE A.ARTICLE_ID = #{articleId}
+	</select>
+	
+	<select id="selectFeedCommentList" parameterType="com.kkk26kkk.bbs.model.CommentParam" resultType="com.kkk26kkk.bbs.model.Comment">
+    	SELECT	
+    			Y.*
+		FROM	(
+					SELECT 
+							Z.*
+					FROM	(
+						        SELECT  /*+ INDEX_DESC(C PK_TB_COMMENT) */
+						        		C.COMMENT_ID
+						        	  , C.ARTICLE_ID
+						        	  , C.USER_ID
+						        	  , C.USER_NAME
+						        	  , C.REG_DTM
+						        	  ,
+						       	CASE	WHEN (C.USER_ID != #{userId} AND A.USER_ID != #{userId}) AND C.CODE = '20'
+						       				THEN NULL
+						       		 --	WHEN 신고 댓글
+						       		 	ELSE C.CONTENTS
+						       	END		CONTENTS
+						        	  , ROW_NUMBER() OVER(PARTITION BY C.ARTICLE_ID ORDER BY C.REG_DTM DESC) AS RNUM
+						        FROM	TB_COMMENT		C
+						        	  , TB_ARTICLE		A
+						       	WHERE	C.ARTICLE_ID	=	A.ARTICLE_ID
+						        AND		C.ARTICLE_ID	IN	(
+						        								SELECT 
+						        										regexp_substr(#{articleId}, '[^,]+', 1, LEVEL) AS ARTICLE_ID
+																FROM	DUAL
+																CONNECT	BY
+																		LEVEL &lt;= length(regexp_replace(#{articleId}, '[^,]+', '')) + 1
+						        							) 
+      						) Z
+			        WHERE	Z.RNUM	&lt;=	#{endNum}
+				) Y
+		WHERE	Y.RNUM	&gt;=	#{startNum}
+    </select>
     
-    <insert id="insertNoticeArticle" parameterType="int">
-        INSERT INTO TB_NOTICE_ARTICLE
-               (NOTICE_ID, ARTICLE_ID, NOTICE_STT_DTM, NOTICE_END_DTM)
-        VALEUS (TB_NOTICE_ARTICLE_SEQ.NEXTVAL, #{articleId}, SYSDATE, (SYSDATE + INTERVAL '14' DAY))
-    </insert>
+    <resultMap id="commentTotalCountResultMap" type="java.util.HashMap">
+        <result property="id" column="ID"/>
+        <result property="totalCount" column="TOTAL_COUNT" javaType="int"/>
+    </resultMap>
+    
+    <select id="selectCommentTotalCount" resultMap="commentTotalCountResultMap">
+    	SELECT	ARTICLE_ID	AS ID
+    		  , COUNT(1)	AS TOTAL_COUNT
+		FROM	TB_COMMENT
+		GROUP BY 
+				ARTICLE_ID
+    </select>
+	
+	<select id="getCommentSeqNextVal" resultType="String">
+		SELECT 
+				TB_COMMENT_SEQ.NEXTVAL
+		FROM	DUAL
+	</select>
 </mapper>

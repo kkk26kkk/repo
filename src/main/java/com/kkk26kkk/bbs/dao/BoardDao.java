@@ -42,14 +42,14 @@ public class BoardDao extends BaseDao {
 		return super.getPageListTotal("getFeedArticleList", "getArticleCount", articleParam);
 	}
 	
-	@AddComments
+	@AddComments(useMore = true, useTotal = true)
 	@AddRootArticle
 	@CacheInSession(name = "BoardDao.getFeedArticleListAddCommentsMore", key = "userId,page,pageSize,sort", type = "com.kkk26kkk.bbs.model.ArticleParam")
 	public PageList<Article> getFeedArticleListAddCommentsMore(ArticleParam articleParam) {
 		return super.getPageListMore("getFeedArticleList", articleParam);
 	}
 
-	@AddComments
+	@AddComments(useMore = true, useTotal = true)
 	@AddRootArticle
 	@CacheInSession(name = "BoardDao.getClipboardListAddCommentsMore", key = "userId,page,pageSize,sort", type = "com.kkk26kkk.bbs.model.ArticleParam")
 	public PageList<Article> getClipboardListAddCommentsMore(ArticleParam articleParam) {

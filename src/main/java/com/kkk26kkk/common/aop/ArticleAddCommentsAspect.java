@@ -31,8 +31,8 @@ public class ArticleAddCommentsAspect {
 	
 	private static final int COMMENT_PAGE_SIZE = 5;
 	
-	@Around("@annotation(com.kkk26kkk.common.aop.AddComments)")
-	public Object addComments(ProceedingJoinPoint joinPoint) { // TODO 리턴 안 하는 구조로 변경
+	@Around("@annotation(com.kkk26kkk.common.aop.AddComments) && @ annotation(target)")
+	public Object addComments(ProceedingJoinPoint joinPoint, AddComments target) { // TODO 리턴 안 하는 구조로 변경
 		Object obj = null;
 		try {
 			obj = joinPoint.proceed();
@@ -61,11 +61,13 @@ public class ArticleAddCommentsAspect {
         
 		CommentParam commentParam = new CommentParam
 				.Builder(COMMENT_PAGE_SIZE, articleIds)
-				.useMore(true)
+				.useMore(target.useMore())
+				.useTotal(target.useTotal())
 				.userId(user.getUserId())
 				.build();
 		
-		Map<String, PageList<Comment>> commentListMap = commentDao.getFeedCommentList(commentParam, Comment::getArticleId);
+//		Map<String, PageList<Comment>> commentListMap = commentDao.selectCommentListMapMore(commentParam, Comment::getArticleId);
+		Map<String, PageList<Comment>> commentListMap = commentDao.selectCommentListMapTotal(commentParam, Comment::getArticleId);
 		
 		for(int i = 0 ; i < articleList.size(); i++) {
 			Article article = articleList.get(i);

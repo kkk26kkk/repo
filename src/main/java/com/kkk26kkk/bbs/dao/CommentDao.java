@@ -27,8 +27,12 @@ public class CommentDao extends BaseDao {
 		return super.getPageListMore("getCommentList", commentParam);
 	}
 	
-	public Map<String, PageList<Comment>> getFeedCommentList(CommentParam commentParam, Function<Comment, String> groupById) {
-		return super.getPageListMore("getFeedCommentList", commentParam, groupById);
+	public Map<String, PageList<Comment>> selectCommentListMapMore(CommentParam commentParam, Function<Comment, String> groupById) {
+		return super.selectPageListMapMore("selectFeedCommentList", commentParam, groupById);
+	}
+	
+	public Map<String, PageList<Comment>> selectCommentListMapTotal(CommentParam commentParam, Function<Comment, String> groupById) {
+		return super.selectPageListMapTotal("selectFeedCommentList", "selectCommentTotalCount", commentParam, groupById);
 	}
 
 	public Comment getComment(String commentId) {
