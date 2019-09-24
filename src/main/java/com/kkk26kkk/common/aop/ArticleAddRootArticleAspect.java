@@ -46,9 +46,10 @@ public class ArticleAddRootArticleAspect {
 		}
 		
 		String rootIds = articleList.stream()
+				.filter(article -> !article.getArticleId().equals(article.getRootId()))
 				.map(article -> article.getRootId())
 				.collect(Collectors.joining(","));
-				
+		
 		ArticleParam articleParam = new ArticleParam
 				.Builder(0)
 				.articleId(rootIds)
@@ -66,10 +67,6 @@ public class ArticleAddRootArticleAspect {
 			
 			Article parentArticle = parentArticleMap.get(article.getRootId());
 			if(null == parentArticle) {
-				continue;
-			}
-			// XXX 최상위 부모인 경우 부모글 붙이는 작업을 할 필요가 없다. 어떻게..?
-			if(article.getArticleId().equals(parentArticle.getArticleId())) {
 				continue;
 			}
 			

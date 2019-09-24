@@ -126,7 +126,7 @@ public class BoardController {
 		boolean hasNext = pageArticleList.hasNext();
 		
 		List<ArticleDto> articleDtoList = articleList.stream()
-			.map(Article::showContent)
+			.map(Article::showContent) // TODO environment, user를 기본적으로 받는 데이터컨버터(팩토리?) 추가
 			.collect(Collectors.toList());
 		
 		map.put("articleList", articleDtoList);

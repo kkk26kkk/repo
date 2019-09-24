@@ -43,6 +43,7 @@ public class ArticleController {
 	private static final int pageSize = 10;
 	
 	// 글 상세보기
+	// @모니터링(name="ArticleController.show", group="ALL")
 	@RequestMapping(value = "/board/{articleId}", method = RequestMethod.GET)
 	String show(@PathVariable String articleId, Model model, User user) {
 		Article article = articleService.getArticle(articleId);

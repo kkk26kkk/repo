@@ -29,6 +29,8 @@ public class CacheInSessionAspect {
 	@Around("@annotation(com.kkk26kkk.common.aop.CacheInSession) && @ annotation(target)")
 	public Object getCachedObject(ProceedingJoinPoint joinPoint, CacheInSession target) throws Throwable {
 		
+		// TODO 강제만료, 캐시패스 기능 추가
+		
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		HttpSession session = request.getSession();
 		Object returnObject;

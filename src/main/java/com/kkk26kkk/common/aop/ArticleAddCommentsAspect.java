@@ -32,7 +32,7 @@ public class ArticleAddCommentsAspect {
 	private static final int COMMENT_PAGE_SIZE = 5;
 	
 	@Around("@annotation(com.kkk26kkk.common.aop.AddComments) && @ annotation(target)")
-	public Object addComments(ProceedingJoinPoint joinPoint, AddComments target) { // TODO 리턴 안 하는 구조로 변경
+	public Object addComments(ProceedingJoinPoint joinPoint, AddComments target) {
 		Object obj = null;
 		try {
 			obj = joinPoint.proceed();

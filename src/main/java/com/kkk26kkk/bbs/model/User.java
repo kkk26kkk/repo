@@ -6,6 +6,11 @@ import java.security.NoSuchAlgorithmException;
 import org.apache.commons.lang3.StringUtils;
 
 public class User extends UserVo {
+	
+	// TODO followeeIdList 또는 followeeIds 필드 추가 - 로그인 시점 or 변화되는 시점에 업데이트
+	
+	// TODO 위 추가한 필드에서 특정 userId가 있는지 체크하는 메소드
+	
 	public boolean isUserId(String userId) {
 		if(StringUtils.equals(userId, this.getUserId())) {
 			return true;
