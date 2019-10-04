@@ -1,10 +1,12 @@
 package com.kkk26kkk.bbs.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -63,6 +65,9 @@ public class UserController {
 		
 		try {
 			if(User.hash(userDto.getUserPw()).equals(user.getUserPw())) {
+				List<String> followeeIdList = userFollowService.getFolloweeIds(user.getUserId());
+				user.setFolloweeIds(StringUtils.join(followeeIdList, ","));
+				
 				request.getSession().setAttribute("user", user);
 				result.put("code", HttpStatus.OK);
 				result.put("redirect", Path.ArticleList.getPath());

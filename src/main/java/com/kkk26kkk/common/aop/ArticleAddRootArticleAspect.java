@@ -70,6 +70,10 @@ public class ArticleAddRootArticleAspect {
 				continue;
 			}
 			
+			if(article.getArticleId().equals(parentArticle.getArticleId())) {
+				continue;
+			}
+			
 			articleList.set(i, new RootArticleDecorator(article, parentArticle));
 		}
 		

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +19,6 @@ import com.kkk26kkk.bbs.model.ArticleDto;
 import com.kkk26kkk.bbs.model.ArticleParam;
 import com.kkk26kkk.bbs.model.User;
 import com.kkk26kkk.bbs.service.BoardService;
-import com.kkk26kkk.bbs.service.UserFollowService;
 import com.kkk26kkk.common.model.PageList;
 import com.kkk26kkk.common.model.Path;
 
@@ -28,8 +26,6 @@ import com.kkk26kkk.common.model.Path;
 public class BoardController {
 	@Autowired
 	private BoardService boardService;
-	@Autowired
-	private UserFollowService userFollowService;
 //	@Autowired
 //	private Environment environment;
 	
@@ -108,13 +104,10 @@ public class BoardController {
 	@ResponseBody Map<String, Object> feedList(User user, @RequestParam(defaultValue = "0") int page) {
 		Map<String, Object> map = new HashMap<>();
 		
-		List<String> followeeIdList = userFollowService.getFolloweeIds(user.getUserId());
-		String followeeIds = StringUtils.join(followeeIdList, ",");
-		
 		ArticleParam articleParam = new ArticleParam
 				.Builder(pageSize)
 				.useMore(true)
-				.userId(followeeIds)
+				.userId(user.getFolloweeIds())
 				.loginUserId(user.getUserId())
 				.build();
 		
@@ -146,6 +139,7 @@ public class BoardController {
 				.useMore(true)
 				.userId(userId)
 				.loginUserId(user.getUserId())
+				.isFollowing(user.isFollowing(userId))
 				.build();
 		
 		PageList<Article> articlePageList = boardService.getClipboardList(articleParam);

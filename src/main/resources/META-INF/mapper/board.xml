@@ -121,16 +121,16 @@
  									  , CONNECT_BY_ROOT A.ARTICLE_ID AS ROOT_ID
 						    	FROM	TB_ARTICLE       A
 						    	      , (
-                                                   SELECT  #{loginUserId}
-                                                   FROM    DUAL
-                                                   WHERE   #{loginUserId}    IS NOT NULL
-                                                   
-                                                   UNION ALL
-                                                   
-                                                   SELECT  regexp_substr(#{userId}, '[^,]+', 1, LEVEL) AS ARTICLE_ID
-                                                   FROM    DUAL
-                                                   CONNECT BY
-                                                           LEVEL &lt;= length(regexp_replace(#{userId}, '[^,]+', '')) + 1
+	                                        SELECT  #{loginUserId} AS USER_ID
+	                                        FROM    DUAL
+	                                        WHERE   #{loginUserId} IS NOT NULL
+	                                        
+	                                        UNION ALL
+	                                        
+	                                        SELECT  regexp_substr(#{userId}, '[^,]+', 1, LEVEL) AS USER_ID
+	                                        FROM    DUAL
+	                                        CONNECT BY
+	                                                LEVEL &lt;= length(regexp_replace(#{userId}, '[^,]+', '')) + 1
 						    	        ) U
 						    	WHERE	1				= 1
 						    	AND		A.USER_ID       = U.USER_ID
@@ -178,11 +178,11 @@
 											WHERE	1			   =       1
 											AND		A.USER_ID	   =       #{userId}
 			                                AND     'Y' = CASE
-			                                                  WHEN #{userId} = #{loginUserId}
+			                                                  WHEN #{userId} = #{loginUserId} AND A.GRADE IN ('10', '20', '30')
 			                                                      THEN 'Y'
-			                                                  WHEN /*내가팔로우했는지체크해서 내려옴*/ AND A.GRADE        IN ('10', '20')
+			                                                  WHEN #{isFollowing} = 1 AND A.GRADE IN ('10', '20')
 			                                                      THEN 'Y'
-                                                              WHEN A.GRADE        = '10'
+                                                              WHEN A.GRADE = '10'
                                                                   THEN 'Y'
 			                                                  ELSE
 			                                                      'N'
