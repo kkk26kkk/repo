@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import com.kkk26kkk.bbs.model.ArticleDto;
 import com.kkk26kkk.bbs.model.ArticleParam;
 import com.kkk26kkk.bbs.model.User;
 import com.kkk26kkk.bbs.service.BoardService;
+import com.kkk26kkk.common.exception.BizException;
 import com.kkk26kkk.common.model.PageList;
 import com.kkk26kkk.common.model.Path;
 
@@ -32,20 +34,10 @@ public class BoardController {
 	private static final int pageSize = 10;
 
 	@RequestMapping(value = "/board/list", method = RequestMethod.GET)
-	String showBoard(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(required = false) String sort) {
-//		int length = 0;
-//		for(Article board : boardList) {
-//			if(null == board.getContents()) {
-//				continue;
-//			}
-//			board.showContents();
-//			if(10 == ++length) {
-//				break;
-//			}
-//		}
-
+	String showBoard(Model model, @RequestParam(defaultValue = "1") int page, @RequestParam(required = false) String sort) {
 		ArticleParam articleParam = new ArticleParam
 				.Builder(pageSize)
+				.page(page)
 				.useTotal(true)
 				.useMore(true)
 				.sort(sort)
@@ -71,9 +63,7 @@ public class BoardController {
 		model.addAttribute("logoutLink", Path.Logout.getPath());
 		model.addAttribute("boardContents", boardContents);
 		model.addAttribute("page", page);
-		
 		model.addAttribute("hasNext", hasNext);
-		
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("totalCount", totalCount);
 		
@@ -82,11 +72,14 @@ public class BoardController {
 	
 	@RequestMapping(value = "/board/showMore", method = RequestMethod.GET)
 	@ResponseBody
-	Map<String, Object> showMore(@RequestParam int page, @RequestParam String sort) {
+	Map<String, Object> showMore(@RequestParam int page, @RequestParam(required = false) String sort) {
 		Map<String, Object> map = new HashMap<>();
 		
 		ArticleParam articleParam = new ArticleParam
 				.Builder(pageSize)
+				.page(page)
+//				.useMore(true)
+				.sort(sort)
 				.build();
 		
 		List<Article> articleList = boardService.getArticleListMore(articleParam);
@@ -101,61 +94,71 @@ public class BoardController {
 	}
 
 	@RequestMapping(value = "/board/feedList", method = RequestMethod.GET)
-	@ResponseBody Map<String, Object> feedList(User user, @RequestParam(defaultValue = "0") int page) {
+	@ResponseBody Map<String, Object> feedList(User user, @RequestParam(defaultValue = "1") int page) {
 		Map<String, Object> map = new HashMap<>();
 		
 		ArticleParam articleParam = new ArticleParam
 				.Builder(pageSize)
+				.page(page)
 				.useMore(true)
 				.userId(user.getFolloweeIds())
 				.loginUserId(user.getUserId())
 				.build();
 		
-		PageList<Article> pageArticleList = boardService.getFeedList(articleParam); 
-		
-		List<Article> articleList = pageArticleList.getList();
-		int totalPage = pageArticleList.getTotalPage();
-		int totalCount = pageArticleList.getTotalCount();
-		boolean hasNext = pageArticleList.hasNext();
-		
-		List<ArticleDto> articleDtoList = articleList.stream()
-			.map(Article::showContent) // TODO environment, user를 기본적으로 받는 데이터컨버터(팩토리?) 추가
-			.collect(Collectors.toList());
-		
-		map.put("articleList", articleDtoList);
-		map.put("totalPage", totalPage);
-		map.put("totalCount", totalCount);
-		map.put("hasNext", hasNext);
+		try {
+			PageList<Article> pageArticleList = boardService.getFeedList(articleParam); 
+			List<Article> articleList = pageArticleList.getList();
+			int totalPage = pageArticleList.getTotalPage();
+			int totalCount = pageArticleList.getTotalCount();
+			boolean hasNext = pageArticleList.hasNext();
+			
+			List<ArticleDto> articleDtoList = articleList.stream()
+				.map(Article::showContent) // TODO environment, user를 기본적으로 받는 데이터컨버터(팩토리?) 추가
+				.collect(Collectors.toList());
+			
+			map.put("articleList", articleDtoList);
+			map.put("totalPage", totalPage);
+			map.put("totalCount", totalCount);
+			map.put("hasNext", hasNext);
+		} catch(BizException e) {
+			map.put("code", HttpStatus.INTERNAL_SERVER_ERROR);
+			map.put("msg", e.getMessage());
+		}
 		
 		return map;
 	}
 	
 	@RequestMapping(value = "/board/clipboard/{userId}", method = RequestMethod.GET)
-	@ResponseBody Map<String, Object> clipboard(User user, @RequestParam(defaultValue = "0") int page, @PathVariable String userId) {
+	@ResponseBody Map<String, Object> clipboard(User user, @RequestParam(defaultValue = "1") int page, @PathVariable String userId) {
 		Map<String, Object> map = new HashMap<>();
 		
 		ArticleParam articleParam = new ArticleParam
 				.Builder(pageSize)
+				.page(page)
 				.useMore(true)
 				.userId(userId)
 				.loginUserId(user.getUserId())
 				.isFollowing(user.isFollowing(userId))
 				.build();
-		
-		PageList<Article> articlePageList = boardService.getClipboardList(articleParam);
-		List<Article> articleList = articlePageList.getList();
-		int totalPage = articlePageList.getTotalPage();
-		int totalCount = articlePageList.getTotalCount();
-		boolean hasNext = articlePageList.hasNext();
-		
-		List<ArticleDto> articleDtoList = articleList.stream()
-				.map(Article::showContent)
-				.collect(Collectors.toList());
+		try {
+			PageList<Article> articlePageList = boardService.getClipboardList(articleParam);
+			List<Article> articleList = articlePageList.getList();
+			int totalPage = articlePageList.getTotalPage();
+			int totalCount = articlePageList.getTotalCount();
+			boolean hasNext = articlePageList.hasNext();
 			
-		map.put("articleList", articleDtoList);
-		map.put("totalPage", totalPage);
-		map.put("totalCount", totalCount);
-		map.put("hasNext", hasNext);
+			List<ArticleDto> articleDtoList = articleList.stream()
+					.map(Article::showContent)
+					.collect(Collectors.toList());
+				
+			map.put("articleList", articleDtoList);
+			map.put("totalPage", totalPage);
+			map.put("totalCount", totalCount);
+			map.put("hasNext", hasNext);
+		} catch(BizException e) {
+			map.put("code", HttpStatus.INTERNAL_SERVER_ERROR);
+			map.put("msg", e.getMessage());
+		}
 		
 		return map;
 	}

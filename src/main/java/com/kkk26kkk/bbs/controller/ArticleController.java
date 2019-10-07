@@ -55,7 +55,6 @@ public class ArticleController {
 		}
 		
 		model.addAttribute("article", article.showContent());
-		
 		model.addAttribute("updateFormLink", Path.UpdateForm.getRestPath(articleId));
 		model.addAttribute("replyFormLink", Path.ReplyForm.getRestPath(articleId));
 		model.addAttribute("deleteLink", Path.Board.getRestPath(articleId));

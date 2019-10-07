@@ -46,7 +46,6 @@ public class ArticleAddRootArticleAspect {
 		}
 		
 		String rootIds = articleList.stream()
-				.filter(article -> !article.getArticleId().equals(article.getRootId()))
 				.map(article -> article.getRootId())
 				.collect(Collectors.joining(","));
 		
