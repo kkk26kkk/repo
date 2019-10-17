@@ -24,6 +24,9 @@ $(function(){
 			dataType : 'json',
 			data : JSON.stringify(data)
 		}).done(function(result){
+			if(result.msg != null) {
+				alert(result.msg);
+			}
 			$(location).attr('href', result.redirect);
 		});
 	});
