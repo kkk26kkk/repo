@@ -1,6 +1,5 @@
 package com.kkk26kkk.user.service;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +18,7 @@ public class UserService {
 	@Autowired
 	private UserDao userDao;
 	
-	public void insertUser(UserDto userDto) throws SQLException {
+	public void insertUser(UserDto userDto) throws BizException {
 		UserVo userVo = new UserVo();
 		userVo.setUserId(userDto.getUserId());
 		userVo.setUserPw(User.hash(userDto.getUserPw()));
@@ -28,7 +27,7 @@ public class UserService {
 		int resultCnt = userDao.insertUser(userVo);
 		
 		if(1 != resultCnt) {
-			throw new SQLException("유저 등록을 실패 했습니다.");
+			throw new BizException("유저 등록을 실패 했습니다.");
 		}
 	}
 
@@ -49,7 +48,7 @@ public class UserService {
 		}
 	}
 
-	public void insertUserFollow(String followUserId, String loginUserId) throws SQLException {
+	public void insertUserFollow(String followUserId, String loginUserId) throws BizException {
 		UserFollowVo userFollowVo = new UserFollowVo();
 		userFollowVo.setFolloweeId(followUserId);
 		userFollowVo.setFollowerId(loginUserId);
@@ -57,7 +56,7 @@ public class UserService {
 		int resultCnt = userDao.insetUserFollow(userFollowVo);
 		
 		if(1 != resultCnt) {
-			throw new SQLException("팔로우 추가에 실패 했습니다.");
+			throw new BizException("팔로우 추가에 실패 했습니다.");
 		}
 	}
 }

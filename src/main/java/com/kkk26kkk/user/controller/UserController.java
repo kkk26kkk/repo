@@ -43,7 +43,7 @@ public class UserController {
 			userService.insertUser(userDto);
 			result.put("code", HttpStatus.OK);
 			result.put("redirect", Path.Articles.getPath());
-		} catch(Exception e) {
+		} catch(BizException e) {
 			result.put("code", HttpStatus.INTERNAL_SERVER_ERROR);
 			result.put("msg", e.getMessage());
 		}
@@ -88,7 +88,7 @@ public class UserController {
 		try {
 			userService.insertUserFollow(userId, user.getUserId());
 			result.put("code", HttpStatus.OK);
-		} catch(Exception e) {
+		} catch(BizException e) {
 			result.put("code", HttpStatus.INTERNAL_SERVER_ERROR);
 			result.put("msg", e.getMessage());
 		}
