@@ -18,15 +18,15 @@ public class BaseDao {
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 	
-	protected <E> PageList<E> getPageListMore(String statement, BaseParam baseParam) {
-		return getPageList(statement, null, baseParam);
+	protected <E> PageList<E> selectPageListMore(String statement, BaseParam baseParam) {
+		return selectPageList(statement, null, baseParam);
 	}
 	
-	protected <E> PageList<E> getPageListTotal(String statement, String statementTotalCount, BaseParam baseParam) {
-		return getPageList(statement, statementTotalCount, baseParam);
+	protected <E> PageList<E> selectPageListTotal(String statement, String statementTotalCount, BaseParam baseParam) {
+		return selectPageList(statement, statementTotalCount, baseParam);
 	}
 	
-	private <E> PageList<E> getPageList(String statement, String statementTotalCount, BaseParam baseParam) {
+	private <E> PageList<E> selectPageList(String statement, String statementTotalCount, BaseParam baseParam) {
 		
 		List<E> list = sqlSession.selectList(statement, baseParam);
 		

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kkk26kkk.batch.dao.BatchDao">
+	<select id="selectArticleIdListForRank" parameterType="int" resultType="com.kkk26kkk.batch.model.ArticleRank">
+        SELECT	/*+ INDEX_DESC(A PK_TB_ARTICLE) */
+                ARTICLE_ID
+        FROM	TB_ARTICLE
+        WHERE   1           = 1
+        AND     ROWNUM      &lt;= #{limit}
+        ORDER BY
+        		ARTICLE_ID	DESC
+    </select>
+    
+    <resultMap id="readCountResultMap" type="java.util.HashMap">
+        <result property="articleId" column="ARTICLE_ID"/>
+        <result property="count" column="COUNT" javaType="int"/>
+	</resultMap>
+	
+	<select id="selectReadCountList" parameterType="String" resultMap="readCountResultMap">
+		SELECT	ARTICLE_ID 
+    		  , COUNT(1) AS COUNT
+		FROM	TB_ARTICLE_READ_COUNT
+		WHERE   ARTICLE_ID	IN	(
+		                            SELECT  regexp_substr(#{articleIds}, '[^,]+', 1, LEVEL) AS ARTICLE_ID
+		                            FROM	DUAL
+		                            CONNECT	BY
+		                                	LEVEL &lt;= length(regexp_replace(#{articleIds}, '[^,]+', '')) + 1
+								) 
+		GROUP BY 
+				ARTICLE_ID
+	</select>
+    
+    <resultMap id="commentCountResultMap" type="java.util.HashMap">
+        <result property="articleId" column="ARTICLE_ID"/>
+        <result property="count" column="COUNT" javaType="int"/>
+    </resultMap>
+	
+	<select id="selectCommentCountList" parameterType="String" resultMap="commentCountResultMap">
+		SELECT	A.ARTICLE_ID
+			  , COUNT(B.ARTICLE_ID) AS COUNT
+		FROM    TB_ARTICLE A
+			  , TB_COMMENT B
+		WHERE   A.ARTICLE_ID    = 	B.ARTICLE_ID
+		AND   	A.ARTICLE_ID	IN	(
+		                            	SELECT  regexp_substr(#{articleIds}, '[^,]+', 1, LEVEL) AS ARTICLE_ID
+		                            	FROM	DUAL
+		                            	CONNECT	BY
+		                                		LEVEL &lt;= length(regexp_replace(#{articleIds}, '[^,]+', '')) + 1
+									)
+		GROUP BY 
+				A.ARTICLE_ID
+	</select>
+	
+	<delete id="deleteArticleRank">
+		DELETE
+		FROM	TB_ARTICLE_RANK
+	</delete>
+	
+	<insert id="insertArticleRank" parameterType="com.kkk26kkk.batch.model.ArticleRankVo">
+		INSERT	ALL
+	<foreach collection="list" item="articleRank" separator=" " open="" close="">
+		INTO	TB_ARTICLE_RANK
+		(
+				ARTICLE_ID
+			,	COMMENT_COUNT_RANK
+			, 	READ_COUNT_RANK
+			,	POPULARITY_RANK
+			,	BEST_RANK
+			,	RISING_RANK
+		)
+		VALUES
+		(
+				#{articleRank.articleId}
+			,	#{articleRank.commentCountRank}
+			,	#{articleRank.readCountRank}
+			,	#{articleRank.popularityRank}
+			,	#{articleRank.bestRank}
+			,	#{articleRank.risingRank}
+		)
+	</foreach>
+		SELECT	'X'
+		FROM	DUAL
+	</insert>
+</mapper>

@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.kkk26kkk.bbs.model.User;
+import com.kkk26kkk.user.model.User;
 
 public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 

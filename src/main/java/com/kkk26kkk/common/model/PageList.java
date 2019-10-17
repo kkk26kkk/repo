@@ -21,7 +21,7 @@ public class PageList<E> {
 	
 	public void setList(List<E> list) {
 		this.list = list;
-		this.totalCount = list.size();		
+		this.totalCount = list.size();
 	}
 	public List<E> getList() {
 		return list;
@@ -36,10 +36,10 @@ public class PageList<E> {
 		return totalCount;
 	}
 	public int getTotalPage() {
-		if(0 == this.pageSize) {
+		if(0 == pageSize) {
 			return 0;
 		}
-		return this.totalCount + this.pageSize - 1 / this.pageSize;
+		return totalCount % pageSize == 0 ? totalCount / pageSize : totalCount / pageSize + 1;
 	}
 	public boolean hasNext() {
 		return hasNext;

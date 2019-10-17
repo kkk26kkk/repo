@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -15,13 +16,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.kkk26kkk.bbs.dao.CommentDao;
-import com.kkk26kkk.bbs.model.Article;
-import com.kkk26kkk.bbs.model.Comment;
-import com.kkk26kkk.bbs.model.CommentListDecorator;
-import com.kkk26kkk.bbs.model.CommentParam;
-import com.kkk26kkk.bbs.model.User;
+import com.kkk26kkk.bbs.article.model.Article;
+import com.kkk26kkk.bbs.article.model.CommentListDecorator;
+import com.kkk26kkk.bbs.comment.dao.CommentDao;
+import com.kkk26kkk.bbs.comment.model.Comment;
+import com.kkk26kkk.bbs.comment.model.CommentParam;
 import com.kkk26kkk.common.model.PageList;
+import com.kkk26kkk.user.model.User;
 
 @Aspect
 @Component
@@ -58,6 +59,10 @@ public class ArticleAddCommentsAspect {
         
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         User user = (User) request.getSession().getAttribute("user");
+        if(null == user) {
+        	user = new User();
+        	user.setUserId(StringUtils.EMPTY);
+        }
         
 		CommentParam commentParam = new CommentParam
 				.Builder(COMMENT_PAGE_SIZE, articleIds)
@@ -82,6 +87,10 @@ public class ArticleAddCommentsAspect {
 		
 		if (obj instanceof PageList) {
 			((PageList<Article>) obj).setList(articleList);
+		} else if (obj instanceof List) {
+			obj = articleList;
+		} else if (obj instanceof Article) {
+			obj = articleList.get(0);
 		}
 		return obj;
 	}
