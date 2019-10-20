@@ -9,7 +9,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import com.kkk26kkk.bbs.model.User;
+import com.kkk26kkk.user.model.User;
 
 public class AuthenticationArgumentResolver implements HandlerMethodArgumentResolver {
 	

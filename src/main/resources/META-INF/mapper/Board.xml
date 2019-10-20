@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kkk26kkk.bbs.article.dao.BoardDao">
+    <select id="selectArticleList" parameterType="com.kkk26kkk.bbs.article.model.ArticleParam" resultType="com.kkk26kkk.bbs.article.model.XArticle">
+	    SELECT
+	            X.*
+	    FROM    (    
+			        SELECT  
+			                Y.*
+			              , ROWNUM RNUM
+			        FROM    (
+                            	SELECT  /*+ ORDERED USE_NL(C B) INDEX(C IDX_TB_NOTICE_ARTICLEID) INDEX(B PK_TB_ARTICLE) */
+                            			B.ARTICLE_ID
+			                          , B.USER_ID
+			                          , B.USER_NAME
+			                          , B.TITLE
+			                          , B.CONTENTS
+			                          , B.PARENT_ID
+			                          , B.READ_COUNT
+			                          , B.REG_DTM
+                            	FROM    TB_NOTICE		C
+                                      , TB_ARTICLE		B
+                                WHERE   1				= 1
+                                AND     SYSDATE			BETWEEN NOTICE_STT_DTM AND NOTICE_END_DTM
+                                AND     C.ARTICLE_ID    = B.ARTICLE_ID
+                                      
+			                    UNION ALL
+			                    
+						        SELECT
+						                Z.*
+						        FROM    ( 
+						                    SELECT  /*+ ORDERED USE_NL(R A) INDEX_DESC(R IDX_TB_ARTICLE_RANK_ARTICLEID) INDEX_DESC(A PK_TB_ARTICLE) */
+						                            A.ARTICLE_ID
+						                          , A.USER_ID
+						                          , A.USER_NAME
+						                          , A.TITLE
+						                          , A.CONTENTS
+						                          , A.PARENT_ID
+						                          , A.READ_COUNT
+						                          , A.REG_DTM
+						                    FROM    TB_ARTICLE		A
+						                    <if test="sort != null">
+						                    	  , TB_ARTICLE_RANK R
+						                    </if>
+						                    WHERE   1          		= 1
+						                	<if test="sort != null">
+						                    AND		R.ARTICLE_ID	= A.ARTICLE_ID
+						                	</if>
+						                    AND     NOT EXISTS (
+                                                               		SELECT	'X'
+                                                               		FROM    TB_NOTICE
+                                                               		WHERE   ARTICLE_ID = A.ARTICLE_ID
+						                                       )
+						                    START WITH
+						                            PARENT_ID 	IS	NULL 
+						                    CONNECT BY
+						                            PARENT_ID 	=	PRIOR A.ARTICLE_ID
+						                    ORDER SIBLINGS BY
+					                    	<choose>
+					                    		<when test="sort == 'commentCount'">
+					                    			(
+		                                            	SELECT	COUNT(1)
+		                                                FROM	TB_COMMENT		B
+		                                            	WHERE	B.ARTICLE_ID 	= A.ARTICLE_ID
+		                                           	) DESC
+		                                        --	R.COMMENT_COUNT_RANK DESC
+					                    		</when>
+					                    		<when test="sort == 'readCount'">
+					                    			A.READ_COUNT DESC
+						                       	--	R.READ_COUNT_RANK DESC
+					                    		</when>
+					                    		<when test="sort == 'popularity'">
+					                    			R.POPULARITY_RANK DESC
+					                    		</when>
+					                    		<when test="sort == 'best'">
+					                    			R.BEST_RANK DESC
+					                    		</when>
+					                    		<when test="sort == 'rising'">
+					                    			R.RISING_RANK DESC
+					                    		</when>
+					                    		<otherwise>
+					                    			REG_DTM DESC
+					                    		</otherwise>
+					                    	</choose>
+						                ) Z
+			                ) Y
+	                WHERE	ROWNUM &lt;= #{endNum} 
+	            ) X
+		WHERE	X.RNUM &gt;= #{startNum}
+    </select>
+    
+    <select id="selectArticleCount" resultType="int">
+        SELECT	COUNT(1)
+        FROM	TB_ARTICLE
+    </select>
+    
+    <select id="selectFeedList" parameterType="com.kkk26kkk.bbs.article.model.ArticleParam" resultType="com.kkk26kkk.bbs.article.model.XArticle">
+	    SELECT	
+	    		X.*
+	    FROM	(
+				    SELECT	
+			    			Y.*
+                          , ROWNUM RNUM
+				   	FROM	(
+						    	SELECT	/*+ INDEX_DESC(A PK_TB_ARTICLE) */
+						    			A.ARTICLE_ID
+						    		  , A.USER_ID
+						    		  , A.USER_NAME
+						    		  , A.TITLE
+						    		  , A.CONTENTS
+						    		  , A.PARENT_ID
+						    		  , A.READ_COUNT
+						    		  , A.REG_DTM
+ 									  , CONNECT_BY_ROOT A.ARTICLE_ID AS ROOT_ID
+						    	FROM	TB_ARTICLE       A
+						    	      , (
+	                                        SELECT  #{loginUserId} AS USER_ID
+	                                        FROM    DUAL
+	                                        WHERE   #{loginUserId} IS NOT NULL
+	                                        
+	                                        UNION ALL
+	                                        
+	                                        SELECT  regexp_substr(#{userId}, '[^,]+', 1, LEVEL) AS USER_ID
+	                                        FROM    DUAL
+	                                        CONNECT BY
+	                                                LEVEL &lt;= length(regexp_replace(#{userId}, '[^,]+', '')) + 1
+						    	        ) U
+						    	WHERE	1				= 1
+						    	AND		A.USER_ID       = U.USER_ID
+						    	AND     'Y' = CASE
+						    	                  WHEN #{loginUserId} = A.USER_ID
+						    	                      THEN 'Y'
+						    	                  WHEN A.GRADE        IN ('10', '20')
+						    	                      THEN 'Y'
+						    	                  ELSE
+						    	                      'N'
+						    	              END
+						    	START WITH
+						                A.PARENT_ID		IS NULL
+						        CONNECT BY
+						                A.PARENT_ID		= PRIOR A.ARTICLE_ID
+						        ORDER	BY
+						        		A.ARTICLE_ID 	DESC
+							) Y
+			        WHERE	ROWNUM	&lt;=	#{endNum} 
+				) X
+		WHERE	X.RNUM	&gt;=	#{startNum}
+    </select>
+
+    <select id="selectClipboardList" parameterType="com.kkk26kkk.bbs.article.model.ArticleParam" resultType="com.kkk26kkk.bbs.article.model.XArticle">
+    	SELECT
+    			X.*
+    	FROM	(
+			    	SELECT
+			    			Y.*
+			    		  , ROWNUM RNUM
+			    	FROM	(
+						    	SELECT	/*+ INDEX_DESC(A PK_TB_ARTICLE) */
+						    			A.ARTICLE_ID
+						    		  , A.USER_ID
+						    		  , A.USER_NAME
+						    		  , A.TITLE
+						    		  , A.CONTENTS
+						    		  , A.READ_COUNT
+						    		  , A.REG_DTM
+						    		  , CONNECT_BY_ROOT A.ARTICLE_ID AS ROOT_ID
+								FROM	TB_ARTICLE	A
+								WHERE	1			= 1
+								AND		A.USER_ID	= #{userId}
+                                AND     'Y' = CASE
+                                                  WHEN #{userId} = #{loginUserId} AND A.GRADE IN ('10', '20', '30')
+                                                      THEN 'Y'
+                                                  WHEN #{isFollowing} = 1 AND A.GRADE IN ('10', '20')
+                                                      THEN 'Y'
+                                                           WHEN A.GRADE = '10'
+                                                               THEN 'Y'
+                                                  ELSE
+                                                      'N'
+                                              END
+<!-- 								<bind name="userId" value="userId"/> -->
+<!--                                <bind name="grade" value="A.GRADE"/> -->
+<!-- 								<include refid="checkPublicScope" /> -->
+								START WITH
+										PARENT_ID	 IS NULL
+								CONNECT BY
+										PARENT_ID	 =	PRIOR ARTICLE_ID
+								ORDER 	BY 
+										A.ARTICLE_ID DESC
+				
+							) Y
+					WHERE 	ROWNUM &lt;= #{endNum}
+				) X
+		WHERE	X.RNUM &gt;= #{startNum}
+    </select>
+    
+<!-- 	<sql id="checkPublicScope"> -->
+<!-- 	    // TODO -->
+<!-- 	</sql> -->
+    
+    <select id="selectParentArticleList" parameterType="String" resultType="com.kkk26kkk.bbs.article.model.XArticle">
+		SELECT  /*+ INDEX_DESC(A PK_TB_ARTICLE) */
+    			A.ARTICLE_ID
+    		  , A.USER_ID
+    		  , A.USER_NAME
+    		  , A.TITLE
+    		  , A.CONTENTS
+    		  , A.READ_COUNT
+    		  , A.REG_DTM
+		FROM	TB_ARTICLE A
+		WHERE	ARTICLE_ID IN  (
+		                       		SELECT	regexp_substr(#{rootIds}, '[^,]+', 1, LEVEL) AS ARTICLE_ID
+		                        	FROM	DUAL
+		                        	CONNECT	BY
+		                            		LEVEL &lt;= length(regexp_replace(#{rootIds}, '[^,]+', '')) + 1
+		                       ) 
+		AND     PARENT_ID  IS  NULL
+    </select>
+</mapper>

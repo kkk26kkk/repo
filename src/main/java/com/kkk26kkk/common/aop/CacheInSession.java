@@ -9,7 +9,9 @@ import java.lang.annotation.Target;
 @Documented
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AddComments {
-	boolean useMore() default false;
-	boolean useTotal() default false;
+public @interface CacheInSession {
+	String name();
+	String type();
+	String key() default "";
+	String ttl() default "3600";
 }

@@ -41,7 +41,7 @@
 	 </tx:advice>
 	 
 	 <aop:config proxy-target-class="true">
-	    <aop:pointcut id="controllerTx" expression="execution(* com.kkk26kkk.bbs.service..*(..))" />
+	    <aop:pointcut id="controllerTx" expression="execution(* com.kkk26kkk..*Service..*(..))" />
 	    <aop:advisor advice-ref="txAdvice" pointcut-ref="controllerTx" />
     </aop:config>
     
