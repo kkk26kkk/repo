@@ -3,7 +3,6 @@ package com.kkk26kkk.bbs.article.model;
 import java.util.List;
 
 import com.kkk26kkk.bbs.comment.model.CommentDto;
-import com.kkk26kkk.common.model.PageList;
 
 public class ArticleDto {
 	private String articleId;

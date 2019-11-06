@@ -9,20 +9,15 @@ public class BaseParam {
 	private final boolean useMore;
 	
 	public static class Builder<T extends Builder<T>> {
-		private int page;
-		private int pageSize;
-		private int startNum;
-		private int endNum;
-		private boolean useTotal;
-		private boolean useMore;
+		private final int pageSize;
+		private int page = 0;
+		private int startNum = 0;
+		private int endNum = 0;
+		private boolean useTotal = false;
+		private boolean useMore = false;
 		
 		public Builder(int pageSize) {
 			this.pageSize = pageSize;
-		}
-		
-		public Builder(int startNum, int endNum) {
-			this.startNum = startNum;
-			this.endNum = endNum;
 		}
 		
 		public T page(int page) {
@@ -40,7 +35,7 @@ public class BaseParam {
 			return (T) this;
 		}
 		
-		public BaseParam build() {
+		protected BaseParam build() {
 			if(0 == this.page) {
 				this.page = 1;
 			}
@@ -90,5 +85,4 @@ public class BaseParam {
 	public boolean useMore() {
 		return useMore;
 	}
-	
 }

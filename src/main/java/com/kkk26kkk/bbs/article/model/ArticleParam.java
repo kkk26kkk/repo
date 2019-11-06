@@ -9,10 +9,10 @@ public class ArticleParam extends BaseParam {
 	private final boolean isFollowing;
 	
 	public static class Builder extends BaseParam.Builder<Builder> {
-		private String sort;
-		private String userId;
-		private String loginUserId;
-		private boolean isFollowing;
+		private String sort = "";
+		private String userId = "";
+		private String loginUserId = "";
+		private boolean isFollowing = false;
 		
 		public Builder(int pageSize) {
 			super(pageSize);
@@ -45,7 +45,7 @@ public class ArticleParam extends BaseParam {
 		}
 	}
 	
-	public ArticleParam(Builder builder) {
+	private ArticleParam(Builder builder) {
 		super(builder);
 		this.sort = builder.sort;
 		this.userId = builder.userId;
@@ -68,5 +68,4 @@ public class ArticleParam extends BaseParam {
 	public boolean isFollowing() {
 		return isFollowing;
 	}
-	
 }

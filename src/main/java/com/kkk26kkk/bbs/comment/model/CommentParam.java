@@ -7,16 +7,11 @@ public class CommentParam extends BaseParam {
 	private final String userId;
 	
 	public static class Builder extends BaseParam.Builder<Builder> {
-		private String articleId;
-		private String userId;
+		private String articleId = "";
+		private String userId = "";
 		
 		public Builder(int pageSize, String articleId) {
 			super(pageSize);
-			this.articleId = articleId;
-		}
-		
-		public Builder(int startNum, int endNum, String articleId) {
-			super(startNum, endNum);
 			this.articleId = articleId;
 		}
 		
@@ -37,7 +32,7 @@ public class CommentParam extends BaseParam {
 		}
 	}
 	
-	public CommentParam(Builder builder) {
+	private CommentParam(Builder builder) {
 		super(builder);
 		this.articleId = builder.articleId;
 		this.userId = builder.userId;
