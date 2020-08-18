@@ -116,6 +116,8 @@ public class ArticleController {
 		if(!user.isUserId(articleDto.getUserId())) {
 			map.put("code", HttpStatus.FORBIDDEN);
 			map.put("msg", "로그인 정보가 다릅니다.");
+			
+			return map;
 		}
 		
 		try {
@@ -142,6 +144,8 @@ public class ArticleController {
 		if(!user.isUserId(articleDto.getUserId())) {
 			map.put("code", HttpStatus.FORBIDDEN);
 			map.put("msg", "로그인 정보가 다릅니다.");
+			
+			return map;
 		}
 		
 		try {
