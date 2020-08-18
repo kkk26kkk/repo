@@ -11,7 +11,7 @@ public class ArticleDto {
 	private String userName;
 	private String title;
 	private String contents;
-	private String readCount;
+	private String readCount; // int? String?
 	private String regDtm;
 	private String grade;
 	private String link;
