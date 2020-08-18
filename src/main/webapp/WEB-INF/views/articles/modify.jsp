@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,18 +17,18 @@
 		<table class="table table-striped">
 			<tr>
 				<th>제목</th>
-				<td><input type="text" id="title" value="${article.title }" />
+				<td><input type="text" id="title" value="${article.title}" />
 			</tr>
 			<tr>
 				<th>작성자</th>
-				<td><span id="userName" data-user-id="${article.userId }"></span>${article.userName }</td>
+				<td><span id="userName" data-user-id="${article.userId}"></span>${article.userName}</td>
 			</tr>
 			<tr>
 				<th>내용</th>
-				<td><textarea rows="8" cols="50" id="contents">${article.contents }</textarea></td>
+				<td><textarea rows="8" cols="50" id="contents">${article.contents}</textarea></td>
 			</tr>
 			<tr>
-				<th><button type="button" id="update-btn" onclick="updateArticle('${path }')">수정</button></th>
+				<th><button type="button" id="update-btn" onclick="updateArticle('${path}')">수정</button></th>
 				<td>--</td>
 			</tr>
 		</table>

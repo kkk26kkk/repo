@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,12 +17,12 @@
 		<!-- 컴포넌트 시작 -->
 		<table class="table table-striped" id="form">
 			<tr>
-				<th><span id="path" data-path="${path }"></span>제목</th>
-				<td><input type="text" id="title" data-parent-id="${article.articleId}" value="${article.title }" /></td>
+				<th><span id="path" data-path="${path}"></span>제목</th>
+				<td><input type="text" id="title" data-parent-id="${article.articleId}" value="${article.title}" /></td>
 			</tr>
 			<tr>
 				<th>작성자</th>
-				<td><span id="userName" data-user-id="${article.userId }">${article.userName }</span></td>
+				<td><span id="userName" data-user-id="${article.userId}">${article.userName}</span></td>
 			</tr>
 			<tr>
 				<th>내용</th>
